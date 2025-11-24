@@ -69,7 +69,7 @@
 // MARK: MEDIC
 /datum/antagonist/ert/non_tg/medic
 	role = "Медик"
-	outfit = /datum/outfit/centcom/ert/medic
+	outfit = /datum/outfit/centcom/ert/non_tg/medic
 
 /datum/antagonist/ert/non_tg/medic/amber
 	outfit = /datum/outfit/centcom/ert/non_tg/medic/amber
