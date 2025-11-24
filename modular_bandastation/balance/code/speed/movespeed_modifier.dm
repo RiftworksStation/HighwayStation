@@ -1,3 +1,5 @@
+GLOBAL_VAR_INIT(minimum_move_delay, /datum/config_entry/number/minimum_move_delay::default)
+
 /proc/modified_move_delay(move_delay, ignore_zero = FALSE, cap_speed = FALSE)
 	if(move_delay == 0 && !ignore_zero)
 		. = round(max(RP_SPEED - TG_SPEED, 0) * TG_SPEED, 0.01)
@@ -5,7 +7,7 @@
 		. = round(RP_SPEED / TG_SPEED * move_delay, 0.01)
 
 	if(cap_speed)
-		return max(., CONFIG_GET(number/minimum_move_delay))
+		return max(., GLOB.minimum_move_delay)
 
 	return .
 
