@@ -39,6 +39,7 @@
 // MARK: SECURITY
 /datum/antagonist/ert/non_tg/security
 	role = "Сотрудник службы безопасности"
+	outfit = /datum/outfit/centcom/ert/non_tg/security
 
 /datum/antagonist/ert/non_tg/security/amber
 	outfit = /datum/outfit/centcom/ert/non_tg/security/amber
