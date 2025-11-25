@@ -119,7 +119,7 @@
 		return COMPONENT_DRIVER_BLOCK_MOVE
 	var/mob/living/living_parent = parent
 	step(living_parent, direction)
-	var/modified_move_delay = uses_native_speed ? living_parent.cached_multiplicative_slowdown : modified_move_delay(vehicle_move_delay)
+	var/modified_move_delay = uses_native_speed ? living_parent.cached_multiplicative_slowdown : vehicle_move_delay
 	if(HAS_TRAIT(user, TRAIT_ROUGHRIDER)) // YEEHAW!
 		switch(HAS_TRAIT(user, TRAIT_PRIMITIVE) ? SANITY_LEVEL_GREAT : user.mob_mood?.sanity_level)
 			if(SANITY_LEVEL_GREAT)
@@ -132,6 +132,7 @@
 				modified_move_delay *= 1.1
 			if(SANITY_LEVEL_INSANE)
 				modified_move_delay *= 1.2
+	modified_move_delay = modified_move_delay(modified_move_delay, cap_speed = TRUE) // BANDASTATION EDIT - Speed
 	if(NSCOMPONENT(direction) && EWCOMPONENT(direction))
 		modified_move_delay = FLOOR(modified_move_delay * sqrt(2), world.tick_lag)
 	COOLDOWN_START(src, vehicle_move_cooldown, modified_move_delay)
