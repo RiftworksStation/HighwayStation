@@ -6780,4 +6780,4 @@
 // END_INCLUDE
 
 // BANDASTATION
-#include "modular_bandastation\modular_bandastation.dme"
+#include "modular_content\modular_content.dme"

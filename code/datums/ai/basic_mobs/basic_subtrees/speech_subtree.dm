@@ -53,7 +53,7 @@
 	emote_hear = list("стрекочет.")
 
 /datum/ai_planning_subtree/random_speech/insect/spider	// SS220 ADD
-	sound = list('modular_bandastation/mobs/sound/spider_talk1.ogg', 'modular_bandastation/mobs/sound/spider_talk2.ogg')	// SS220 EDIT
+	sound = list('modular_content/mobs/sound/spider_talk1.ogg', 'modular_content/mobs/sound/spider_talk2.ogg')	// SS220 EDIT
 
 /datum/ai_planning_subtree/random_speech/mothroach
 	speech_chance = 15
@@ -70,7 +70,7 @@
 /datum/ai_planning_subtree/random_speech/frog
 	speech_chance = 3
 	speak = list("Квак!","КУААК!","Квуак!")
-	sound = list('modular_bandastation/mobs/sound/frog_talk1.ogg', 'modular_bandastation/mobs/sound/frog_talk2.ogg')	// SS220 EDIT
+	sound = list('modular_content/mobs/sound/frog_talk1.ogg', 'modular_content/mobs/sound/frog_talk2.ogg')	// SS220 EDIT
 	emote_hear = list("квак","куак","квуак")
 	emote_see = list("прыгает по кругу", "раздувается.", "лежит расслабленная.", "издает гортанные звуки.", "лупает глазками.")
 
@@ -111,7 +111,7 @@
 /datum/ai_planning_subtree/random_speech/chicken
 	speech_chance = 15 // really talkative ladies
 	speak = list("Кудах!", "КУУУД КУУУД КУДАААААХ!", "Кудах-тах-тах.")
-	sound = list('sound/mobs/non-humanoids/chicken/clucks.ogg', 'sound/mobs/non-humanoids/chicken/bagawk.ogg', 'modular_bandastation/mobs/sound/chicken_talk.ogg')
+	sound = list('sound/mobs/non-humanoids/chicken/clucks.ogg', 'sound/mobs/non-humanoids/chicken/bagawk.ogg', 'modular_content/mobs/sound/chicken_talk.ogg')
 	emote_hear = list("кудахчет.", "клокочет.")
 	emote_see = list("ключет землю.", "хлопает крыльями","дерзко машет крыльями")
 
@@ -125,7 +125,7 @@
 /datum/ai_planning_subtree/random_speech/cow
 	speech_chance = 1
 	speak = list("муу?","муу","МУУУУУ")
-	sound = list('sound/mobs/non-humanoids/cow/cow.ogg', 'modular_bandastation/mobs/sound/cow_talk1.ogg', 'modular_bandastation/mobs/sound/cow_talk2.ogg')	// SS220 EDIT
+	sound = list('sound/mobs/non-humanoids/cow/cow.ogg', 'modular_content/mobs/sound/cow_talk1.ogg', 'modular_content/mobs/sound/cow_talk2.ogg')	// SS220 EDIT
 	emote_hear = list("мычит.")
 	emote_see = list("трясет головой.")
 
@@ -146,7 +146,7 @@
 
 /datum/ai_planning_subtree/random_speech/dog
 	speech_chance = 1
-	sound = list('modular_bandastation/mobs/sound/dog_bark1.ogg', 'modular_bandastation/mobs/sound/dog_bark2.ogg') // SS220 EDIT
+	sound = list('modular_content/mobs/sound/dog_bark1.ogg', 'modular_content/mobs/sound/dog_bark2.ogg') // SS220 EDIT
 
 /datum/ai_planning_subtree/random_speech/dog/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	if(!isdog(controller.pawn))
@@ -224,11 +224,11 @@
 	speech_chance = 5
 	emote_hear = list("rawrs.","grumbles.","grawls.", "stomps!")
 	emote_see = list("stares ferociously.")
-	sound = list('modular_bandastation/mobs/sound/bear_talk1.ogg', 'modular_bandastation/mobs/sound/bear_talk2.ogg', 'modular_bandastation/mobs/sound/bear_talk3.ogg') // SS220 ADD
+	sound = list('modular_content/mobs/sound/bear_talk1.ogg', 'modular_content/mobs/sound/bear_talk2.ogg', 'modular_content/mobs/sound/bear_talk3.ogg') // SS220 ADD
 
 /datum/ai_planning_subtree/random_speech/cats
 	speech_chance = 10
-	sound = list(/*SFX_CAT_MEOW*/'modular_bandastation/mobs/sound/cat_meow.ogg') // SS220 EDIT
+	sound = list(/*SFX_CAT_MEOW*/'modular_content/mobs/sound/cat_meow.ogg') // SS220 EDIT
 	emote_hear = list("meows.")
 	emote_see = list("meows.")
 

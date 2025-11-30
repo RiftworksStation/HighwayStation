@@ -18,10 +18,10 @@
 		"stamp-centcom" = 'icons/stamp_icons/large_stamp-centcom.png',
 		"stamp-syndicate" = 'icons/stamp_icons/large_stamp-syndicate.png',
 		// BANDASTATION EDIT START
-		"stamp-magistrate" = 'modular_bandastation/objects/icons/stamp_icons/large_stamp-magistrate.png',
-		"stamp-nanotrasen_representative" = 'modular_bandastation/objects/icons/stamp_icons/large_stamp-nanotrasen_representative.png',
-		"stamp-tsf" = 'modular_bandastation/objects/icons/stamp_icons/large_stamp-tsf.png',
-		"stamp-ussp" = 'modular_bandastation/objects/icons/stamp_icons/large_stamp-ussp.png'
+		"stamp-magistrate" = 'modular_content/objects/icons/stamp_icons/large_stamp-magistrate.png',
+		"stamp-nanotrasen_representative" = 'modular_content/objects/icons/stamp_icons/large_stamp-nanotrasen_representative.png',
+		"stamp-tsf" = 'modular_content/objects/icons/stamp_icons/large_stamp-tsf.png',
+		"stamp-ussp" = 'modular_content/objects/icons/stamp_icons/large_stamp-ussp.png'
 		// BANDASTATION EDIT END
 	)
 

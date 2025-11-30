@@ -7,7 +7,7 @@
 	var/obj/machinery/barsign_type = /obj/machinery/barsign
 	var/icon/barsign_icon = initial(barsign_type.icon)
 	var/list/barsign_icon_states = icon_states(barsign_icon)
-	var/icon/barsign_icon_ss220 = 'modular_bandastation/barsigns/icons/barsigns.dmi' // BANDASTATION EDIT Barsigns
+	var/icon/barsign_icon_ss220 = 'modular_content/barsigns/icons/barsigns.dmi' // BANDASTATION EDIT Barsigns
 	var/list/barsign_icon_states_ss220 = icon_states(barsign_icon_ss220)
 
 	// Check every datum real bar sign
