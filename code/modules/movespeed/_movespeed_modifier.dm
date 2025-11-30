@@ -176,7 +176,7 @@ GLOBAL_LIST_EMPTY(movespeed_modification_cache)
 		if(M.blacklisted_movetypes & movement_type) // There's a movetype here that disables this modifier, skip
 			continue
 		var/conflict = M.conflicts_with
-		var/amt = M.multiplicative_slowdown
+		var/amt = M.get_rp_speed() // BANDASTATION EDIT - Speed
 		if(conflict)
 			// Conflicting modifiers prioritize the larger slowdown or the larger speedup
 			// We purposefuly don't handle mixing speedups and slowdowns on the same id
@@ -185,7 +185,7 @@ GLOBAL_LIST_EMPTY(movespeed_modification_cache)
 			else
 				continue
 		. += amt
-	cached_multiplicative_slowdown = .
+	cached_multiplicative_slowdown = max(., GLOB.minimum_move_delay) // BANDASTATION EDIT - Speed
 	SEND_SIGNAL(src, COMSIG_MOB_MOVESPEED_UPDATED)
 
 /// Get the move speed modifiers list of the mob
