@@ -1,7 +1,7 @@
 #define COMMUNICATION_COOLDOWN (30 SECONDS)
 #define COMMUNICATION_COOLDOWN_AI (30 SECONDS)
 #define COMMUNICATION_COOLDOWN_MEETING (5 MINUTES)
-#define STATION_REPORT_TEMPLATE_PATH "modular_bandastation/paperwork/templates/station_report.md" /// BANDASTATION ADDITION - UPDATED INTERCEPT TEMPLATE
+#define STATION_REPORT_TEMPLATE_PATH "modular_content/paperwork/templates/station_report.md" /// BANDASTATION ADDITION - UPDATED INTERCEPT TEMPLATE
 
 GLOBAL_DATUM_INIT(communications_controller, /datum/communciations_controller, new)
 

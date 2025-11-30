@@ -68,7 +68,7 @@
 	))
 
 	send_to_playing_players(span_narsie("NAR'SIE HAS RISEN"))
-	sound_to_playing_players('modular_bandastation/cult_overhaul/sound/narsie/narsie_risen.ogg') // BANDASTATION EDIT - Cult Overhaul
+	sound_to_playing_players('modular_content/cult_overhaul/sound/narsie/narsie_risen.ogg') // BANDASTATION EDIT - Cult Overhaul
 
 	var/area/area = get_area(src)
 	if(area)
@@ -268,7 +268,7 @@
 			\"ПОЛНОЕ ИСТРЕБЛЕНИЕ\". Приказ на принятие мер получен и авторизован. Ожидаемое время готовности: 60 секунд.",
 		// BANDASTATION EDIT END - Cult Overhaul
 		title = "[command_name()]: Отдел паранормальных явлений",
-		sound = 'modular_bandastation/cult_overhaul/sound/announcements/cult_rise_announcement.ogg', // BANDASTATION EDIT - Cult Overhaul (sound replacement)
+		sound = 'modular_content/cult_overhaul/sound/announcements/cult_rise_announcement.ogg', // BANDASTATION EDIT - Cult Overhaul (sound replacement)
 	)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(narsie_end_second_check)), 50 SECONDS)
 

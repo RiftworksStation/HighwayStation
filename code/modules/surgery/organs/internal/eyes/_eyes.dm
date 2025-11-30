@@ -687,7 +687,7 @@
 	// BANDASTATION EDIT START - Feat: Augmentation
 	iris_overlay = "eyes_cyber_glow_iris"
 	eye_icon_state = "eyes_glow_gs"
-	icon_eyes_path = 'modular_bandastation/augmentation_preferences/icons/human_face.dmi'
+	icon_eyes_path = 'modular_content/augmentation_preferences/icons/human_face.dmi'
 	organ_traits = list(TRAIT_LUMINESCENT_EYES)
 	// BANDASTATION EDIT END - Feat: Augmentation
 	flash_protect = FLASH_PROTECTION_SENSITIVE

@@ -6781,5 +6781,5 @@
 #include "interface\fonts\vcr_osd_mono.dm"
 // END_INCLUDE
 
-// BANDASTATION
-#include "modular_bandastation\modular_bandastation.dme"
+// MODULAR EDIT ADD
+#include "modular_content\modular_content.dme"

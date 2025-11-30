@@ -1,6 +1,6 @@
 Any time you make a change to the schema files, remember to increment the database schema version. Generally increment the minor number, major should be reserved for significant changes to the schema. Both values go up to 255.
 
-Make sure to also update `DB_MAJOR_VERSION_220` and `DB_MINOR_VERSION_220`, which can be found in `code/modular_bandastation/_defines220/code/defines/subsystems.dm`.
+Make sure to also update `DB_MAJOR_VERSION_220` and `DB_MINOR_VERSION_220`, which can be found in `code/modular_content/_defines220/code/defines/subsystems.dm`.
 
 The latest database version is 1.3; The query to update the schema revision table is:
 
