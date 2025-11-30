@@ -13,15 +13,15 @@
 	req_body["api_token"] = CONFIG_GET(string/tts_token_silero)
 	req_body["text"] = ssml_text
 	req_body["sample_rate"] = 24000
-	req_body["ssml"] = TRUE
+	req_body["ssml"] = new /datum/bool(TRUE)
 	req_body["speaker"] = seed.value
 	req_body["lang"] = "ru"
 	req_body["remote_id"] = "[world.port]"
-	req_body["put_accent"] = TRUE
-	req_body["put_yo"] = FALSE
+	req_body["put_accent"] = new /datum/bool(TRUE)
+	req_body["put_yo"] = new /datum/bool(FALSE)
 	req_body["symbol_durs"] = list()
 	req_body["format"] = "ogg"
-	req_body["word_ts"] = FALSE
+	req_body["word_ts"] = new /datum/bool(FALSE)
 
 	// API requires strict bools
 	SShttp.create_async_request(RUSTG_HTTP_METHOD_POST, CONFIG_GET(string/tts_api_url_silero), json_encode2(req_body), list("content-type" = "application/json"), proc_callback)
