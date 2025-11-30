@@ -1,4 +1,4 @@
-pygit2==1.14.1
+pygit2==1.19.0
 bidict==0.22.0
 Pillow==11.3.0
 
@@ -10,4 +10,4 @@ beautifulsoup4==4.9.3
 mysql-connector-python==8.0.33
 
 # icon cutter
-numpy==1.26.0
+numpy==1.26.4
