@@ -28,3 +28,39 @@
 
 	window_flash(target, ignorepref = TRUE)
 	to_chat(target, message, MESSAGE_TYPE_ADMINPM)
+
+/datum/bool
+	var/value
+
+/datum/bool/New(value)
+	src.value = value
+
+/// The curse of BYOND
+/proc/json_encode2(var/thing)
+	if(istype(thing, /datum/bool))
+		var/datum/bool/B = thing
+		return B.value ? "true" : "false"
+
+	if(islist(thing))
+		var/list/L = thing
+		var/list/output = list()
+
+		// The curse of BYOND continues
+		var/is_associative = FALSE
+		for(var/key in L)
+			if(istext(key) && !isnull(L[key]))
+				is_associative = TRUE
+				break
+
+		if(is_associative)
+			// Encode as json dict
+			for(var/key in L)
+				output += "\"[key]\":[json_encode2(L[key])]"
+			return "{[jointext(output, ",")]}"
+		else
+			// Encode ass json list
+			for(var/val in L)
+				output += json_encode2(val)
+			return "\[[jointext(output, ",")]\]"
+
+	return json_encode(thing)
