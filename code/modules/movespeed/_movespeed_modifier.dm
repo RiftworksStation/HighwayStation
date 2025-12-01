@@ -185,7 +185,7 @@ GLOBAL_LIST_EMPTY(movespeed_modification_cache)
 			else
 				continue
 		. += amt
-	cached_multiplicative_slowdown = .
+	cached_multiplicative_slowdown = max(., GLOB.minimum_move_delay) // BANDASTATION EDIT - Speed
 	SEND_SIGNAL(src, COMSIG_MOB_MOVESPEED_UPDATED)
 
 /// Get the move speed modifiers list of the mob

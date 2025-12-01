@@ -375,7 +375,7 @@
 	var/static/cult_music_played = FALSE
 	priority_announce(
 		text = "Зафиксирован призыв древнего божества культистом [cultist.real_name] в [summon_location.get_original_area_name()]. Прервите ритуал любой ценой!",
-		sound = cult_music_played ? 'sound/announcer/notice/notice3.ogg' : 'modular_bandastation/cult_overhaul/sound/announcements/cult_summon.ogg', // BANDASTATION EDIT - Cult Overhaul
+		sound = cult_music_played ? 'sound/announcer/notice/notice3.ogg' : 'modular_content/cult_overhaul/sound/announcements/cult_summon.ogg', // BANDASTATION EDIT - Cult Overhaul
 		sender_override = "[command_name()]: Отдел паранормальных явлений",
 		has_important_message = TRUE,
 	)

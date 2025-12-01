@@ -28,7 +28,8 @@ type KeybindingsPageState = {
   keybindings?: Keybindings;
   lastKeyboardEvent?: KeyboardEvent;
   selectedKeybindings?: PreferencesMenuData['keybindings'];
-
+  searchText?: string;
+  setSearchText?: (text: string) => void;
   /**
    * The current hotkey that the user is rebinding.
    *
@@ -170,12 +171,18 @@ export class KeybindingsPage extends Component<any, KeybindingsPageState> {
     keybindings: undefined,
     selectedKeybindings: undefined,
     rebindingHotkey: undefined,
+    searchText: undefined,
+    setSearchText: undefined,
   };
 
   constructor(props) {
     super(props);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.state.searchText = '';
+    this.state.setSearchText = ((text) => {
+      this.setState({ searchText: text });
+    }).bind(this);
   }
 
   componentDidMount() {
@@ -352,7 +359,6 @@ export class KeybindingsPage extends Component<any, KeybindingsPageState> {
           onKeyDown={this.handleKeyDown}
           onKeyUp={this.handleKeyUp}
         />
-
         <Stack fill vertical>
           <TabbedMenu
             buttons={
