@@ -92,7 +92,7 @@
 	item_path = /obj/item/clothing/suit/takemura_jacket
 	donator_level = DONATOR_TIER_3
 
-/datum/loadout_item/suits/v_jacket
+/datum/loadout_item/suits/vi_jacket
 	name = "Куртка Вай"
 	item_path = /obj/item/clothing/suit/hooded/vi_arcane
 	donator_level = DONATOR_TIER_3
@@ -114,7 +114,7 @@
 	donator_level = DONATOR_TIER_4
 
 // MARK: Tier 5
-/datum/loadout_item/suits/soundhand_white_jacket
+/datum/loadout_item/suits/soundhand_white_jacket_aria
 	name = "Серебристая куртка Арии"
 	item_path = /obj/item/clothing/suit/soundhand_white_jacket/tag
 	donator_level = DONATOR_TIER_5
