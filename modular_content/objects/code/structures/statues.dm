@@ -155,18 +155,6 @@
 /obj/structure/statue/station_map/delta/se
 	icon_state = "se"
 
-// MARK: Off-station statues
-/obj/structure/statue/mooniverse
-	name = "Неизвестный агент"
-	desc = "Информация на табличке под статуей исцарапана и нечитабельна... Поверх написано невнятное словосочетание из слов \"Moon\" и \"Universe\"."
-	icon = 'modular_content/objects/icons/obj/structures/statuelarge.dmi'
-	icon_state = "mooniverse"
-	pixel_y = 7
-	anchored = TRUE
-	max_integrity = 1000
-	impressiveness = 100
-	abstract_type = /obj/structure/statue/mooniverse
-
 /obj/structure/statue/ell_good
 	name = "Mr.Буум"
 	desc = "Загадочный клоун с жёлтым оттенком кожи и выразительными зелёными глазами. Лучший двойной агент синдиката, получивший власть над множеством фасилити. \
@@ -190,23 +178,6 @@
 	anchored = TRUE
 	abstract_type = /obj/structure/statue/heinrich_treisen
 	layer = ABOVE_MOB_LAYER
-
-/obj/structure/statue/elwycco
-	name = "Camper Hunter"
-	desc = "Похоже это какой-то очень важный человек, или очень значимый для многих людей. Вы замечаете огроменный топор в его руках, с выгравированным числом 220. \
-			Что это число значит? Каждый понимает по своему, однако по слухам оно означает количество его жертв. \n Надпись на табличке - Мы с тобой, Шустрила! Аве, Легион!"
-	icon = 'modular_content/objects/icons/obj/structures/statue.dmi'
-	icon_state = "elwycco"
-	anchored = TRUE
-	abstract_type = /obj/structure/statue/elwycco
-
-/obj/structure/statue/normandy_soo
-	name = "Офицер специальных операций"
-	desc = "Статуя одного из офицеров специальных операций. Подобной почести удостоены лишь самые верные..."
-	icon = 'modular_content/objects/icons/obj/structures/statue.dmi'
-	icon_state = "mooniverse_soo"
-	anchored = TRUE
-	abstract_type = /obj/structure/statue/normandy_soo
 
 /obj/structure/statue/sandstone/venus/pure
 	name = "Венера"
