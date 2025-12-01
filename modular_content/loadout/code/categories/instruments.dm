@@ -47,15 +47,12 @@
 /datum/loadout_item/pocket_items/instruments/soundhand_bass_guitar
 	name = "Бас гитара"
 	item_path = /obj/item/instrument/soundhand_bass_guitar
-	donator_level = DONATOR_TIER_1
 
 /datum/loadout_item/pocket_items/instruments/soundhand_rock_guitar
 	name = "Рок гитара"
 	item_path = /obj/item/instrument/soundhand_rock_guitar
-	donator_level = DONATOR_TIER_1
 
 // MARK: Tier 5
 /datum/loadout_item/pocket_items/instruments/soundhand_metal_guitar
 	name = "Электро-гитара Арии"
 	item_path = /obj/item/instrument/soundhand_metal_guitar
-	donator_level = DONATOR_TIER_5

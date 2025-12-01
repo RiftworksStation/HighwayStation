@@ -43,20 +43,16 @@
 /datum/loadout_item/shoes/ducky_shoes
 	name = "Утинные тапки"
 	item_path = /obj/item/clothing/shoes/ducky_shoes
-	donator_level = DONATOR_TIER_1
 
 /datum/loadout_item/shoes/etamin_shoes
 	name = "Ботинки Etamin Industries"
 	item_path = /obj/item/clothing/shoes/etamin_shoes
-	donator_level = DONATOR_TIER_1
 
 // MARK: Tier 2
 /datum/loadout_item/shoes/shark_shoes
 	name = "Акульи тапочки"
 	item_path = /obj/item/clothing/shoes/shark
-	donator_level = DONATOR_TIER_2
 
 /datum/loadout_item/shoes/shark_light_shoes
 	name = "Акульи тапочки (светло-голубые)"
 	item_path = /obj/item/clothing/shoes/shark/light
-	donator_level = DONATOR_TIER_2
