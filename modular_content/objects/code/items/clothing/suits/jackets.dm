@@ -77,8 +77,7 @@
 	desc = "Серебристая куртка с тэгом группы Саундхэнд, которую носят исполнители группы."
 	icon = 'modular_content/objects/icons/obj/clothing/suits/suits.dmi'
 	worn_icon = 'modular_content/objects/icons/mob/clothing/suits/suits.dmi'
-	icon_state = "soundhand_white_jacket_teg"
-	worn_icon_state = "soundhand_white_jacket"
+	icon_state = "soundhand_white_jacket_tag"
 	lefthand_file = 'modular_content/objects/icons/mob/inhands/clothing_left_hand.dmi'
 	righthand_file = 'modular_content/objects/icons/mob/inhands/clothing_right_hand.dmi'
 
@@ -97,8 +96,7 @@
 	desc = "Черная куртка с тэгом группы Саундхэнд, которую носят исполнители группы."
 	icon = 'modular_content/objects/icons/obj/clothing/suits/suits.dmi'
 	worn_icon = 'modular_content/objects/icons/mob/clothing/suits/suits.dmi'
-	icon_state = "soundhand_black_jacket_teg"
-	worn_icon_state = "soundhand_black_jacket"
+	icon_state = "soundhand_black_jacket_tag"
 	lefthand_file = 'modular_content/objects/icons/mob/inhands/clothing_left_hand.dmi'
 	righthand_file = 'modular_content/objects/icons/mob/inhands/clothing_right_hand.dmi'
 
@@ -117,8 +115,7 @@
 	desc = "Оливковая куртка с тэгом группы Саундхэнд, которую носят исполнители группы."
 	icon = 'modular_content/objects/icons/obj/clothing/suits/suits.dmi'
 	worn_icon = 'modular_content/objects/icons/mob/clothing/suits/suits.dmi'
-	icon_state = "soundhand_olive_jacket_teg"
-	worn_icon_state = "soundhand_olive_jacket"
+	icon_state = "soundhand_olive_jacket_tag"
 	lefthand_file = 'modular_content/objects/icons/mob/inhands/clothing_left_hand.dmi'
 	righthand_file = 'modular_content/objects/icons/mob/inhands/clothing_right_hand.dmi'
 
@@ -137,8 +134,7 @@
 	desc = "Коричневая куртка с тэгом группы Саундхэнд, которую носят исполнители группы."
 	icon = 'modular_content/objects/icons/obj/clothing/suits/suits.dmi'
 	worn_icon = 'modular_content/objects/icons/mob/clothing/suits/suits.dmi'
-	icon_state = "soundhand_brown_jacket_teg"
-	worn_icon_state = "soundhand_brown_jacket"
+	icon_state = "soundhand_brown_jacket_tag"
 	lefthand_file = 'modular_content/objects/icons/mob/inhands/clothing_left_hand.dmi'
 	righthand_file = 'modular_content/objects/icons/mob/inhands/clothing_right_hand.dmi'
 

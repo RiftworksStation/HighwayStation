@@ -1,5 +1,5 @@
-/datum/loadout_item/accessory/pride/is_available()
-	return FALSE
+/datum/loadout_item/accessory/pride
+	hidden = TRUE
 
 // MARK: Tier 3
 /datum/loadout_item/accessory/maid_apron
