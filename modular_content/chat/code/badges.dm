@@ -37,9 +37,7 @@ GLOBAL_LIST(badge_icons_cache)
 
 /client/proc/get_worker_badge()
 	var/static/list/rank_badge_map = list(
-		"Максон" = "Wycc",
-		"Банда" = "Streamer",
-		"Друг Банды" = "Streamer",
+		"Стример" = "Streamer",
 		"Хост" = "Host",
 		"Ведущий Разработчик" = "Host",
 		"Старший Разработчик" = "HeadDeveloper",
