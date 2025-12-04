@@ -1293,11 +1293,6 @@
 	},
 /turf/open/floor/mineral/plastitanium/red,
 /area/centcom/syndicate_base/control)
-"dar" = (
-/obj/effect/turf_decal/plaque,
-/obj/structure/statue/mooniverse,
-/turf/open/floor/circuit/red,
-/area/centcom/syndicate_base)
 "dbJ" = (
 /obj/structure/curtain/bounty/start_closed{
 	pixel_x = 32;
@@ -5777,7 +5772,6 @@
 /turf/open/floor/iron/white,
 /area/centcom/syndicate_base)
 "nGd" = (
-/obj/structure/statue/mooniverse,
 /turf/open/floor/iron/goonplaque,
 /area/centcom/syndicate_base/outside)
 "nGz" = (
@@ -14951,7 +14945,7 @@ gOQ
 gOQ
 rrb
 fnU
-dar
+cFP
 gHP
 vru
 srn

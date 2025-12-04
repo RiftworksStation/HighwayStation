@@ -36,7 +36,6 @@
 	/// BANDASTATION ADDITION START - Loadout
 	var/total_points_spent = 0
 	var/points_cap = preferences.get_loadout_max_points()
-	var/donator_level = preferences.parent.get_donator_level()
 	/// BANDASTATION ADDITION END - Loadout
 	for(var/path in passed_list)
 		// Loading from json has each path in the list as a string that we need to convert back to typepath
@@ -58,14 +57,8 @@
 			continue
 
 		/// BANDASTATION ADDITION START - Loadout
-		if(loadout_item.donator_level > donator_level)
-			to_chat(
-				preferences.parent,
-				span_boldnotice(\
-					"Ваш уровень подписки ([donator_level]) недостаточен для [loadout_item.name] \
-						с уровнем [loadout_item.donator_level]. Предмет убран из снаряжения." \
-				)
-			)
+		if(!loadout_item.is_available(preferences.parent))
+			to_chat(preferences.parent, span_boldwarning("Предмет [loadout_item.name] убран из снаряжения."))
 			continue
 
 		if(loadout_item.cost + total_points_spent > points_cap)

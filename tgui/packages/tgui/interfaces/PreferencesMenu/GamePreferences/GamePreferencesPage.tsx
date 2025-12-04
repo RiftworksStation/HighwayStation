@@ -1,6 +1,6 @@
 import { binaryInsertWith } from 'common/collections';
 import { sortBy } from 'es-toolkit';
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { useBackend } from 'tgui/backend';
 import { Stack } from 'tgui-core/components';
 
