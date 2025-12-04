@@ -32,7 +32,7 @@
 	var/data = json_decode(response.body)
 	// log_debug(response.body)
 
-	if(data["timings"]["003_tts_time"] > 3)
+	if(data["timings"] && data["timings"]["003_tts_time"] > 3)
 		is_throttled = TRUE
 		throttled_until = world.time + 15 SECONDS
 
