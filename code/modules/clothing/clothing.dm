@@ -333,9 +333,9 @@
 		else
 			how_cool_are_your_threads += "Хранилище [declent_ru(GENITIVE)] открывается при перетаскивании на себя.\n"
 		if (atom_storage.can_hold?.len) // If pocket type can hold anything, vs only specific items
-			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] <a href='byond://?src=[REF(src)];show_valid_pocket_items=1'>предмет[declension_ru(atom_storage.max_slots), "", "а", "ов"]</a>.\n"
+			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] <a href='byond://?src=[REF(src)];show_valid_pocket_items=1'>предмет[declension_ru(atom_storage.max_slots, "", "а", "ов")]</a>.\n"
 		else
-			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] предмет[declension_ru(atom_storage.max_slots), "", "а", "ов"] размером [weight_class_to_text(atom_storage.max_specific_storage)] или меньше.\n"
+			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] предмет[declension_ru(atom_storage.max_slots, "", "а", "ов")] размером [weight_class_to_text(atom_storage.max_specific_storage)] или меньше.\n"
 		if(atom_storage.quickdraw)
 			how_cool_are_your_threads += "Вы можете достать предмет из [declent_ru(GENITIVE)], используя ПКМ.\n"
 		if(atom_storage.silent)
