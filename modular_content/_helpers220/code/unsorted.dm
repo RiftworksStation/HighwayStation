@@ -36,7 +36,7 @@
 	src.value = value
 
 /// The curse of BYOND
-/proc/json_encode2(var/thing)
+/proc/json_encode2(thing)
 	if(istype(thing, /datum/bool))
 		var/datum/bool/B = thing
 		return B.value ? "true" : "false"

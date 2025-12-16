@@ -20,11 +20,27 @@
 	worn_icon = 'modular_content/objects/icons/mob/clothing/suits/armor.dmi'
 	icon_state = "blueshield_armor"
 	body_parts_covered = CHEST
-	unique_reskin = list(
-		"Slim" = "blueshield_armor",
-		"Marine" = "blueshield_marine",
-		"Bulky" = "vest_black"
-	)
+
+/obj/item/clothing/suit/armor/vest/blueshield/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/reskinable_item, /datum/atom_skin/blueshield_vest)
+
+/datum/atom_skin/blueshield_vest
+	abstract_type = /datum/atom_skin/blueshield_vest
+	change_inhand_icon_state = TRUE
+	change_base_icon_state = TRUE
+
+/datum/atom_skin/blueshield_vest/slim
+	preview_name = "Slim"
+	new_icon_state = "blueshield_armor"
+
+/datum/atom_skin/blueshield_vest/marine
+	preview_name = "Marine"
+	new_icon_state = "blueshield_marine"
+
+/datum/atom_skin/blueshield_vest/bulky
+	preview_name = "Bulky"
+	new_icon_state = "vest_black"
 
 /obj/item/clothing/suit/armor/vest/blueshield_jacket
 	name = "blueshield's jacket"

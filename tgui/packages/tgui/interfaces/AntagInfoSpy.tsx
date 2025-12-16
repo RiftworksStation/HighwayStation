@@ -56,7 +56,9 @@ export const AntagInfoSpy = () => {
             </Stack.Item>
             <Stack.Item>
               Работайте вместе или против них: выбор за вами, но{' '}
-              <span style={redText}>вы не сможете поделить награду.</span>
+              <span style={redText}>
+                один и тот же заказ не может быть награжден дважды.
+              </span>
             </Stack.Item>
             <Stack.Divider />
             <Stack.Item>

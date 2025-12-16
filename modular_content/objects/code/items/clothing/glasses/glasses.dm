@@ -29,6 +29,8 @@
 	worn_icon_state = "hudsunmeson"
 	flash_protect = FLASH_PROTECTION_FLASH
 	tint = 1
+	glass_colour_type = /datum/client_colour/glass_colour/lightgreen
+	custom_materials = list(/datum/material/glass = SHEET_MATERIAL_AMOUNT * 0.55, /datum/material/iron = SMALL_MATERIAL_AMOUNT / 2)
 
 /obj/item/clothing/glasses/meson/sunglasses/Initialize(mapload)
 	. = ..()
@@ -58,3 +60,4 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	reqs = list(/obj/item/clothing/glasses/meson/sunglasses = 1)
 	category = CAT_EQUIPMENT
+	crafting_flags = parent_type::crafting_flags | CRAFT_SKIP_MATERIALS_PARITY
