@@ -17,8 +17,7 @@
 // 	human_holder.del_and_replace_bodypart(new /obj/item/bodypart/leg/right/robot/surplus, special = TRUE)
 
 // /datum/quirk/quadruple_amputee/post_add()
-// 	to_chat(quirk_holder, span_bolddanger("All your limbs have been replaced with surplus prosthetics. They are fragile and will easily come apart under duress. \
-// 	Additionally, you need to use a welding tool and cables to repair them, instead of sutures and regenerative mesh."))
+// 	to_chat(quirk_holder, span_bolddanger("All your limbs have been replaced with surplus prosthetics. They are fragile and will easily come apart under duress. Additionally, you need to use a welding tool and cables to repair them, instead of sutures and regenerative mesh."))
 
 // /datum/quirk/quadruple_amputee/remove()
 // 	if(QDELING(quirk_holder))
