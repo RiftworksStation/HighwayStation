@@ -22,10 +22,23 @@
 	slot_flags = ITEM_SLOT_BACK
 	projectile_damage_multiplier = 1.4
 	obj_flags = UNIQUE_RENAME
-	unique_reskin = list(
-		"Default" = "renoster",
-		"Green" = "renoster_green"
-	)
+
+/obj/item/gun/ballistic/shotgun/riot/renoster/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/reskinable_item, /datum/atom_skin/renoster)
+
+/datum/atom_skin/renoster
+	abstract_type = /datum/atom_skin/renoster
+	change_inhand_icon_state = TRUE
+	change_base_icon_state = TRUE
+
+/datum/atom_skin/renoster/default
+	preview_name = "Default"
+	new_icon_state = "renoster"
+
+/datum/atom_skin/renoster/green
+	preview_name = "Green"
+	new_icon_state = "renoster_green"
 
 /obj/item/gun/ballistic/shotgun/riot/renoster/add_seclight_point()
 	AddComponent(
@@ -63,7 +76,12 @@
 	inhand_icon_state = "renoster_black"
 	recoil = 1
 	projectile_damage_multiplier = 1.5
-	unique_reskin = list()
+
+/obj/item/gun/ballistic/shotgun/riot/renoster/black/Initialize(mapload)
+	. = ..()
+	var/list/datum/component/reskinable_components = GetComponents(/datum/component/reskinable_item)
+	for(var/datum/component/to_delete in reskinable_components)
+		qdel(to_delete)
 
 /obj/item/gun/ballistic/shotgun/riot/renoster/black/examine_more(mob/user)
 	. = ..()

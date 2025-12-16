@@ -68,7 +68,7 @@
 	/// do these eyes have pupils (or equivalent) that react to light when penlighted.
 	var/light_reactive = TRUE
 	/// variable to hold the eye icon state path for different eye types
-	var/icon_eyes_path = 'icons/mob/human/human_face.dmi' // BANDASTATION ADDITION  - Feat: Augmentation
+	var/icon_eyes_path = 'icons/mob/human/human_eyes.dmi' // BANDASTATION ADDITION  - Feat: Augmentation
 
 /obj/item/organ/eyes/Initialize(mapload)
 	. = ..()
