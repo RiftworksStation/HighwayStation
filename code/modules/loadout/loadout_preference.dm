@@ -56,6 +56,9 @@
 				You may want to check your loadout settings."))
 			continue
 
+		if(loadout_item.is_disabled())
+			continue // this just falls off silently
+
 		/// BANDASTATION ADDITION START - Loadout
 		if(!loadout_item.is_available(preferences.parent))
 			to_chat(preferences.parent, span_boldwarning("Предмет [loadout_item.name] убран из снаряжения."))

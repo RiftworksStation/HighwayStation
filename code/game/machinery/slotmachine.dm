@@ -122,7 +122,7 @@
 			var/obj/item/holochip/inserted_chip = inserted
 			if(!user.temporarilyRemoveItemFromInventory(inserted_chip))
 				return ITEM_INTERACT_BLOCKING
-			balloon_alert(user, "[declension_ru(inserted_chip.credits, "вставлен", "вставлено", "вставлено")] [inserted_chip.credits] [declension_ru(inserted_chip.credits, "кредит", "кредита", "кредитов")]")
+			balloon_alert(user, "[declension_ru(inserted_chip.credits, "вставлен", "вставлено", "вставлено")] [inserted_chip.credits] [MONEY_NAME_AUTOPURAL(inserted_chip.credits)]")
 			balance += inserted_chip.credits
 			qdel(inserted_chip)
 			return ITEM_INTERACT_SUCCESS
@@ -309,7 +309,7 @@
 
 	else if(check_jackpot(JACKPOT_SEVENS))
 		var/prize = money + JACKPOT
-		visible_message("<b>[capitalize(declent_ru(NOMINATIVE))]</b> говорит, 'ДЖЕКПОТ! Джекпоооот!!!! [prize] [declension_ru(prize, "кредит", "кредита", "кредитов")] тебе в рот!'")
+		visible_message("<b>[capitalize(declent_ru(NOMINATIVE))]</b> говорит, 'ДЖЕКПОТ! Джекпоооот!!!! [prize] [MONEY_NAME_AUTOPURAL(prize)] тебе в рот!'")
 		priority_announce("Джекпот! Джекпоооот!!!! Бабки [user ? user.real_name : usrname] в рот! Поздравить победителя можно в [get_area(src)]!")
 		if(isliving(user) && (user in viewers(src)))
 			var/mob/living/living_user = user
@@ -327,14 +327,14 @@
 				sleep(REEL_DEACTIVATE_DELAY)
 
 	else if(linelength == 5)
-		visible_message("<b>[src]</b> докладывает, 'Большой выигрыш! Тысяча кредитов!'")
+		visible_message("<b>[src]</b> докладывает, 'Большой выигрыш! Тысяча [MONEY_NAME_SINGULAR]ов!'")
 		give_money(BIG_PRIZE)
 		if(isliving(user) && (user in viewers(src)))
 			var/mob/living/living_user = user
 			living_user.add_mood_event("slots", /datum/mood_event/slots/win/big)
 
 	else if(linelength == 4)
-		visible_message("<b>[src]</b> докладывает, 'Выигрыш! Четыреста кредитов!'")
+		visible_message("<b>[src]</b> докладывает, 'Выигрыш! Четыреста [MONEY_NAME_SINGULAR]ов!'")
 		give_money(SMALL_PRIZE)
 		if(isliving(user) && (user in viewers(src)))
 			var/mob/living/living_user = user

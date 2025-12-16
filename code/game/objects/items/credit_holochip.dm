@@ -16,7 +16,7 @@
 	if(!credits && amount)
 		credits = amount
 	if(credits <= 0 && !mapload)
-		stack_trace("Holochip created with 0 or less credits in [get_area_name(src)]!")
+		stack_trace("Holochip created with 0 or less [MONEY_NAME] in [get_area_name(src)]!")
 		return INITIALIZE_HINT_QDEL
 	add_traits(list(TRAIT_FISHING_BAIT, TRAIT_BAIT_ALLOW_FISHING_DUD), INNATE_TRAIT)
 	update_appearance()
@@ -24,20 +24,20 @@
 
 /obj/item/holochip/examine(mob/user)
 	. = ..()
-	. += "[span_notice("В нём [credits] кр.")]"+\
+	. += "[span_notice("В нём [credits] [MONEY_NAME_AUTOPURAL(credits)]")]"+\
 	span_notice("Alt-ЛКМ, чтобы разделить.")
 
 /obj/item/holochip/add_context(atom/source, list/context, obj/item/held_item, mob/living/user)
 	if(istype(held_item, /obj/item/holochip))
 		context[SCREENTIP_CONTEXT_LMB] = "Объединить с..."
-	context[SCREENTIP_CONTEXT_ALT_LMB] = "Разделить кредиты"
+	context[SCREENTIP_CONTEXT_ALT_LMB] = "Разделить [MONEY_NAME]"
 	return CONTEXTUAL_SCREENTIP_SET
 
 /obj/item/holochip/get_item_credit_value()
 	return credits
 
 /obj/item/holochip/update_name()
-	name = "голочип номиналом [credits] кр."
+	name = "голочип номиналом [credits] [MONEY_SYMBOL]"
 	return ..()
 
 /obj/item/holochip/update_icon_state()
@@ -117,7 +117,7 @@
 	if(loc != user)
 		to_chat(user, span_warning("Вы должны держать голочип, чтобы продолжить!"))
 		return CLICK_ACTION_BLOCKING
-	var/split_amount = tgui_input_number(user, "Сколько кредитов вы хотите разделить с голочипа? (Макс: [credits] кр.)", "Голочип", max_value = credits)
+	var/split_amount = tgui_input_number(user, "Сколько кредитов вы хотите разделить с голочипа? (Макс: [credits] [MONEY_SYMBOL])", "Голочип", max_value = credits)
 	if(!split_amount || QDELETED(user) || QDELETED(src) || issilicon(user) || !usr.can_perform_action(src, NEED_DEXTERITY|FORBID_TELEKINESIS_REACH) || loc != user)
 		return CLICK_ACTION_BLOCKING
 	var/new_credits = spend(split_amount, TRUE)
@@ -126,7 +126,7 @@
 		if(!user.put_in_hands(chip))
 			chip.forceMove(user.drop_location())
 		add_fingerprint(user)
-	to_chat(user, span_notice("Вы разделили [split_amount] кр. в новый голочип."))
+	to_chat(user, span_notice("Вы разделили [split_amount] [MONEY_NAME_AUTOPURAL(split_amount)] в новый голочип."))
 	return CLICK_ACTION_SUCCESS
 
 /obj/item/holochip/emp_act(severity)
