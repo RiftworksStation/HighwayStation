@@ -200,7 +200,7 @@
 	if(iscarbon(loc))
 		var/mob/living/carbon/carbon_loc = loc
 		zone_name = carbon_loc.parse_zone_with_bodypart(def_zone)
-		carbon_loc.visible_message(span_danger("[capitalize(zone_name)] [break_verb] на [declent_ru(PREPOSITIONAL)] у [carbon_loc.declent_ru(PREPOSITIONAL)]!"), span_userdanger("[capitalize(zone_name)] [break_verb] на вашем [declent_ru(PREPOSITIONAL)]!"), vision_distance = COMBAT_MESSAGE_RANGE)
+		carbon_loc.visible_message(span_danger("[capitalize(zone_name)] [break_verb] на [declent_ru(PREPOSITIONAL)] у [carbon_loc.declent_ru(GENITIVE)]!"), span_userdanger("[capitalize(zone_name)] [break_verb] на вашем [declent_ru(PREPOSITIONAL)]!"), vision_distance = COMBAT_MESSAGE_RANGE)
 		RegisterSignal(carbon_loc, COMSIG_MOVABLE_MOVED, PROC_REF(bristle), override = TRUE)
 	else
 		zone_name = parse_zone(def_zone)
@@ -333,9 +333,9 @@
 		else
 			how_cool_are_your_threads += "Хранилище [declent_ru(GENITIVE)] открывается при перетаскивании на себя.\n"
 		if (atom_storage.can_hold?.len) // If pocket type can hold anything, vs only specific items
-			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] <a href='byond://?src=[REF(src)];show_valid_pocket_items=1'>предмета</a>.\n"
+			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] <a href='byond://?src=[REF(src)];show_valid_pocket_items=1'>предмет[declension_ru(atom_storage.max_slots), "", "а", "ов"]</a>.\n"
 		else
-			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] предмета размером [weight_class_to_text(atom_storage.max_specific_storage)] или меньше.\n"
+			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] предмет[declension_ru(atom_storage.max_slots), "", "а", "ов"] размером [weight_class_to_text(atom_storage.max_specific_storage)] или меньше.\n"
 		if(atom_storage.quickdraw)
 			how_cool_are_your_threads += "Вы можете достать предмет из [declent_ru(GENITIVE)], используя ПКМ.\n"
 		if(atom_storage.silent)
@@ -541,9 +541,9 @@ BLIND     // can't see anything
 
 	var/message
 	if(up)
-		message = src.alt_toggle_message || "Вы убираете [declent_ru(NOMINATIVE)] в сторону."
+		message = src.alt_toggle_message || "Вы убираете [declent_ru(ACCUSATIVE)] в сторону."
 	else
-		message = src.toggle_message || "Вы возвращаете [declent_ru(NOMINATIVE)] на место."
+		message = src.toggle_message || "Вы возвращаете [declent_ru(ACCUSATIVE)] на место."
 
 	to_chat(user, span_notice("[message]"))
 
@@ -609,7 +609,7 @@ BLIND     // can't see anything
 		if(isliving(loc))
 			var/mob/living/M = loc
 			if(src in M.get_equipped_items()) //make sure they were wearing it and not attacking the item in their hands
-				M.visible_message(span_danger("[capitalize(declent_ru(NOMINATIVE))] спадает c [M.declent_ru(PREPOSITIONAL)], полностью развалившись на кусочки!"), span_warning("<b>[capitalize(declent_ru(NOMINATIVE))] спадает с вас, полностью развалившись на кусочки!</b>"), vision_distance = COMBAT_MESSAGE_RANGE)
+				M.visible_message(span_danger("[capitalize(declent_ru(NOMINATIVE))] спадает c [M.declent_ru(GENITIVE)], полностью развалившись на кусочки!"), span_warning("<b>[capitalize(declent_ru(NOMINATIVE))] спадает с вас, полностью развалившись на кусочки!</b>"), vision_distance = COMBAT_MESSAGE_RANGE)
 				M.dropItemToGround(src)
 			else
 				M.visible_message(span_danger("[capitalize(declent_ru(NOMINATIVE))] разваливается на кусочки!"), vision_distance = COMBAT_MESSAGE_RANGE)
