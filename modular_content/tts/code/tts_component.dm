@@ -142,9 +142,18 @@
 /datum/component/tts_component/proc/get_effects(list/additional_effects)
 	var/list/resulting_effects = effects.Copy()
 	if(length(additional_effects))
+		additional_effects = sort_effects(additional_effects)
 		resulting_effects |= additional_effects
 
 	return resulting_effects
+
+/datum/component/tts_component/proc/sort_effects(list/effects_to_sort)
+	if(!length(effects))
+		return list()
+	return sort_list(effects_to_sort, GLOBAL_PROC_REF(cmp_sound_effect_priority_asc))
+
+/proc/cmp_sound_effect_priority_asc(datum/singleton/sound_effect/A, datum/singleton/sound_effect/B)
+	return A.priority - B.priority
 
 /datum/component/tts_component/proc/cast_tts(
 	atom/speaker,
@@ -223,6 +232,7 @@
 		return
 
 	effects |= new_sound_effects
+	effects = sort_effects(effects)
 
 /datum/component/tts_component/proc/tts_effects_remove(atom/user, list/sound_effects_to_remove)
 	SIGNAL_HANDLER
@@ -231,6 +241,7 @@
 		return
 
 	effects -= sound_effects_to_remove
+	effects = sort_effects(effects)
 
 /datum/component/tts_component/proc/on_item_equip(mob/user, obj/item/equipped_item, slot)
 	SIGNAL_HANDLER

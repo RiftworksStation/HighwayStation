@@ -375,8 +375,6 @@ SUBSYSTEM_DEF(tts220)
 
 		filename_suffixes |= effect.suffix
 
-	sortTim(filename_suffixes, GLOBAL_PROC_REF(cmp_text_asc))
-
 	var/filename2play = "[pure_filename][filename_suffixes.Join()].ogg"
 
 	if(!length(effects) || fexists(filename2play))
