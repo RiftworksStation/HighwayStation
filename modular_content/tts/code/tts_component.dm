@@ -148,7 +148,7 @@
 	return resulting_effects
 
 /datum/component/tts_component/proc/sort_effects(list/effects_to_sort)
-	if(!length(effects))
+	if(!length(effects_to_sort))
 		return list()
 	return sort_list(effects_to_sort, GLOBAL_PROC_REF(cmp_sound_effect_priority_asc))
 
