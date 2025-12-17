@@ -1,5 +1,5 @@
 /atom/movable
-	var/datum/singleton/sound_effect/voice_effect
+	var/list/voice_effect
 
 /atom/movable/Initialize(mapload, ...)
 	. = ..()
@@ -67,7 +67,7 @@
 		voice_effect = list(/datum/singleton/sound_effect/poly)
 
 /datum/singleton/sound_effect/poly
-	suffix = "_fishingcapsule"
+	suffix = "_poly"
 	ffmpeg_arguments = "rubberband=pitch=1.5"
 	priority = TTS_SOUND_EFFECT_PRIORITY_TONGUE
 
