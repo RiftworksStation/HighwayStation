@@ -23,7 +23,6 @@
 			return FALSE
 		return TRUE
 
-	filename_modifying = filename_modifying
 	for(var/datum/singleton/sound_effect/effect as anything in effects)
 		if(!_apply_individual_effect(effect, effects, filename_input, filename_output, filename_modifying))
 			return FALSE
