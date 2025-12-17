@@ -7,12 +7,22 @@
 	RegisterSignal(parent, COMSIG_ATOM_TTS_CAST, PROC_REF(cast_tts))
 	RegisterSignal(parent, COMSIG_ATOM_TTS_EFFECTS_ADD, PROC_REF(tts_effects_add))
 	RegisterSignal(parent, COMSIG_ATOM_TTS_EFFECTS_REMOVE, PROC_REF(tts_effects_remove))
+	if(ismob(parent))
+		RegisterSignal(parent, COMSIG_MOB_EQUIPPED_ITEM, PROC_REF(on_item_equip))
+		RegisterSignal(parent, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(on_item_unequip))
+		RegisterSignal(parent, COMSIG_CARBON_GAIN_ORGAN, PROC_REF(on_organ_gain))
+		RegisterSignal(parent, COMSIG_CARBON_LOSE_ORGAN, PROC_REF(on_organ_lose))
 
 /datum/component/tts_component/UnregisterFromParent()
 	UnregisterSignal(parent, COMSIG_ATOM_TTS_SEED_CHANGE)
 	UnregisterSignal(parent, COMSIG_ATOM_TTS_CAST)
 	UnregisterSignal(parent, COMSIG_ATOM_TTS_EFFECTS_ADD)
 	UnregisterSignal(parent, COMSIG_ATOM_TTS_EFFECTS_REMOVE)
+	if(ismob(parent))
+		UnregisterSignal(parent, COMSIG_MOB_EQUIPPED_ITEM)
+		UnregisterSignal(parent, COMSIG_MOB_UNEQUIPPED_ITEM)
+		UnregisterSignal(parent, COMSIG_CARBON_GAIN_ORGAN)
+		UnregisterSignal(parent, COMSIG_CARBON_LOSE_ORGAN)
 
 /datum/component/tts_component/Initialize(datum/tts_seed/new_tts_seed, list/effects)
 	if(!isatom(parent))
@@ -27,6 +37,10 @@
 		return COMPONENT_INCOMPATIBLE
 	if(length(effects))
 		src.effects |= effects
+	if(ismovable(parent))
+		var/atom/movable/parent_movable = parent
+		if(parent_movable.voice_effect)
+			src.effects |= parent_movable.voice_effect
 
 /datum/component/tts_component/proc/return_tts_seed()
 	SIGNAL_HANDLER
@@ -217,6 +231,32 @@
 		return
 
 	effects -= sound_effects_to_remove
+
+/datum/component/tts_component/proc/on_item_equip(mob/user, obj/item/equipped_item, slot)
+	SIGNAL_HANDLER
+	if(!equipped_item.voice_effect)
+		return
+	if(slot & ITEM_SLOT_HANDS)
+		tts_effects_remove(user, equipped_item.voice_effect)
+		return
+	tts_effects_add(user, equipped_item.voice_effect)
+
+/datum/component/tts_component/proc/on_item_unequip(mob/user, obj/item/item_dropping, force, newloc, no_move, invdrop, silent)
+	SIGNAL_HANDLER
+	if(item_dropping.voice_effect)
+		tts_effects_remove(user, item_dropping.voice_effect)
+
+/datum/component/tts_component/proc/on_organ_gain(mob/living/carbon/user, obj/item/organ/organ_gained, special)
+	SIGNAL_HANDLER
+	if(organ_gained.voice_effect)
+		user.voice_effect = organ_gained.voice_effect
+		tts_effects_add(user, organ_gained.voice_effect)
+
+/datum/component/tts_component/proc/on_organ_lose(mob/living/carbon/user, obj/item/organ/organ_lost, special)
+	SIGNAL_HANDLER
+	if(organ_lost.voice_effect)
+		user.voice_effect = user::voice_effect
+		tts_effects_remove(user, organ_lost.voice_effect)
 
 // Component usage
 
