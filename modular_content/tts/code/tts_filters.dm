@@ -118,3 +118,6 @@
 	suffix = "_vending"
 	ffmpeg_arguments = "alimiter=0.9,acompressor=threshold=0.2:ratio=20:attack=10:release=50:makeup=2,highpass=f=1000"
 	priority = TTS_SOUND_EFFECT_PRIORITY_TONGUE
+
+/mob/living/carbon/alien
+	voice_effect = list(/datum/singleton/sound_effect/tongue_alien)
