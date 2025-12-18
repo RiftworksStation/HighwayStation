@@ -27,12 +27,15 @@
 	priority = TTS_SOUND_EFFECT_PRIORITY_MASK
 
 /obj/item/clothing/mask/gas/clown_hat
+	voice_filter = null
 	voice_effect = null
 
 /obj/item/clothing/mask/gas/sexyclown
+	voice_filter = null
 	voice_effect = null
 
 /obj/item/clothing/mask/gas/jonkler
+	voice_filter = null
 	voice_effect = null
 
 // Up is for eyes, not mouth
