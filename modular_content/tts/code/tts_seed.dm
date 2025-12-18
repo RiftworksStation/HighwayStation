@@ -36,3 +36,9 @@
 			return
 		AddComponent(/datum/component/tts_component, /datum/tts_seed/silero/angel)
 	SEND_SIGNAL(src, COMSIG_ATOM_TTS_SEED_CHANGE, chooser, overrides, new_sound_effects)
+
+/atom/movable/proc/update_voice_effect()
+	SEND_SIGNAL(src, COMSIG_MOVABLE_UPDATE_VOICE_EFFECT, should_apply_voice_effect())
+
+/atom/movable/proc/should_apply_voice_effect()
+	return TRUE

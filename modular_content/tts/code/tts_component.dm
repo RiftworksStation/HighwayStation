@@ -239,14 +239,24 @@
 		return
 	if(slot & ITEM_SLOT_HANDS)
 		return
-	tts_effects_add(equipped_item.voice_effect)
+	if(equipped_item.should_apply_voice_effect())
+		tts_effects_add(equipped_item.voice_effect)
 	RegisterSignal(equipped_item, COMSIG_ITEM_POST_UNEQUIP, PROC_REF(on_item_unequip))
+	RegisterSignal(equipped_item, COMSIG_MOVABLE_UPDATE_VOICE_EFFECT, PROC_REF(on_item_update_voice_effect))
 
 // Item got removed from us
 /datum/component/tts_component/proc/on_item_unequip(obj/item/item_dropping, force, newloc, no_move, invdrop, silent)
 	SIGNAL_HANDLER
 	tts_effects_remove(item_dropping.voice_effect)
 	UnregisterSignal(item_dropping, COMSIG_ITEM_POST_UNEQUIP)
+	UnregisterSignal(item_dropping, COMSIG_MOVABLE_UPDATE_VOICE_EFFECT)
+
+/datum/component/tts_component/proc/on_item_update_voice_effect(obj/item/item_affecting, should_apply)
+	SIGNAL_HANDLER
+	if(should_apply)
+		tts_effects_add(item_affecting.voice_effect)
+	else
+		tts_effects_remove(item_affecting.voice_effect)
 
 /datum/component/tts_component/proc/on_organ_gain(mob/living/carbon/user, obj/item/organ/organ_gained, special)
 	SIGNAL_HANDLER

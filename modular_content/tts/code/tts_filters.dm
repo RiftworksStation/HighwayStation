@@ -8,16 +8,36 @@
 	if(voice_effect && !length(voice_effect))
 		CRASH("[src] has assigned var/voice_effect = ([voice_effect]), but it is not a list()!")
 
+
+/obj/item/clothing/should_apply_voice_effect()
+	return !up
+
+/obj/item/clothing/adjust_visor(mob/living/user)
+	. = ..()
+	if(!.)
+		return
+	update_voice_effect()
+
 /obj/item/clothing/mask/gas
 	voice_effect = list(/datum/singleton/sound_effect/gasmask)
-
-/obj/item/clothing/mask/gas/clown_hat
-	voice_effect = null
 
 /datum/singleton/sound_effect/gasmask
 	suffix = "_gasmask"
 	ffmpeg_arguments = "lowpass=f=750,volume=2"
 	priority = TTS_SOUND_EFFECT_PRIORITY_MASK
+
+/obj/item/clothing/mask/gas/clown_hat
+	voice_effect = null
+
+/obj/item/clothing/mask/gas/sexyclown
+	voice_effect = null
+
+/obj/item/clothing/mask/gas/jonkler
+	voice_effect = null
+
+// Up is for eyes, not mouth
+/obj/item/clothing/mask/gas/welding/should_apply_voice_effect()
+	return TRUE
 
 /obj/item/clothing/mask/gas/sechailer
 	voice_effect = list(/datum/singleton/sound_effect/sechailer)
