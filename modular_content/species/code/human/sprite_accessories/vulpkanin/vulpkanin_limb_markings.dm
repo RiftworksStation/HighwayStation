@@ -21,6 +21,6 @@
 	applies_to = list(
 		/obj/item/bodypart/arm/right,
 		/obj/item/bodypart/arm/left,
-		/obj/item/bodypart/leg/right/digitigrade,
-		/obj/item/bodypart/leg/left/digitigrade,
+		// /obj/item/bodypart/leg/right/digitigrade,
+		// /obj/item/bodypart/leg/left/digitigrade,
 	)
