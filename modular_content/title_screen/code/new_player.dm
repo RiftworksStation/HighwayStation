@@ -46,8 +46,12 @@
 			to_chat(usr, span_warning("Игра уже начинается!"))
 			return
 
-		ready = !ready
-		SStitle.title_output(client, ready, "toggleReady")
+		if(ready == PLAYER_NOT_READY)
+			auto_deadmin_on_ready_or_latejoin()
+			ready = PLAYER_READY_TO_PLAY
+		else
+			ready = PLAYER_NOT_READY
+		SStitle.title_output(client, ready == PLAYER_READY_TO_PLAY, "toggleReady")
 
 	else if(href_list["late_join"])
 		if(SSticker.current_state == GAME_STATE_FINISHED)
