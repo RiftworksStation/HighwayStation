@@ -47,7 +47,7 @@
 
 /datum/singleton/sound_effect/sechailer
 	suffix = "_sechailer"
-	ffmpeg_arguments = @{"[0:a] asetrate=24000*0.7,aresample=16000,atempo=1/0.7,lowshelf=g=-20:f=500,highpass=f=500,aphaser=in_gain=1:out_gain=1:delay=3.0:decay=0.4:speed=0.5:type=t [out]; [out]atempo=1.2,volume=15dB [final]; anoisesrc=a=0.01:d=60 [noise]; [final][noise] amix=duration=shortest"}
+	ffmpeg_arguments = @{"[0:a] asetrate=%SAMPLE_RATE%*0.7,aresample=16000,atempo=1/0.7,lowshelf=g=-20:f=500,highpass=f=500,aphaser=in_gain=1:out_gain=1:delay=3.0:decay=0.4:speed=0.5:type=t [out]; [out]atempo=1.2,volume=15dB [final]; anoisesrc=a=0.01:d=60 [noise]; [final][noise] amix=duration=shortest"}
 	priority = TTS_SOUND_EFFECT_PRIORITY_MASK
 
 /obj/item/organ/tongue/inky
@@ -99,7 +99,7 @@
 
 /datum/singleton/sound_effect/tongue_lizard
 	suffix = "_tonguelizard"
-	ffmpeg_arguments = @{"[0:a] asplit [out0][out2]; [out0] asetrate=24000*0.9,aresample=24000,atempo=1/0.9,aformat=channel_layouts=mono,volume=0.2 [p0]; [out2] asetrate=24000*1.1,aresample=24000,atempo=1/1.1,aformat=channel_layouts=mono,volume=0.2[p2]; [p0][0][p2] amix=inputs=3"}
+	ffmpeg_arguments = @{"[0:a] asplit [out0][out2]; [out0] asetrate=%SAMPLE_RATE%*0.9,aresample=%SAMPLE_RATE%,atempo=1/0.9,aformat=channel_layouts=mono,volume=0.2 [p0]; [out2] asetrate=%SAMPLE_RATE%*1.1,aresample=%SAMPLE_RATE%,atempo=1/1.1,aformat=channel_layouts=mono,volume=0.2[p2]; [p0][0][p2] amix=inputs=3"}
 	priority = TTS_SOUND_EFFECT_PRIORITY_TONGUE
 
 /obj/item/organ/tongue/alien
@@ -107,7 +107,7 @@
 
 /datum/singleton/sound_effect/tongue_alien
 	suffix = "_tonguealien"
-	ffmpeg_arguments = @{"[0:a] asplit [out0][out2]; [out0] asetrate=24000*0.8,aresample=24000,atempo=1/0.8,aformat=channel_layouts=mono [p0]; [out2] asetrate=24000*1.2,aresample=24000,atempo=1/1.2,aformat=channel_layouts=mono[p2]; [p0][0][p2] amix=inputs=3"}
+	ffmpeg_arguments = @{"[0:a] asplit [out0][out2]; [out0] asetrate=%SAMPLE_RATE%*0.8,aresample=%SAMPLE_RATE%,atempo=1/0.8,aformat=channel_layouts=mono [p0]; [out2] asetrate=%SAMPLE_RATE%*1.2,aresample=%SAMPLE_RATE%,atempo=1/1.2,aformat=channel_layouts=mono[p2]; [p0][0][p2] amix=inputs=3"}
 	priority = TTS_SOUND_EFFECT_PRIORITY_TONGUE
 
 /obj/item/organ/tongue/robot
@@ -131,7 +131,7 @@
 
 /datum/singleton/sound_effect/tongue_ethereal
 	suffix = "_tongueethereal"
-	ffmpeg_arguments = @{"[0:a] asplit [out0][out2]; [out0] asetrate=24000*0.99,aresample=24000,volume=0.3 [p0]; [p0][out2] amix=inputs=2"}
+	ffmpeg_arguments = @{"[0:a] asplit [out0][out2]; [out0] asetrate=%SAMPLE_RATE%*0.99,aresample=%SAMPLE_RATE%,volume=0.3 [p0]; [p0][out2] amix=inputs=2"}
 	priority = TTS_SOUND_EFFECT_PRIORITY_TONGUE
 
 /obj/machinery/vending

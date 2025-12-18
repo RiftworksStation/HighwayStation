@@ -34,6 +34,8 @@
 	var/taskset = CONFIG_GET(string/ffmpeg_cpuaffinity) ? "taskset -ac [CONFIG_GET(string/ffmpeg_cpuaffinity)]" : ""
 	var/output_name = is_complex ? filename_output : "[filename_modifying][effect.suffix].ogg"
 	var/filter = is_complex ? effect.ffmpeg_arguments : {"-filter_complex:a "[effect.ffmpeg_arguments]""}
+	// TODO: acquire correct TTS provider and their sample rate. 24000 is silero.
+	filter = replacetext(filter, "%SAMPLE_RATE%", "24000")
 	var/command = {"[taskset] ffmpeg -y -hide_banner -loglevel error -i [filename_modifying].ogg [filter] [output_name]"}
 	var/list/output = world.shelleo(command)
 
