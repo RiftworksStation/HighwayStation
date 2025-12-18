@@ -37,7 +37,7 @@
 		2'\
 	:formant=preserved,\
 	highpass=f=1000:t=s:w=24,\
-	equalizer=f=1200:g=15,\
+	equalizer=f=1200:g=6,\
 	equalizer=f=4350:g=-15,\
 	highshelf=f=870:g=1,\
 	afftfilt=\
