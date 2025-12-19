@@ -30,16 +30,10 @@
 
 	return TRUE
 
-GLOBAL_VAR_INIT(sechailer_filter, @{"[0:a] asetrate=%SAMPLE_RATE%*0.7,aresample=16000,atempo=1/0.7,lowshelf=g=-20:f=500,highpass=f=500,aphaser=in_gain=1:out_gain=1:delay=3.0:decay=0.4:speed=0.5:type=t [out]; [out]atempo=1.2,volume=15dB [final]; anoisesrc=a=0.01:d=60 [noise]; [final][noise] amix=duration=shortest"})
-
 /proc/_apply_individual_effect(datum/singleton/sound_effect/effect, list/effects, filename_input, filename_output, filename_modifying, is_complex = FALSE)
 	var/taskset = CONFIG_GET(string/ffmpeg_cpuaffinity) ? "taskset -ac [CONFIG_GET(string/ffmpeg_cpuaffinity)]" : ""
 	var/output_name = is_complex ? filename_output : "[filename_modifying][effect.suffix].ogg"
 	var/filter = is_complex ? effect.ffmpeg_arguments : {"-filter_complex:a "[effect.ffmpeg_arguments]""}
-	// DELETE ME
-	if(istype(effect, /datum/singleton/sound_effect/sechailer))
-		filter = {"-filter_complex:a "[GLOB.sechailer_filter]""}
-	// DELETE ME END
 	// TODO: acquire correct TTS provider and their sample rate. 24000 is silero.
 	filter = replacetext(filter, "%SAMPLE_RATE%", "24000")
 	var/command = {"[taskset] ffmpeg -y -hide_banner -loglevel error -i [filename_modifying].ogg [filter] [output_name]"}
