@@ -30,10 +30,36 @@
 
 	return TRUE
 
+GLOBAL_VAR_INIT(inky_filter, "\
+	rubberband=pitch='\
+		2'\
+	:formant=preserved,\
+	highpass=f=1000:t=s:w=12,\
+	equalizer=f=1200:g=6:w=0.5,\
+	equalizer=f=4350:g=-6,\
+	highshelf=f=870:g=1,\
+	afftfilt=\
+		real='\
+			st(0,(b+0.5)/nb*sr);\
+			st(1,3000+1500*sin(9.3*2*PI*pts));\
+			st(2,ld(0)/ld(1));\
+			re*(1-ld(2)^2+2*gauss(log(ld(2)+1)))'\
+		:imag='\
+			st(0,(b+0.5)/nb*sr);\
+			st(1,3000+1500*sin(9.3*2*PI*pts));\
+			st(2,ld(0)/ld(1));\
+			im*(1-ld(2)^2+2*gauss(log(ld(2)+1)))'\
+		:win_size=1024,\
+	alimiter=limit=0.999")
+
 /proc/_apply_individual_effect(datum/singleton/sound_effect/effect, list/effects, filename_input, filename_output, filename_modifying, is_complex = FALSE)
 	var/taskset = CONFIG_GET(string/ffmpeg_cpuaffinity) ? "taskset -ac [CONFIG_GET(string/ffmpeg_cpuaffinity)]" : ""
 	var/output_name = is_complex ? filename_output : "[filename_modifying][effect.suffix].ogg"
 	var/filter = is_complex ? effect.ffmpeg_arguments : {"-filter_complex:a "[effect.ffmpeg_arguments]""}
+	// DELETE ME
+	if(istype(effect, /datum/singleton/sound_effect/tongue_inky))
+		filter = {"-filter_complex:a "[GLOB.inky_filter]""}
+	// DELETE ME END
 	// TODO: acquire correct TTS provider and their sample rate. 24000 is silero.
 	filter = replacetext(filter, "%SAMPLE_RATE%", "24000")
 	var/command = {"[taskset] ffmpeg -y -hide_banner -loglevel error -i [filename_modifying].ogg [filter] [output_name]"}
