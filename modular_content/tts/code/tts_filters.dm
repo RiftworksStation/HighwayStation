@@ -61,7 +61,7 @@
 	:formant=preserved,\
 	highpass=f=1000:t=s:w=24,\
 	equalizer=f=1200:g=6,\
-	equalizer=f=4350:g=-15,\
+	equalizer=f=4350:g=-6,\
 	highshelf=f=870:g=1,\
 	afftfilt=\
 		real='\
@@ -74,7 +74,8 @@
 			st(1,3000+1500*sin(9.3*2*PI*pts));\
 			st(2,ld(0)/ld(1));\
 			im*(1-ld(2)^2+2*gauss(log(ld(2)+1)))'\
-		:win_size=1024"
+		:win_size=1024,\
+	alimiter=limit=0.999"
 	priority = TTS_SOUND_EFFECT_PRIORITY_TONGUE
 
 /obj/item/survivalcapsule/fishing
