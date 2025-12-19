@@ -13,8 +13,8 @@
 	var/static/list/limb_types = list(
 		/obj/item/bodypart/arm/left/vulpkanin,
 		/obj/item/bodypart/arm/right/vulpkanin,
-		/obj/item/bodypart/leg/left/vulpkanin,
-		/obj/item/bodypart/leg/right/vulpkanin,
+		// /obj/item/bodypart/leg/left/vulpkanin,
+		// /obj/item/bodypart/leg/right/vulpkanin,
 	)
 
 	var/static/datum/universal_icon/body
