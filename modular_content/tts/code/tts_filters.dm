@@ -59,7 +59,7 @@
 	rubberband=pitch='\
 		2'\
 	:formant=preserved,\
-	highpass=f=8000:t=s:w=12,\
+	highpass=f=800:t=s:w=12,\
 	equalizer=f=1200:g=6:w=0.5,\
 	equalizer=f=4350:g=-10,\
 	highshelf=f=870:g=1,\
