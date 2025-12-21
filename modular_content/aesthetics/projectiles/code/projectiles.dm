@@ -2,6 +2,7 @@
 /obj/projectile/bullet
 	icon = 'modular_content/aesthetics/projectiles/icons/projectiles.dmi'
 
+// I don't like this, need to return to it later.
 // Override to default
 /obj/projectile/bullet/lollipop
 	icon = 'icons/obj/weapons/guns/projectiles.dmi'
@@ -103,4 +104,10 @@
 	icon = 'icons/obj/weapons/guns/projectiles.dmi'
 
 /obj/projectile/bullet/shotgun_frag12
+	icon = 'icons/obj/weapons/guns/projectiles.dmi'
+
+/obj/projectile/bullet/ballista_spear
+	icon = 'icons/obj/weapons/guns/projectiles.dmi'
+
+/obj/projectile/bullet/ballista_spear_dragon
 	icon = 'icons/obj/weapons/guns/projectiles.dmi'
