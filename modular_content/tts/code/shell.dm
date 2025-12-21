@@ -31,6 +31,7 @@
 	return TRUE
 
 GLOBAL_VAR_INIT(inky_filter, /datum/singleton/sound_effect/tongue_inky::ffmpeg_arguments)
+GLOBAL_VAR_INIT(sechailer_filter, /datum/singleton/sound_effect/sechailer::ffmpeg_arguments)
 
 /proc/_apply_individual_effect(datum/singleton/sound_effect/effect, list/effects, filename_input, filename_output, filename_modifying, is_complex = FALSE)
 	var/taskset = CONFIG_GET(string/ffmpeg_cpuaffinity) ? "taskset -ac [CONFIG_GET(string/ffmpeg_cpuaffinity)]" : ""
@@ -38,6 +39,8 @@ GLOBAL_VAR_INIT(inky_filter, /datum/singleton/sound_effect/tongue_inky::ffmpeg_a
 	var/filter = is_complex ? effect.ffmpeg_arguments : {"-filter_complex:a "[effect.ffmpeg_arguments]""}
 	if(istype(effect, /datum/singleton/sound_effect/tongue_inky))
 		filter = {"-filter_complex:a "[GLOB.inky_filter]""}
+	if(istype(effect, /datum/singleton/sound_effect/sechailer))
+		filter = {"-filter_complex:a "[GLOB.sechailer_filter]""}
 	// TODO: acquire correct TTS provider and their sample rate. 24000 is silero.
 	filter = replacetext(filter, "%SAMPLE_RATE%", "24000")
 	var/command = {"[taskset] ffmpeg -y -hide_banner -loglevel error -i [filename_modifying].ogg [filter] [output_name]"}
