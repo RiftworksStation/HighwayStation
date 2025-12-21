@@ -57,7 +57,7 @@
 	suffix = "_tongueinky"
 	ffmpeg_arguments = "\
 	rubberband=pitch='\
-		2'\
+		1.75'\
 	:formant=preserved,\
 	highpass=f=800:t=s:w=12,\
 	equalizer=f=1200:g=6:w=0.5,\
