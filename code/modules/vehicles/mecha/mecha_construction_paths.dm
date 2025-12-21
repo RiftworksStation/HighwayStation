@@ -776,7 +776,9 @@
 	)
 
 /datum/component/construction/mecha/phazon/get_outer_plating_steps()
-	return ..() + list(
+	return ..() + list(core_insert_list(required_core))
+	// MODULAR EDIT REMOVAL START
+	/*
 		list(
 			"key" = required_core,
 			"action" = ITEM_DELETE,
@@ -787,6 +789,8 @@
 			"skip_state" = TRUE,
 		)
 	)
+	*/
+	// MODULAR EDIT REMOVAL END
 
 //SAVANNAH-IVANOV
 /datum/component/construction/unordered/mecha_chassis/savannah_ivanov

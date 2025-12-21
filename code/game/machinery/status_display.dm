@@ -200,7 +200,7 @@ GLOBAL_LIST_EMPTY(key_to_status_display)
 			return
 		if(SD_PICTURE)
 			clear_display()
-			. += mutable_appearance(icon, current_picture)
+			. += mutable_appearance(alert_icon, current_picture) // MODULAR EDIT - use var/alert_icon for overlays
 			if(current_picture == AI_DISPLAY_DONT_GLOW) // If the thing's off, don't display the emissive yeah?
 				return
 		if(SD_GREENSCREEN)

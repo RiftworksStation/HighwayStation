@@ -20,8 +20,10 @@ import { ReconnectButton } from './reconnect';
 import { settingsVisibleAtom } from './settings/atoms';
 import { SettingsPanel } from './settings/SettingsPanel';
 import { useSettings } from './settings/use-settings';
+import { EmotePanel, useEmotes } from './emotes'; // BANDASTATION ADD  - Emote Panel
 
 export function Panel(props) {
+  const emotes = useEmotes(); // BANDASTATION ADD  - Emote Panel
   const [audioVisible, setAudioVisible] = useAtom(visibleAtom);
   const game = useAtomValue(gameAtom);
   const { settings } = useSettings();
@@ -41,6 +43,18 @@ export function Panel(props) {
               <Stack.Item>
                 <PingIndicator />
               </Stack.Item>
+              {/* BANDASTATION ADD START - Emote Panel */}
+              <Stack.Item>
+                <Button
+                  color="grey"
+                  selected={emotes.visible}
+                  icon="face-grin-beam"
+                  tooltip="Emote Panel"
+                  tooltipPosition="bottom-start"
+                  onClick={() => emotes.toggle()}
+                />
+              </Stack.Item>
+              {/* BANDASTATION ADD END - Emote Panel */}
               <Stack.Item>
                 <Button
                   color="grey"
@@ -63,6 +77,15 @@ export function Panel(props) {
             </Stack>
           </Section>
         </Stack.Item>
+        {/* BANDASTATION ADD START - Emote Panel */}
+        {emotes.visible && (
+          <Stack.Item>
+            <Section>
+              <EmotePanel />
+            </Section>
+          </Stack.Item>
+        )}
+        {/* BANDASTATION ADD END - Emote Panel */}
         {audioVisible && (
           <Stack.Item>
             <Section>
