@@ -49,6 +49,9 @@
 		logger.Log(LOG_CATEGORY_DEBUG, "apply_sound_effects([effect_types], [filename_input], [filename_output]) STDERR: [stderr]")
 		return FALSE
 
+	if(!CONFIG_GET(flag/tts_cache_enabled))
+		SStts220.add_tts_file_to_cleanup(output_name)
+
 	return TRUE
 
 /datum/singleton/sound_effect
