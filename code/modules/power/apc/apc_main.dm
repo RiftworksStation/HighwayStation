@@ -293,6 +293,7 @@
 	. = ..()
 	if(auto_name)
 		name = "[declent_ru(NOMINATIVE)] [area.declent_ru(GENITIVE)]"
+		ru_names_rename(ru_names_toml(src::name, suffix = "\"[area.declent_ru(GENITIVE)]\"", base = name))
 
 /obj/machinery/power/apc/proc/assign_to_area(area/target_area = get_area(src))
 	if(area == target_area)
