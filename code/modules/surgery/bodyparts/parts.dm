@@ -94,6 +94,14 @@
 	acceptable_bodyshape = BODYSHAPE_MONKEY
 	dmg_overlay_type = SPECIES_MONKEY
 
+/obj/item/bodypart/chest/monkey/Initialize(mapload)
+	worn_neck_offset = new(
+		attached_part = src,
+		feature_key = OFFSET_NECK,
+		offset_y = list("south" = 1),
+	)
+	return ..()
+
 /obj/item/bodypart/chest/alien
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
 	icon_static = 'icons/mob/human/species/alien/bodyparts.dmi'
@@ -108,6 +116,7 @@
 	burn_modifier = LIMB_ALIEN_BURN_DAMAGE_MULTIPLIER
 	acceptable_bodyshape = BODYSHAPE_HUMANOID
 	wing_types = null
+	biological_state = BIO_STANDARD_ALIEN
 
 /obj/item/bodypart/chest/larva
 	icon = 'icons/mob/human/species/alien/bodyparts.dmi'
@@ -127,6 +136,7 @@
 /obj/item/bodypart/arm
 	name = "arm"
 	desc = "Hey buddy give me a HAND and report this to the github because you shouldn't be seeing this."
+	abstract_type = /obj/item/bodypart/arm
 	attack_verb_continuous = list("slaps", "punches")
 	attack_verb_simple = list("slap", "punch")
 	max_damage = LIMB_MAX_HP_DEFAULT
@@ -134,7 +144,9 @@
 	body_damage_coeff = LIMB_BODY_DAMAGE_COEFFICIENT_DEFAULT
 	can_be_disabled = TRUE
 	unarmed_attack_verbs = list("бьет") /// The classic punch, wonderfully classic and completely random
+	unarmed_attack_verbs_continuous = list("бьет")
 	grappled_attack_verb = "pummel"
+	grappled_attack_verb_continuous = "pummels"
 	unarmed_damage_low = 5
 	unarmed_damage_high = 10
 	unarmed_pummeling_bonus = 1.5
@@ -286,6 +298,7 @@
 	burn_modifier = LIMB_ALIEN_BURN_DAMAGE_MULTIPLIER
 	should_draw_greyscale = FALSE
 	appendage_noun = "scythe-like hand"
+	biological_state = BIO_STANDARD_ALIEN
 
 /obj/item/bodypart/arm/right
 	name = "right arm"
@@ -385,11 +398,13 @@
 	burn_modifier = LIMB_ALIEN_BURN_DAMAGE_MULTIPLIER
 	should_draw_greyscale = FALSE
 	appendage_noun = "scythe-like hand"
+	biological_state = BIO_STANDARD_ALIEN
 
 /// Parent Type for legs, should not appear in game.
 /obj/item/bodypart/leg
 	name = "leg"
 	desc = "This item shouldn't exist. Talk about breaking a leg. Badum-Tss!"
+	abstract_type = /obj/item/bodypart/leg
 	attack_verb_continuous = list("kicks", "stomps")
 	attack_verb_simple = list("kick", "stomp")
 	max_damage = LIMB_MAX_HP_DEFAULT
@@ -398,6 +413,7 @@
 	unarmed_attack_effect = ATTACK_EFFECT_KICK
 	body_zone = BODY_ZONE_L_LEG
 	unarmed_attack_verbs = list("пинает") // The lovely kick, typically only accessable by attacking a grouded foe. 1.5 times better than the punch.
+	unarmed_attack_verbs_continuous = list("пинает")
 	unarmed_damage_low = 7
 	unarmed_damage_high = 15
 	unarmed_effectiveness = 15
@@ -519,6 +535,7 @@
 	max_damage = LIMB_MAX_HP_ALIEN_LIMBS
 	burn_modifier = LIMB_ALIEN_BURN_DAMAGE_MULTIPLIER
 	should_draw_greyscale = FALSE
+	biological_state = BIO_STANDARD_ALIEN
 
 /obj/item/bodypart/leg/right
 	name = "right leg"
@@ -610,3 +627,4 @@
 	max_damage = LIMB_MAX_HP_ALIEN_LIMBS
 	burn_modifier = LIMB_ALIEN_BURN_DAMAGE_MULTIPLIER
 	should_draw_greyscale = FALSE
+	biological_state = BIO_STANDARD_ALIEN

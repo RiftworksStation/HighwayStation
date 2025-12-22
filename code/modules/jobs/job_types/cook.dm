@@ -1,10 +1,9 @@
 /datum/job/cook
 	title = JOB_COOK
 	description = "Обеспечьте станцию едой, жарьте стейки, следите за тем, чтобы экипаж был сыт."
-	department_head = list(JOB_HEAD_OF_PERSONNEL)
 	faction = FACTION_STATION
 	total_positions = 2
-	spawn_positions = 1
+	spawn_positions = 2
 	supervisors = JOB_HEAD_OF_PERSONNEL_RU
 	exp_granted_type = EXP_TYPE_CREW
 	config_tag = "COOK"
@@ -16,6 +15,7 @@
 	paycheck = PAYCHECK_CREW
 	paycheck_department = ACCOUNT_SRV
 
+	mind_traits = list(TRAIT_DESENSITIZED) // butcher
 	liver_traits = list(TRAIT_CULINARY_METABOLISM)
 
 	display_order = JOB_DISPLAY_ORDER_COOK

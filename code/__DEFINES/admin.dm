@@ -40,10 +40,13 @@
 #define R_SPAWN (1<<12)
 #define R_AUTOADMIN (1<<13)
 #define R_DBRANKS (1<<14)
+// BANDASTATION ADDITION START - Mentors
+#define R_MENTOR (1<<15)
+// BANDASTATION ADDITION END
 
 #define R_DEFAULT R_AUTOADMIN
 
-#define R_EVERYTHING (1<<15)-1 //the sum of all other rank permissions, used for +EVERYTHING
+#define R_EVERYTHING (1<<16)-1 //the sum of all other rank permissions, used for +EVERYTHING
 
 #define ADMIN_QUE(user) "(<a href='byond://?_src_=holder;[HrefToken(forceGlobal = TRUE)];adminmoreinfo=[REF(user)]'>?</a>)"
 #define ADMIN_FLW(user) "(<a href='byond://?_src_=holder;[HrefToken(forceGlobal = TRUE)];adminplayerobservefollow=[REF(user)]'>FLW</a>)"
@@ -75,7 +78,7 @@
 /// Displays "(SHOW)" in the chat, when clicked it tries to show atom(paper). First you need to set the request_state variable to TRUE for the paper.
 #define ADMIN_SHOW_PAPER(atom) "(<A href='byond://?_src_=holder;[HrefToken(forceGlobal = TRUE)];show_paper=[REF(atom)]'>SHOW</a>)"
 /// Displays "(PRINT)" in the chat, when clicked it will try to print the atom(paper) on the CentCom/Syndicate fax machine.
-#define ADMIN_PRINT_FAX(atom, sender, destination) "(<a href='byond://?_src_=holder;[HrefToken(forceGlobal = TRUE)];print_fax=[REF(atom)];sender_name=[sender];destination=[destination]'>PRINT</a>)"
+#define ADMIN_PRINT_FAX(atom, sender, destination) "(<a href='byond://?_src_=holder;[HrefToken(forceGlobal = TRUE)];print_fax=[REF(atom)];sender_name=[url_encode(sender)];destination=[url_encode(destination)]'>PRINT</a>)"
 /// Displays "(PLAY)" in the chat, when clicked it tries to play internet sounds from the request.
 #define ADMIN_PLAY_INTERNET(text, credit) "(<A href='byond://?_src_=holder;[HrefToken(forceGlobal = TRUE)];play_internet=[url_encode(text)];credit=[credit]'>PLAY</a>)"
 /// Displays "(SEE Z-LEVEL LAYOUT)" in the chat, when clicked it shows the z-level layouts for the current world state.
@@ -83,7 +86,7 @@
 
 /atom/proc/Admin_Coordinates_Readable(area_name, admin_jump_ref)
 	var/turf/turf_at_coords = Safe_COORD_Location()
-	return turf_at_coords ? "[area_name ? "[get_area_name(turf_at_coords, TRUE)] " : " "]([turf_at_coords.x],[turf_at_coords.y],[turf_at_coords.z])[admin_jump_ref ? " [ADMIN_JMP(turf_at_coords)]" : ""]" : "nonexistent location"
+	return turf_at_coords ? "[area_name ? "[get_area_name(turf_at_coords, TRUE)] " : ""]([turf_at_coords.x],[turf_at_coords.y],[turf_at_coords.z])[admin_jump_ref ? " [ADMIN_JMP(turf_at_coords)]" : ""]" : "nonexistent location"
 
 /atom/proc/Safe_COORD_Location()
 	var/atom/drop_atom = drop_location()
@@ -103,11 +106,27 @@
 #define AHELP_CLOSED 2
 #define AHELP_RESOLVED 3
 
-/// Amount of time after the round starts that the player disconnect report is issued.
-#define ROUNDSTART_LOGOUT_REPORT_TIME (10 MINUTES)
+// Page numbers for the Permission Panel
+#define PERMISSIONS_PAGE_PERMISSIONS 1
+#define PERMISSIONS_PAGE_RANKS 2
+#define PERMISSIONS_PAGE_LOGGING 3
+#define PERMISSIONS_PAGE_HOUSEKEEPING 4
 
-/// Threshold in minutes for counting a player as AFK on the roundstart report.
-#define ROUNDSTART_LOGOUT_AFK_THRESHOLD (ROUNDSTART_LOGOUT_REPORT_TIME * 0.7)
+// Actions that can be logged in the admin_log table, excepting NONE
+#define PERMISSIONS_ACTION_ADMIN_ADDED "add admin"
+#define PERMISSIONS_ACTION_ADMIN_REMOVED "remove admin"
+#define PERMISSIONS_ACTION_ADMIN_RANK_CHANGED "change admin rank"
+#define PERMISSIONS_ACTION_RANK_ADDED "add rank"
+#define PERMISSIONS_ACTION_RANK_REMOVED "remove rank"
+#define PERMISSIONS_ACTION_RANK_CHANGED "change rank flags"
+#define PERMISSIONS_ACTION_NONE "none"
+
+// The types of ranks you can have
+#define RANK_SOURCE_LOCAL "rank_local"
+#define RANK_SOURCE_TXT "rank_txt"
+#define RANK_SOURCE_DB "rank_db"
+#define RANK_SOURCE_BACKUP "rank_backup"
+#define RANK_SOURCE_TEMPORARY "rank_temp"
 
 /// Number of identical messages required before the spam-prevention will warn you to stfu
 #define SPAM_TRIGGER_WARNING 5
@@ -187,3 +206,30 @@ GLOBAL_VAR_INIT(ghost_role_flags, ALL)
 #define SMITE_DELAY (1<<1)
 /// Stuns the target for a short duration, ignores stun immunity
 #define SMITE_STUN (1<<2)
+
+// BANDASTATION ADDITION START - Ticket manager
+#define TICKET_OPEN 0
+#define TICKET_CLOSED 1
+#define TICKET_RESOLVED 2
+
+#define TICKET_TYPE_ADMIN "Admin"
+#define TICKET_TYPE_MENTOR "Mentor"
+#define TICKET_TYPE_HIDDEN_PM "Private Message"
+#define TICKET_TYPE_HIDDEN_TICKET "Ticket"
+
+#define TICKET_MANAGER_USER_TYPE_PLAYER 0
+#define TICKET_MANAGER_USER_TYPE_MENTOR 1
+#define TICKET_MANAGER_USER_TYPE_ADMIN 2
+
+#define TICKET_LOG_SENDER_ADMIN_TICKET_LOG "ADMIN_TICKET_LOG"
+#define TICKET_LOG_SENDER_CLIENT_CONNECTED "CLIENT_CONNECTED"
+#define TICKET_LOG_SENDER_CLIENT_DISCONNECTED "CLIENT_DISCONNECTED"
+
+#define TICKET_OPEN_LINK(id, msg) ("<a href='byond://?src=[GLOB.ticket_manager_ref];ticket_id=[id];open_ticket=1'>[msg]</a>")
+#define TICKET_REPLY_LINK(id, msg) (span_adminsay("<a href='byond://?src=[GLOB.ticket_manager_ref];ticket_id=[id];reply_ticket=1'>[msg]</a>"))
+#define TICKET_RESOLVE_LINK(id) ("<a href='byond://?src=[GLOB.ticket_manager_ref];ticket_id=[id];resolve_ticket=1'>Решить</a>")
+#define TICKET_CLOSE_LINK(id) ("<a href='byond://?src=[GLOB.ticket_manager_ref];ticket_id=[id];close_ticket=1'>Закрыть</a>")
+
+#define TICKET_ADMIN(user, id) "[ADMIN_FULLMONTY_NONAME(user)] [TICKET_RESOLVE_LINK(id)] [TICKET_CLOSE_LINK(id)] [TICKET_OPEN_LINK(id, "Открыть чат")]"
+#define TICKET_MENTOR(user, id) "[ADMIN_FLW(user)] [TICKET_RESOLVE_LINK(id)] [TICKET_CLOSE_LINK(id)] [TICKET_OPEN_LINK(id, "Открыть чат")]"
+// BANDASTATION ADDITION END - Ticket manager

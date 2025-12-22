@@ -104,16 +104,16 @@
 
 	if(!ID)
 		to_chat(user, span_warning("You don't have an ID."))
-		return
+		return .
 
 	if(!(ACCESS_COMMAND in ID.access))
 		to_chat(user, span_warning("The access level of your card is not high enough."))
-		return
+		return .
 
-	if (user in acted_recently)
-		return
+	if(user in acted_recently)
+		return .
 
-	var/old_len = authorized.len
+	var/old_len = length(authorized)
 	addtimer(CALLBACK(src, PROC_REF(clear_recent_action), user), SHUTTLE_CONSOLE_ACTION_DELAY)
 
 	switch(action)
@@ -124,23 +124,36 @@
 			authorized -= ID
 
 		if("abort")
-			if(authorized.len)
-				// Abort. The action for when heads are fighting over whether
-				// to launch early.
+			if(length(authorized))
+				// Abort. The action for when heads are fighting over whether to launch early.
 				authorized.Cut()
 				. = TRUE
 
-	if((old_len != authorized.len) && !ENGINES_STARTED)
-		var/alert = (authorized.len > old_len)
-		var/repeal = (authorized.len < old_len)
-		var/remaining = max(0, auth_need - authorized.len)
-		if(authorized.len && remaining)
-			minor_announce("[remaining] авторизации необходимо для раннего запуска шаттла", null, alert)
+	var/new_len = length(authorized)
+	if((old_len != new_len) && !ENGINES_STARTED)
+		var/repeal = (new_len < old_len)
+		var/remaining = max(0, auth_need - new_len)
+		if(new_len && remaining)
+			priority_announce(
+				"[remaining] авторизации необходимо для раннего запуска шаттла.",
+				"Emergency Shuttle Status",
+				sound = 'sound/announcer/notice/notice1.ogg',
+				type = ANNOUNCEMENT_TYPE_PRIORITY,
+				has_important_message = TRUE,
+				color_override = "red",
+			)
 		if(repeal)
-			minor_announce("Авторизация на ранний запуск отозвана, [remaining] авторизации необходимо")
+			priority_announce(
+				"Авторизация на ранний запуск отозвана, [remaining] авторизации необходимо.",
+				"Emergency Shuttle Status",
+				sound = 'sound/announcer/notice/notice2.ogg',
+				type = ANNOUNCEMENT_TYPE_PRIORITY,
+				color_override = "blue",
+			)
 
 	acted_recently += user
 	SStgui.update_user_uis(user, src)
+	return .
 
 /obj/machinery/computer/emergency_shuttle/proc/authorize(mob/living/user, source)
 	var/obj/item/card/id/ID = user.get_idcard(TRUE)
@@ -212,7 +225,7 @@
 	return CLICK_ACTION_SUCCESS
 
 /obj/machinery/computer/emergency_shuttle/proc/attempt_hijack_stage(mob/living/user)
-	if(!user.CanReach(src))
+	if(!IsReachableBy(user))
 		return
 	if(HAS_TRAIT(user, TRAIT_HANDS_BLOCKED))
 		to_chat(user, span_warning("You need your hands free before you can manipulate [src]."))
@@ -263,20 +276,20 @@
 		if(HIJACK_NOT_BEGUN)
 			return
 		if(HIJACK_STAGE_1)
-			msg = "AUTHENTICATING - FAIL. AUTHENTICATING - FAIL. AUTHENTICATING - FAI###### Welcome, technician JOHN DOE."
+			msg = "ОШИБКА АУТЕНТИФИКАЦИИ. ОШИБКА АУТЕНТИФИКАЦИИ. ОШИБКА АУТЕНТ###### Добро пожаловать, оператор ДЖОН ДОУ."
 		if(HIJACK_STAGE_2)
-			msg = "Warning: Navigational route fails \"IS_AUTHORIZED\". Please try againNN[scramble_message_replace_chars("againagainagainagainagain", 70)]."
+			msg = "Ошибка маршрута: доступ не авторизован \"IS_AUTHORIZED\". Пожалуйста, попробуйте сноваАА[scramble_message_replace_chars("сновасновасновасноваснова", 70)]."
 		if(HIJACK_STAGE_3)
-			msg = "CRC mismatch at ~h~ in calculated route buffer. Full reset initiated of FTL_NAVIGATION_SERVICES. Memory decrypted for automatic repair."
+			msg = "Несовпадение CRC в позиции ~h~ буфера расчётного маршрута. Инициирован полный сброс FTL_NAVIGATION_SERVICES. Память расшифрована для автоматического восстановления."
 		if(HIJACK_STAGE_4)
-			msg = "~ACS_directive module_load(cyberdyne.exploit.nanotrasen.shuttlenav)... NT key mismatch. Confirm load? Y...###Reboot complete. $SET transponder_state = 0; System link initiated with connected engines..."
+			msg = "~ACS_directive module_load(cyberdyne.exploit.nanotrasen.shuttlenav)... Несоответствие ключа НТ. Подтвердить загрузку? ДА...###Перезагрузка завершена. $SET transponder_state = 0; Установлено соединение с двигателями..."
 		if(HIJACK_COMPLETED)
-			msg = "SYSTEM OVERRIDE - Resetting course to \[[scramble_message_replace_chars("###########", 100)]\] \
+			msg = "СИСТЕМА ПЕРЕЗАПИСАНА - Переназначение маршрута на \[[scramble_message_replace_chars("###########", 100)]\] \
 			([scramble_message_replace_chars("#######", 100)]/[scramble_message_replace_chars("#######", 100)]/[scramble_message_replace_chars("#######", 100)]) \
 			{AUTH - ROOT (uid: 0)}.</font>\
-			[SSshuttle.emergency.mode == SHUTTLE_ESCAPE ? "Diverting from existing route - Bluespace exit in \
-			[hijack_completion_flight_time_set >= INFINITY ? "[scramble_message_replace_chars("\[ERROR\]")]" : hijack_completion_flight_time_set/10] seconds." : ""]"
-	minor_announce(scramble_message_replace_chars(msg, replaceprob = 10), "Emergency Shuttle", TRUE)
+			[SSshuttle.emergency.mode == SHUTTLE_ESCAPE ? "Отклонение от текущего маршрута - выход из Блюспейса через... \
+			[hijack_completion_flight_time_set >= INFINITY ? "[scramble_message_replace_chars("\[ОШИБКА\]")]" : hijack_completion_flight_time_set/10] секунд(-ы)." : ""]"
+	minor_announce(scramble_message_replace_chars(msg, replaceprob = 10), "Эвакуационный шаттл", TRUE)
 
 /obj/machinery/computer/emergency_shuttle/emag_act(mob/user, obj/item/card/emag/emag_card)
 	// How did you even get on the shuttle before it go to the station?

@@ -105,7 +105,7 @@
 /area/station/maintenance/central/greater)
 "gc" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/mapping_helpers/airlock/unres{
+/obj/effect/mapping_helpers/airlock/unres/delayed{
 	dir = 1
 	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
@@ -159,7 +159,7 @@
 	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /obj/machinery/duct,
-/obj/effect/mapping_helpers/airlock/unres{
+/obj/effect/mapping_helpers/airlock/unres/delayed{
 	dir = 8
 	},
 /obj/structure/cable,
@@ -331,7 +331,7 @@
 "sL" = (
 /obj/structure/disposalpipe/segment,
 /turf/template_noop,
-/area/template_noop)
+/area/space/nearstation)
 "tZ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/light/small/directional/north,
@@ -556,7 +556,7 @@
 	dir = 6
 	},
 /turf/template_noop,
-/area/template_noop)
+/area/space/nearstation)
 "Ke" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,

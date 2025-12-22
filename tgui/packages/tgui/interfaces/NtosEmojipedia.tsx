@@ -27,11 +27,10 @@ export const NtosEmojipedia = (props) => {
       <NtosWindow.Content scrollable>
         <Section
           // required: follow semantic versioning every time you touch this file
-          title={'Эмодзипедия V2.7.10' + (filter ? ` - ${filter}` : '')}
+          title={`Эмодзипедия V2.7.10${filter ? ` - ${filter}` : ''}`}
           buttons={
             <>
               <Input
-                expensive
                 placeholder="Найти по имени"
                 value={filter}
                 onChange={setFilter}

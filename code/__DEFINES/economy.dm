@@ -31,19 +31,19 @@
 #define VENDING_CREDITS_COLLECTION_AMOUNT 0.2
 
 #define ACCOUNT_CIV "CIV"
-#define ACCOUNT_CIV_NAME "Civil Budget"
+#define ACCOUNT_CIV_NAME "Гражданский бюджет"
 #define ACCOUNT_ENG "ENG"
-#define ACCOUNT_ENG_NAME "Engineering Budget"
+#define ACCOUNT_ENG_NAME "Инженерный бюджет"
 #define ACCOUNT_SCI "SCI"
-#define ACCOUNT_SCI_NAME "Scientific Budget"
+#define ACCOUNT_SCI_NAME "Научный бюджет"
 #define ACCOUNT_MED "MED"
-#define ACCOUNT_MED_NAME "Medical Budget"
+#define ACCOUNT_MED_NAME "Медицинский бюджет"
 #define ACCOUNT_SRV "SRV"
-#define ACCOUNT_SRV_NAME "Service Budget"
+#define ACCOUNT_SRV_NAME "Бюджет обслуживания"
 #define ACCOUNT_CAR "CAR"
-#define ACCOUNT_CAR_NAME "Cargo Budget"
+#define ACCOUNT_CAR_NAME "Бюджет снабжения"
 #define ACCOUNT_SEC "SEC"
-#define ACCOUNT_SEC_NAME "Defense Budget"
+#define ACCOUNT_SEC_NAME "Оборонный бюджет"
 
 #define IS_DEPARTMENTAL_CARD(card) (card in SSeconomy.dep_cards)
 #define IS_DEPARTMENTAL_ACCOUNT(account) (account in SSeconomy.departmental_accounts)
@@ -81,3 +81,18 @@
 #define MARKET_TREND_STABLE 0
 
 #define MARKET_EVENT_PROBABILITY 8 //Probability of a market event firing, in percent. Fires once per material, every stock market tick.
+
+// Fair warning that these defines at present are not used in all tgui, static descriptions, or any varible names or comments
+/// The symbol for the default type of money used in the code.
+#define MONEY_SYMBOL "кр."
+/// The name for the default type of money used in the code.
+#define MONEY_NAME "кредиты"
+#define MONEY_NAME_SINGULAR "кредит"
+#define MONEY_NAME_CAPITALIZED "Кредиты"
+// Due to the ways macros work, I cant just directly use credit\s.
+// You will need to verify there is no loose use cases of credit\s.
+// As of present there is none left floating around.
+#define MONEY_NAME_AUTOPURAL(amount) "кредит[declension_ru(##amount, "", "а", "ов")]"
+
+#define MONEY_MINING_SYMBOL "mp"
+#define MONEY_BITRUNNING_SYMBOL "np"

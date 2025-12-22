@@ -2,7 +2,6 @@
 	if(!client)
 		return
 
-	SStitle.show_title_screen_to(client) // BANDASTATION ADDITION - HTML Title Screen
 	if(CONFIG_GET(flag/use_exp_tracking))
 		client?.set_exp_from_db()
 		client?.set_db_player_flags()
@@ -22,7 +21,10 @@
 		if (required_living_minutes >= living_minutes)
 			client.interviewee = TRUE
 
-	check_whitelist_or_make_interviewee() // BANDASTATION Add
+	// BANDASTATION ADDITION - START
+	check_whitelist_or_make_interviewee()
+	SStitle.show_title_screen_to(client)
+	// BANDASTATION ADDITION - END
 	. = ..()
 	if(!. || !client)
 		return FALSE
@@ -58,4 +60,11 @@
 		var/tl = SSticker.GetTimeLeft()
 		to_chat(src, "Please set up your character and select \"Ready\". The game will start [tl > 0 ? "in about [DisplayTimeText(tl)]" : "soon"].")
 
+	if(GLOB.unrecommended_builds[num2text(client.byond_build)])
+		INVOKE_ASYNC(src, PROC_REF(unrcommended_build_alert))
 
+/mob/dead/new_player/proc/unrcommended_build_alert()
+	var/warning = "Hey! The build of byond you are running ([client.byond_build]) has one or more potential issues that may cause major gameplay disruptions.\n\n\
+		You may continue to play, but be aware you may encounter the following issue while playing:\n\"[GLOB.unrecommended_builds[num2text(client.byond_build)]]\"\n\n\
+		If possible, we recommend updating your BYOND version.\nIf you are on the latest version, download an earlier release instead from www.byond.com/download/build."
+	alert(src, warning, "Bad BYOND Build", "OK")

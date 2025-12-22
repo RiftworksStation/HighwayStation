@@ -1,6 +1,12 @@
-#define CHALLENGE_TELECRYSTALS 280
+// #define CHALLENGE_TELECRYSTALS 280 // BANDASTATION EDIT
 #define CHALLENGE_TIME_LIMIT (5 MINUTES)
 #define CHALLENGE_SHUTTLE_DELAY (25 MINUTES) // 25 minutes, so the ops have at least 5 minutes before the shuttle is callable.
+
+// BANDASTATION ADD - Start
+/datum/config_entry/number/challenge_telecrystals_per_crewman
+	default = 3.5
+	integer = FALSE
+// BANDASTATION ADD - End
 
 GLOBAL_LIST_EMPTY(jam_on_wardec)
 
@@ -16,6 +22,7 @@ GLOBAL_LIST_EMPTY(jam_on_wardec)
 			Must be used within five minutes, or your benefactors will lose interest."
 	var/declaring_war = FALSE
 	var/uplink_type = /obj/item/uplink/nuclear
+	var/announcement_sound = 'sound/announcer/alarm/nuke_alarm.ogg'
 
 /obj/item/nuclear_challenge/attack_self(mob/living/user)
 	if(!check_allowed(user))
@@ -70,7 +77,7 @@ GLOBAL_LIST_EMPTY(jam_on_wardec)
 		return
 
 	for(var/obj/item/circuitboard/computer/syndicate_shuttle/board as anything in GLOB.syndicate_shuttle_boards)
-		if(board.challenge)
+		if(board.challenge_start_time)
 			tgui_alert(usr, "War has already been declared!", "War Was Declared")
 			return
 
@@ -80,7 +87,7 @@ GLOBAL_LIST_EMPTY(jam_on_wardec)
 	priority_announce(
 		text = memo,
 		title = "Объявление войны",
-		sound = 'sound/announcer/alarm/nuke_alarm.ogg',
+		sound = announcement_sound,
 		has_important_message = TRUE,
 		sender_override = "Аванпост ядерных оперативников",
 		color_override = "red",
@@ -89,19 +96,21 @@ GLOBAL_LIST_EMPTY(jam_on_wardec)
 		to_chat(user, "You've attracted the attention of powerful forces within the syndicate. \
 			A bonus bundle of telecrystals has been granted to your team. Great things await you if you complete the mission.")
 
+	addtimer(CALLBACK(SSsecurity_level, TYPE_PROC_REF(/datum/controller/subsystem/security_level, set_level), SEC_LEVEL_GAMMA), 20 SECONDS) // BANDASTATION ADD
+
 	distribute_tc()
 	CONFIG_SET(number/shuttle_refuel_delay, max(CONFIG_GET(number/shuttle_refuel_delay), CHALLENGE_SHUTTLE_DELAY))
 	SSblackbox.record_feedback("amount", "nuclear_challenge_mode", 1)
 
 	for(var/obj/item/circuitboard/computer/syndicate_shuttle/board as anything in GLOB.syndicate_shuttle_boards)
-		board.challenge = TRUE
+		board.challenge_start_time = world.time
 
 	for(var/obj/machinery/computer/camera_advanced/shuttle_docker/dock as anything in GLOB.jam_on_wardec)
 		dock.jammed = TRUE
 
 	var/datum/techweb/station_techweb = locate(/datum/techweb/science) in SSresearch.techwebs
 	if(station_techweb)
-		var/obj/machinery/announcement_system/announcement_system = get_announcement_system()
+		var/obj/machinery/announcement_system/announcement_system = get_announcement_system(null, null, list(RADIO_CHANNEL_SCIENCE))
 		if (!isnull(announcement_system))
 			announcement_system.broadcast("Additional research data received from Nanotrasen R&D Division following the emergency protocol.", list(RADIO_CHANNEL_SCIENCE), TRUE)
 		station_techweb.add_point_list(list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_5_POINTS * 3))
@@ -121,7 +130,7 @@ GLOBAL_LIST_EMPTY(jam_on_wardec)
 			continue
 		uplinks += uplink
 
-	var/tc_to_distribute = CHALLENGE_TELECRYSTALS
+	var/tc_to_distribute = GLOB.player_list.len * CONFIG_GET(number/challenge_telecrystals_per_crewman) // BandaStation Edit: Challenge balance
 	var/tc_per_nukie = round(tc_to_distribute / (length(orphans)+length(uplinks)))
 
 	for (var/datum/component/uplink/uplink in uplinks)
@@ -159,13 +168,14 @@ GLOBAL_LIST_EMPTY(jam_on_wardec)
 		if(board.moved)
 			to_chat(user, span_boldwarning("The shuttle has already been moved! You have forfeit the right to declare war."))
 			return FALSE
-		if(board.challenge)
+		if(board.challenge_start_time)
 			to_chat(user, span_boldwarning("War has already been declared!"))
 			return FALSE
 	return TRUE
 
 /obj/item/nuclear_challenge/clownops
 	uplink_type = /obj/item/uplink/clownop
+	announcement_sound = 'sound/announcer/alarm/clownops.ogg'
 
 /// Subtype that does nothing but plays the war op message. Intended for debugging
 /obj/item/nuclear_challenge/literally_just_does_the_message
@@ -192,7 +202,7 @@ GLOBAL_LIST_EMPTY(jam_on_wardec)
 	priority_announce(
 		text = memo,
 		title = "Объявление войны",
-		sound = 'sound/announcer/alarm/nuke_alarm.ogg',
+		sound = announcement_sound,
 		has_important_message = TRUE,
 		sender_override = "Аванпост ядерных оперативников",
 		color_override = "red",
@@ -201,6 +211,6 @@ GLOBAL_LIST_EMPTY(jam_on_wardec)
 /obj/item/nuclear_challenge/literally_just_does_the_message/distribute_tc()
 	return
 
-#undef CHALLENGE_TELECRYSTALS
+// #undef CHALLENGE_TELECRYSTALS // BANDASTATION EDIT
 #undef CHALLENGE_TIME_LIMIT
 #undef CHALLENGE_SHUTTLE_DELAY

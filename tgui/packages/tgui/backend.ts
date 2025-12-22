@@ -13,7 +13,7 @@
 
 import { perf } from 'common/perf';
 import { createAction } from 'common/redux';
-import { BooleanLike } from 'tgui-core/react';
+import type { BooleanLike } from 'tgui-core/react';
 
 import { setupDrag } from './drag';
 import { focusMap } from './focus';
@@ -77,7 +77,7 @@ export const backendReducer = (state = initialState, action) => {
     // Merge shared states
     const shared = { ...state.shared };
     if (payload.shared) {
-      for (let key of Object.keys(payload.shared)) {
+      for (const key of Object.keys(payload.shared)) {
         const value = payload.shared[key];
         if (value === '') {
           shared[key] = undefined;
@@ -172,7 +172,6 @@ export const backendReducer = (state = initialState, action) => {
 };
 
 export const backendMiddleware = (store) => {
-  let fancyState;
   let suspendInterval;
 
   return (next) => (action) => {
@@ -209,27 +208,13 @@ export const backendMiddleware = (store) => {
       suspendRenderer();
       clearInterval(suspendInterval);
       suspendInterval = undefined;
+      // Tiny window to not show previous content when resumed
       Byond.winset(Byond.windowId, {
+        size: '1x1',
+        pos: '1,1',
         'is-visible': false,
       });
       setTimeout(() => focusMap());
-    }
-
-    if (type === 'backend/update') {
-      const fancy = payload.config?.window?.fancy;
-      // Initialize fancy state
-      if (fancyState === undefined) {
-        fancyState = fancy;
-      }
-      // React to changes in fancy
-      else if (fancyState !== fancy) {
-        logger.log('changing fancy mode to', fancy);
-        fancyState = fancy;
-        Byond.winset(Byond.windowId, {
-          titlebar: !fancy,
-          'can-resize': !fancy,
-        });
-      }
     }
 
     // Resume on incoming update
@@ -316,7 +301,7 @@ const chunkSplitter = {
   [Symbol.split]: (string: string) => {
     const charSeq = string[Symbol.iterator]().toArray();
     const length = charSeq.length;
-    let chunks: string[] = [];
+    const chunks: string[] = [];
     let startIndex = 0;
     let endIndex = 1024;
     while (startIndex < length) {
@@ -350,9 +335,8 @@ const chunkSplitter = {
 export const sendAct = (action: string, payload: object = {}) => {
   // Validate that payload is an object
   // prettier-ignore
-  const isObject = typeof payload === 'object'
-    && payload !== null
-    && !Array.isArray(payload);
+  const isObject =
+    typeof payload === 'object' && payload !== null && !Array.isArray(payload);
   if (!isObject) {
     logger.error(`Payload for act() must be an object, got this:`, payload);
     return;
@@ -360,7 +344,7 @@ export const sendAct = (action: string, payload: object = {}) => {
 
   const stringifiedPayload = JSON.stringify(payload);
   const urlSize = Object.entries({
-    type: 'act/' + action,
+    type: `act/${action}`,
     payload: stringifiedPayload,
     tgui: 1,
     windowId: Byond.windowId,
@@ -371,18 +355,18 @@ export const sendAct = (action: string, payload: object = {}) => {
     '',
   ).length;
   if (urlSize > 2048) {
-    let chunks: string[] = stringifiedPayload.split(chunkSplitter);
+    const chunks: string[] = stringifiedPayload.split(chunkSplitter);
     const id = `${Date.now()}`;
     globalStore?.dispatch(backendCreatePayloadQueue({ id, chunks }));
     Byond.sendMessage('oversizedPayloadRequest', {
-      type: 'act/' + action,
+      type: `act/${action}`,
       id,
       chunkCount: chunks.length,
     });
     return;
   }
 
-  Byond.sendMessage('act/' + action, payload);
+  Byond.sendMessage(`act/${action}`, payload);
 };
 
 type BackendState<TData> = {
@@ -397,7 +381,6 @@ type BackendState<TData> = {
     window: {
       key: string;
       size: [number, number];
-      fancy: BooleanLike;
       locked: BooleanLike;
       scale: BooleanLike;
     };

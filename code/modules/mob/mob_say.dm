@@ -3,7 +3,7 @@
 ///what clients use to speak. when you type a message into the chat bar in say mode, this is the first thing that goes off serverside.
 /mob/verb/say_verb(message as text)
 	set name = "Say"
-	set category = "IC"
+	set category = null // BANDASTATION REPLACEMENT: Original: "IC"
 	set instant = TRUE
 
 	if(GLOB.say_disabled) //This is here to try to identify lag problems
@@ -18,7 +18,7 @@
 ///Whisper verb
 /mob/verb/whisper_verb(message as text)
 	set name = "Whisper"
-	set category = "IC"
+	set category = null // BANDASTATION REPLACEMENT: Original: "IC"
 	set instant = TRUE
 
 	if(GLOB.say_disabled) //This is here to try to identify lag problems
@@ -41,16 +41,20 @@
 ///The me emote verb
 /mob/verb/me_verb(message as text)
 	set name = "Me"
-	set category = "IC"
+	set category = null // BANDASTATION REPLACEMENT: Original: "IC"
 	set desc = "Perform a custom emote. Leave blank to pick between an audible or a visible emote (Defaults to visible)."
 
 	if(GLOB.say_disabled) //This is here to try to identify lag problems
 		to_chat(usr, span_danger("Общение было заблокировано администрацией."))
 		return
 
-	message = trim(copytext_char(sanitize(message), 1, MAX_MESSAGE_LEN))
+	// BANDASTATION EDIT START - Sanitize emotes
+	message = trim(copytext_char(sanitize(message, apply_ic_filter = TRUE), 1, MAX_MESSAGE_LEN))
+	if(!message)
+		return
+	// BANDASTATION EDIT END - Sanitize emotes
 
-	QUEUE_OR_CALL_VERB_FOR(VERB_CALLBACK(src, TYPE_PROC_REF(/mob, emote), "me", EMOTE_VISIBLE|EMOTE_AUDIBLE, message, TRUE), SSspeech_controller)
+	QUEUE_OR_CALL_VERB_FOR(VERB_CALLBACK(src, TYPE_PROC_REF(/mob, emote), "me", NONE, message, TRUE), SSspeech_controller)
 
 /mob/try_speak(message, ignore_spam = FALSE, forced = null, filterproof = FALSE)
 	var/list/filter_result
@@ -108,8 +112,14 @@
 
 	return ..()
 
-///Speak as a dead person (ghost etc)
-/mob/proc/say_dead(message)
+/**
+ * say_dead
+ * allows you to speak as a dead person
+ * Args:
+ * - message: The message you're sending to chat.
+ * - mannequin_controller: If someone else is forcing you to speak, this is the mob doing it.
+ */
+/mob/proc/say_dead(message, mob/mannequin_controller)
 	var/name = real_name
 	var/alt_name = ""
 
@@ -117,7 +127,7 @@
 		to_chat(usr, span_danger("Общение было заблокировано администрацией."))
 		return
 
-	var/jb = is_banned_from(ckey, "Deadchat")
+	var/jb = is_banned_from(mannequin_controller?.ckey || ckey, "Deadchat")
 	if(QDELETED(src))
 		return
 
@@ -132,7 +142,7 @@
 
 		if(SSlag_switch.measures[SLOWMODE_SAY] && !HAS_TRAIT(src, TRAIT_BYPASS_MEASURES) && src == usr)
 			if(!COOLDOWN_FINISHED(client, say_slowmode))
-				to_chat(src, span_warning("Сообщение было отправлено из-за слоумода. Пожалуйста, ждите [SSlag_switch.slowmode_cooldown/10] секунд между сообщениями.\n\"[message]\""))
+				to_chat(src, span_warning("Сообщение не было отправлено из-за слоумода. Пожалуйста, ждите [SSlag_switch.slowmode_cooldown/10] секунд между сообщениями.\n\"[message]\""))
 				return
 			COOLDOWN_START(client, say_slowmode, SSlag_switch.slowmode_cooldown)
 
@@ -150,7 +160,7 @@
 		if(name != real_name)
 			alt_name = " (умер как [real_name])"
 
-	var/spanned = say_quote(say_emphasis(message))
+	var/spanned = generate_messagepart(message)
 	var/source = "<span class='game'><span class='prefix'>МЕРТВ:</span> <span class='name'>[name]</span>[alt_name]"
 	var/rendered = " <span class='message'>[emoji_parse(spanned)]</span></span>"
 	log_talk(message, LOG_SAY, tag="DEAD")
@@ -159,7 +169,9 @@
 	var/displayed_key = key
 	if(client?.holder?.fakekey)
 		displayed_key = null
-	deadchat_broadcast(rendered, source, follow_target = src, speaker_key = displayed_key)
+	// BANDASTATION EDIT START - ghost runechat
+	deadchat_broadcast(rendered, source, follow_target = src, speaker_key = displayed_key, raw_message = message)
+	// BANDASTATION EDIT END - ghost runechat
 
 ///Check if this message is an emote
 /mob/proc/check_emote(message, forced)
@@ -184,7 +196,7 @@
 	message = copytext(message, customsaypos + 1)
 	if (!message)
 		mods[MODE_CUSTOM_SAY_ERASE_INPUT] = TRUE
-		message = "an interesting thing to say"
+		// message = "an interesting thing to say" // BANDASTATION REMOVAL
 	return message
 /**
  * Extracts and cleans message of any extenstions at the begining of the message

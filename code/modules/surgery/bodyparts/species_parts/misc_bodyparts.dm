@@ -17,6 +17,7 @@
 /obj/item/bodypart/arm/left/snail
 	limb_id = SPECIES_SNAIL
 	unarmed_attack_verbs = list("slap")
+	unarmed_attack_verbs_continuous = list("slaps")
 	unarmed_attack_effect = ATTACK_EFFECT_DISARM
 	unarmed_damage_low = 1
 	unarmed_damage_high = 2 //snails are soft and squishy
@@ -26,6 +27,7 @@
 /obj/item/bodypart/arm/right/snail
 	limb_id = SPECIES_SNAIL
 	unarmed_attack_verbs = list("slap")
+	unarmed_attack_verbs_continuous = list("slaps")
 	unarmed_attack_effect = ATTACK_EFFECT_DISARM
 	unarmed_damage_low = 1
 	unarmed_damage_high = 2 //snails are soft and squishy
@@ -230,7 +232,9 @@
 /obj/item/bodypart/arm/left/pod
 	limb_id = SPECIES_PODPERSON
 	unarmed_attack_verbs = list("slash", "lash")
+	unarmed_attack_verbs_continuous = list("slashes", "lashes")
 	grappled_attack_verb = "lacerate"
+	grappled_attack_verb_continuous = "lacerates"
 	unarmed_attack_effect = ATTACK_EFFECT_CLAW
 	unarmed_attack_sound = 'sound/items/weapons/slice.ogg'
 	unarmed_miss_sound = 'sound/items/weapons/slashmiss.ogg'
@@ -242,7 +246,9 @@
 /obj/item/bodypart/arm/right/pod
 	limb_id = SPECIES_PODPERSON
 	unarmed_attack_verbs = list("slash", "lash")
+	unarmed_attack_verbs_continuous = list("slashes", "lashes")
 	grappled_attack_verb = "lacerate"
+	grappled_attack_verb_continuous = "lacerates"
 	unarmed_attack_effect = ATTACK_EFFECT_CLAW
 	unarmed_attack_sound = 'sound/items/weapons/slice.ogg'
 	unarmed_miss_sound = 'sound/items/weapons/slashmiss.ogg'
@@ -480,6 +486,7 @@
 	icon_state = "golem_head"
 	biological_state = BIO_BONE
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_GOLEM
 	limb_id = SPECIES_GOLEM
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
@@ -487,6 +494,8 @@
 	head_flags = NONE
 	// too hard to drill through
 	teeth_count = 0
+	brute_modifier = 0.5
+	burn_modifier = 0.5
 
 /obj/item/bodypart/head/golem/Initialize(mapload)
 	worn_ears_offset = new(
@@ -520,12 +529,15 @@
 	biological_state = BIO_BONE
 	acceptable_bodytype = BODYTYPE_GOLEM
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_GOLEM
 	limb_id = SPECIES_GOLEM
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	bodypart_traits = list(TRAIT_NO_JUMPSUIT)
 	wing_types = null
+	brute_modifier = 0.5
+	burn_modifier = 0.5
 
 /obj/item/bodypart/chest/golem/Initialize(mapload)
 	worn_belt_offset = new(
@@ -541,6 +553,7 @@
 	icon_state = "golem_l_arm"
 	biological_state = (BIO_BONE|BIO_JOINTED)
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_GOLEM
 	limb_id = SPECIES_GOLEM
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
@@ -548,6 +561,8 @@
 	unarmed_damage_low = 5
 	unarmed_damage_high = 14
 	unarmed_effectiveness = 20
+	brute_modifier = 0.5
+	burn_modifier = 0.5
 
 /obj/item/bodypart/arm/left/golem/Initialize(mapload)
 	held_hand_offset =  new(
@@ -574,6 +589,7 @@
 	icon_state = "golem_r_arm"
 	biological_state = (BIO_BONE|BIO_JOINTED)
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_GOLEM
 	limb_id = SPECIES_GOLEM
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
@@ -581,6 +597,8 @@
 	unarmed_damage_low = 5
 	unarmed_damage_high = 14
 	unarmed_effectiveness = 20
+	brute_modifier = 0.5
+	burn_modifier = 0.5
 
 /obj/item/bodypart/arm/right/golem/Initialize(mapload)
 	held_hand_offset =  new(
@@ -607,12 +625,15 @@
 	icon_state = "golem_l_leg"
 	biological_state = (BIO_BONE|BIO_JOINTED)
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_GOLEM
 	limb_id = SPECIES_GOLEM
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	unarmed_damage_low = 7
 	unarmed_damage_high = 21
 	unarmed_effectiveness = 25
+	brute_modifier = 0.5
+	burn_modifier = 0.5
 
 /obj/item/bodypart/leg/right/golem
 	icon = 'icons/mob/human/species/golems.dmi'
@@ -620,12 +641,15 @@
 	icon_state = "golem_r_leg"
 	biological_state = (BIO_BONE|BIO_JOINTED)
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
+	bodyshape = BODYSHAPE_GOLEM
 	limb_id = SPECIES_GOLEM
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 	unarmed_damage_low = 7
 	unarmed_damage_high = 21
 	unarmed_effectiveness = 25
+	brute_modifier = 0.5
+	burn_modifier = 0.5
 
 ///flesh
 

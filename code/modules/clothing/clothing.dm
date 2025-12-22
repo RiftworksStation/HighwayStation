@@ -1,5 +1,6 @@
 /obj/item/clothing
 	name = "clothing"
+	abstract_type = /obj/item/clothing
 	resistance_flags = FLAMMABLE
 	max_integrity = 200
 	integrity_failure = 0.4
@@ -18,6 +19,10 @@
 	var/visor_toggle_down_sound = null
 	///Sound this item makes when its visor is flipped up
 	var/visor_toggle_up_sound = null
+	///chat message when the visor is toggled down.
+	var/toggle_message
+	///chat message when the visor is toggled up.
+	var/alt_toggle_message
 
 	var/clothing_flags = NONE
 	///List of items that can be equipped in the suit storage slot while we're worn.
@@ -67,20 +72,10 @@
 	if(!icon_state)
 		item_flags |= ABSTRACT
 
-/obj/item/clothing/mouse_drop_dragged(atom/over_object, mob/user, src_location, over_location, params)
-	var/mob/M = user
-
-	if(ismecha(M.loc)) // stops inventory actions in a mech
-		return
-
-	if(loc == M && istype(over_object, /atom/movable/screen/inventory/hand))
-		var/atom/movable/screen/inventory/hand/H = over_object
-		if(M.putItemFromInventoryInHandIfPossible(src, H.held_index))
-			add_fingerprint(user)
-
 /obj/item/food/clothing
 	name = "temporary moth clothing snack item"
 	desc = "If you're reading this it means I messed up. This is related to moths eating clothes and I didn't know a better way to do it than making a new food object. <--- stinky idiot wrote this"
+	spawn_blacklisted = TRUE
 	bite_consumption = 1
 	// sigh, ok, so it's not ACTUALLY infinite nutrition. this is so you can eat clothes more than...once.
 	// bite_consumption limits how much you actually get, and the take_damage in after eat makes sure you can't abuse this.
@@ -103,7 +98,7 @@
 	else
 		qdel(src)
 
-/obj/item/clothing/attack(mob/living/target, mob/living/user, list/modifiers)
+/obj/item/clothing/attack(mob/living/target, mob/living/user, list/modifiers, list/attack_modifiers)
 	if(user.combat_mode || !ismoth(target) || ispickedupmob(src))
 		return ..()
 	if((clothing_flags & INEDIBLE_CLOTHING) || (resistance_flags & INDESTRUCTIBLE))
@@ -136,9 +131,9 @@
 		if(CLOTHING_SHREDDED)
 			var/obj/item/stack/cloth_repair = weapon
 			if(cloth_repair.amount < 3)
-				to_chat(user, span_warning("You require 3 [cloth_repair.name] to repair [src]."))
+				to_chat(user, span_warning("Вам требуется три [cloth_repair.declent_ru(GENITIVE)], чтобы починить [declent_ru(NOMINATIVE)]."))
 				return ITEM_INTERACT_BLOCKING
-			to_chat(user, span_notice("You begin fixing the damage to [src] with [cloth_repair]..."))
+			to_chat(user, span_notice("Вы начинаете чинить повреждения на [declent_ru(PREPOSITIONAL)]..."))
 			if(!do_after(user, 6 SECONDS, src) || !cloth_repair.use(3))
 				return ITEM_INTERACT_BLOCKING
 			repair(user)
@@ -154,7 +149,7 @@
 	damage_by_parts = null
 	if(user)
 		UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
-		to_chat(user, span_notice("You fix the damage on [src]."))
+		to_chat(user, span_notice("Вы починили повреждения на [declent_ru(PREPOSITIONAL)]."))
 	update_appearance()
 
 /**
@@ -200,18 +195,19 @@
 		return
 
 	var/zone_name
-	var/break_verb = ((damage_type == BRUTE) ? "torn" : "burned")
+	var/break_verb = ((damage_type == BRUTE) ? "рвётся" : "прогорает")
 
 	if(iscarbon(loc))
 		var/mob/living/carbon/carbon_loc = loc
 		zone_name = carbon_loc.parse_zone_with_bodypart(def_zone)
-		carbon_loc.visible_message(span_danger("The [zone_name] on [carbon_loc]'s [src.name] is [break_verb] away!"), span_userdanger("The [zone_name] on your [src.name] is [break_verb] away!"), vision_distance = COMBAT_MESSAGE_RANGE)
+		carbon_loc.visible_message(span_danger("[capitalize(zone_name)] [break_verb] на [declent_ru(PREPOSITIONAL)] у [carbon_loc.declent_ru(GENITIVE)]!"), span_userdanger("[capitalize(zone_name)] [break_verb] на вашем [declent_ru(PREPOSITIONAL)]!"), vision_distance = COMBAT_MESSAGE_RANGE)
 		RegisterSignal(carbon_loc, COMSIG_MOVABLE_MOVED, PROC_REF(bristle), override = TRUE)
 	else
 		zone_name = parse_zone(def_zone)
 
 	zones_disabled++
-	body_parts_covered &= ~body_zone2cover_flags(def_zone)
+	if(clothing_flags & NO_ZONE_DISABLING)
+		body_parts_covered &= ~body_zone2cover_flags(def_zone)
 
 	if(body_parts_covered == NONE) // if there are no more parts to break then the whole thing is kaput
 		atom_destruction((damage_type == BRUTE ? MELEE : LASER)) // melee/laser is good enough since this only procs from direct attacks anyway and not from fire/bombs
@@ -316,37 +312,34 @@
 /obj/item/clothing/examine(mob/user)
 	. = ..()
 	if(damaged_clothes == CLOTHING_SHREDDED)
-		. += span_warning("<b>[p_Theyre()] completely shredded and require[p_s()] mending before [p_they()] can be worn again!</b>")
+		. += span_warning("<b>Материалы одежды повреждены и требуют починки, прежде чем можно будет носить!</b>")
 		return
-
-	if(TRAIT_FAST_CUFFING in clothing_traits)
-		. += "[src] increase the speed that you handcuff others."
 
 	for(var/zone in damage_by_parts)
 		var/pct_damage_part = damage_by_parts[zone] / limb_integrity * 100
 		var/zone_name = parse_zone(zone)
 		switch(pct_damage_part)
 			if(100 to INFINITY)
-				. += span_warning("<b>The [zone_name] is useless and requires mending!</b>")
+				. += span_warning("<b>[capitalize(zone_name)] требует починки!</b>")
 			if(60 to 99)
-				. += span_warning("The [zone_name] is heavily shredded!")
+				. += span_warning("[capitalize(zone_name)] сильно изорвана!")
 			if(30 to 59)
-				. += span_danger("The [zone_name] is partially shredded.")
+				. += span_danger("[capitalize(zone_name)] частично изорвана.")
 
 	if(atom_storage)
 		var/list/how_cool_are_your_threads = list("<span class='notice'>")
 		if(atom_storage.attack_hand_interact)
-			how_cool_are_your_threads += "[src]'s storage opens when clicked.\n"
+			how_cool_are_your_threads += "Хранилище [declent_ru(GENITIVE)] открывается при нажатии.\n"
 		else
-			how_cool_are_your_threads += "[src]'s storage opens when dragged to yourself.\n"
+			how_cool_are_your_threads += "Хранилище [declent_ru(GENITIVE)] открывается при перетаскивании на себя.\n"
 		if (atom_storage.can_hold?.len) // If pocket type can hold anything, vs only specific items
-			how_cool_are_your_threads += "[src] can store [atom_storage.max_slots] <a href='byond://?src=[REF(src)];show_valid_pocket_items=1'>item\s</a>.\n"
+			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] <a href='byond://?src=[REF(src)];show_valid_pocket_items=1'>предмет[declension_ru(atom_storage.max_slots, "", "а", "ов")]</a>.\n"
 		else
-			how_cool_are_your_threads += "[src] can store [atom_storage.max_slots] item\s that are [weight_class_to_text(atom_storage.max_specific_storage)] or smaller.\n"
+			how_cool_are_your_threads += "[capitalize(declent_ru(NOMINATIVE))] [genderize_ru(gender, "может", "может", "может", "могут")] хранить [atom_storage.max_slots] предмет[declension_ru(atom_storage.max_slots, "", "а", "ов")] размером [weight_class_to_text(atom_storage.max_specific_storage)] или меньше.\n"
 		if(atom_storage.quickdraw)
-			how_cool_are_your_threads += "You can quickly remove an item from [src] using Right-Click.\n"
+			how_cool_are_your_threads += "Вы можете достать предмет из [declent_ru(GENITIVE)], используя ПКМ.\n"
 		if(atom_storage.silent)
-			how_cool_are_your_threads += "Adding or removing items from [src] makes no noise.\n"
+			how_cool_are_your_threads += "Вы можете положить или достать предмет из [declent_ru(GENITIVE)], не издавая шума.\n"
 		how_cool_are_your_threads += "</span>"
 		. += how_cool_are_your_threads.Join()
 
@@ -360,10 +353,10 @@
 	if (clothing_flags & CASTING_CLOTHES)
 		.["магический"] = "Позволяет магическим существам произносить заклинания, пока надет [declent_ru(NOMINATIVE)]."
 	if((clothing_flags & STOPSPRESSUREDAMAGE) || (visor_flags & STOPSPRESSUREDAMAGE))
-		.["герметичный"] = "Защищает носителя от чрезвычайно низкого и высокого давленй, например как вакуум космоса."
+		.["герметичный"] = "Защищает носителя от чрезвычайно низкого и высокого давления, например как вакуум космоса."
 	if(flags_cover & PEPPERPROOF)
 		.["перцестойкий"] = "Защищает носителя от воздействия перцового баллончика."
-	if (heat_protection || cold_protection)
+	if(heat_protection || cold_protection)
 		var/heat_desc
 		var/cold_desc
 		switch (max_heat_protection_temperature)
@@ -381,6 +374,12 @@
 			if (0 to 71)
 				cold_desc = "чрезвычайно низких"
 		.["термоизолированный"] = "Защищает носителя от [jointext(list(heat_desc, cold_desc) - null, " и ")] температур."
+	if((TRAIT_QUICK_CARRY in clothing_traits) || (TRAIT_QUICKER_CARRY in clothing_traits))
+		.["тактильный"] = "Уменьшает требуемое время для поднятия существ на [(TRAIT_QUICKER_CARRY in clothing_traits) ? "две секунды" : "одну секунду"]."
+	if(TRAIT_FASTMED in clothing_traits)
+		.["стерильный"] = "Увеличивает скорость введения реагентов на [round((1/NITRILE_GLOVES_MULTIPLIER-1)*100, 1)]%."
+	if(TRAIT_FAST_CUFFING in clothing_traits)
+		.["сдерживающий"] = "Увеличивает скорость, с которой вы применяете стяжки или наручники."
 
 /obj/item/clothing/examine_descriptor(mob/user)
 	return "надеваемый предмет"
@@ -409,53 +408,53 @@
 				continue
 			if(!added_durability_header)
 				readout += "<b><u>ПРОЧНОСТЬ (I-X)</u></b>"
-				added_damage_header = TRUE
+				added_durability_header = TRUE
 			readout += "[armor_to_protection_name(durability_key)] [armor_to_protection_class(rating)]"
 
 		if((flags_cover & HEADCOVERSMOUTH) || (flags_cover & PEPPERPROOF))
 			var/list/things_blocked = list()
 			if(flags_cover & HEADCOVERSMOUTH)
-				things_blocked += span_tooltip("Because this item is worn on the head and is covering the mouth, it will block facehugger proboscides, killing facehuggers.", "facehuggers")
+				things_blocked += span_tooltip("Поскольку этот предмет носится на голове и закрывает рот, он блокирует щупальца лицехвата, убивая его.", "лицехватов")
 			if(flags_cover & PEPPERPROOF)
-				things_blocked += "pepperspray"
+				things_blocked += "перцовый баллончик"
 			if(length(things_blocked))
-				readout += "<b><u>COVERAGE</u></b>"
-				readout += "It will block [english_list(things_blocked)]."
+				readout += "<b><u>ПОКРЫТИЕ</u></b>"
+				readout += "Блокирует [english_list(things_blocked)]."
 
 		if((clothing_flags & STOPSPRESSUREDAMAGE) || (visor_flags & STOPSPRESSUREDAMAGE))
 			var/list/parts_covered = list()
-			var/output_string = "It"
+			var/output_string = "Защищает"
 			if(!(clothing_flags & STOPSPRESSUREDAMAGE))
-				output_string = "When sealed, it"
+				output_string = "При герметичности, защищает"
 			if(body_parts_covered & HEAD)
-				parts_covered += "head"
+				parts_covered += "голову"
 			if(body_parts_covered & CHEST)
-				parts_covered += "torso"
+				parts_covered += "торс"
 			if(body_parts_covered & (ARMS|HANDS))
-				parts_covered += "arms"
+				parts_covered += "руки"
 			if(body_parts_covered & (LEGS|FEET))
-				parts_covered += "legs"
+				parts_covered += "ноги"
 			if(length(parts_covered))
-				readout += "[output_string] will protect the wearer's [english_list(parts_covered)] from [span_tooltip("The extremely low pressure is the biggest danger posed by the vacuum of space.", "low pressure")]."
+				readout += "[output_string] [english_list(parts_covered)] владельца от [span_tooltip("Крайне низкое давление представляет наибольшую опасность в вакууме космоса.", "низкого давления")]."
 
 		var/heat_prot
 		switch (max_heat_protection_temperature)
 			if (400 to 1000)
-				heat_prot = "minor"
+				heat_prot = "незначительную"
 			if (1001 to 1600)
-				heat_prot = "some"
+				heat_prot = "небольшую"
 			if (1601 to 35000)
-				heat_prot = "extreme"
+				heat_prot = "экстремальную"
 		if (heat_prot)
-			. += "[src] offers the wearer [heat_protection] protection from heat, up to [max_heat_protection_temperature] kelvin."
+			. += "[capitalize(declent_ru(NOMINATIVE))] обеспечивает владельцу [heat_protection] защиту от перегрева с точностью до [max_heat_protection_temperature]° по Кельвину."
 
 		if(min_cold_protection_temperature)
-			readout += "It will insulate the wearer from [min_cold_protection_temperature <= SPACE_SUIT_MIN_TEMP_PROTECT ? span_tooltip("While not as dangerous as the lack of pressure, the extremely low temperature of space is also a hazard.", "the cold of space, down to [min_cold_protection_temperature] kelvin") : "cold, down to [min_cold_protection_temperature] kelvin"]."
+			readout += "Защищает владельца от [min_cold_protection_temperature <= SPACE_SUIT_MIN_TEMP_PROTECT ? span_tooltip("Хотя это и не так опасно, как отсутствие давления, чрезвычайно низкая температура в космосе также представляет опасность.", "холода космоса до [min_cold_protection_temperature]° по Кельвину") : "холода до [min_cold_protection_temperature]° по Кельвину"]."
 
 		if(!length(readout))
-			readout += "No armor or durability information available."
+			readout += "Нет информации о прочности или защите."
 
-		var/formatted_readout = span_notice("<b>PROTECTION CLASSES</b><hr>[jointext(readout, "\n")]")
+		var/formatted_readout = span_notice("<b>КЛАССЫ ЗАЩИТЫ</b><hr>[jointext(readout, "\n")]")
 		to_chat(usr, boxed_message(formatted_readout))
 
 /**
@@ -477,9 +476,9 @@
 	if(isliving(loc)) //It's not important enough to warrant a message if it's not on someone
 		var/mob/living/M = loc
 		if(src in M.get_equipped_items())
-			to_chat(M, span_warning("Your [name] start[p_s()] to fall apart!"))
+			to_chat(M, span_warning("Ваш[genderize_ru(gender, "", "а", "е", "и")] [declent_ru(NOMINATIVE)] начинает распадаться на части!"))
 		else
-			to_chat(M, span_warning("[src] start[p_s()] to fall apart!"))
+			to_chat(M, span_warning("[capitalize(declent_ru(NOMINATIVE))] начинает распадаться на части!"))
 
 // you just dont get the same feeling with handwashed clothes
 /obj/item/clothing/machine_wash()
@@ -490,7 +489,7 @@
 	var/fresh_mood = AddComponent( \
 		/datum/component/onwear_mood, \
 		saved_event_type = /datum/mood_event/fresh_laundry, \
-		examine_string = "[src] looks crisp and pristine.", \
+		examine_string = "[capitalize(declent_ru(NOMINATIVE))] выглядит свежо и опрятно.", \
 	)
 
 	QDEL_IN(fresh_mood, 2 MINUTES)
@@ -540,7 +539,13 @@ BLIND     // can't see anything
 
 	visor_toggling()
 
-	to_chat(user, span_notice("You push [src] [up ? "out of the way" : "back into place"]."))
+	var/message
+	if(up)
+		message = src.alt_toggle_message || "Вы убираете [declent_ru(ACCUSATIVE)] в сторону."
+	else
+		message = src.toggle_message || "Вы возвращаете [declent_ru(ACCUSATIVE)] на место."
+
+	to_chat(user, span_notice("[message]"))
 
 	//play sounds when toggling the visor up or down (if there is any)
 	if(visor_toggle_up_sound && up)
@@ -553,12 +558,12 @@ BLIND     // can't see anything
 	if(user.is_holding(src))
 		user.update_held_items()
 		return TRUE
-	if(up)
-		user.update_obscured_slots(visor_flags_inv)
 	user.update_clothing(slot_flags)
 	if(!iscarbon(user))
 		return TRUE
 	var/mob/living/carbon/carbon_user = user
+	if(up)
+		carbon_user.refresh_obscured()
 	if(visor_vars_to_toggle & VISOR_TINT)
 		carbon_user.update_tint()
 	if((visor_flags & (MASKINTERNALS|HEADINTERNALS)) && carbon_user.invalid_internals())
@@ -595,7 +600,7 @@ BLIND     // can't see anything
 		new /obj/effect/decal/cleanable/shreds(current_position, name)
 		if(isliving(loc))
 			var/mob/living/possessing_mob = loc
-			possessing_mob.visible_message(span_danger("[src] is consumed until naught but shreds remains!"), span_boldwarning("[src] falls apart into little bits!"))
+			possessing_mob.visible_message(span_danger("[capitalize(declent_ru(NOMINATIVE))] поглощается, оставляя от себя только небольшие ошмётки!"), span_boldwarning("[capitalize(declent_ru(NOMINATIVE))] распадается на маленькие кусочки!"))
 		deconstruct(FALSE)
 	else
 		body_parts_covered = NONE
@@ -604,10 +609,10 @@ BLIND     // can't see anything
 		if(isliving(loc))
 			var/mob/living/M = loc
 			if(src in M.get_equipped_items()) //make sure they were wearing it and not attacking the item in their hands
-				M.visible_message(span_danger("[M]'s [src.name] fall[p_s()] off, [p_theyre()] completely shredded!"), span_warning("<b>Your [src.name] fall[p_s()] off, [p_theyre()] completely shredded!</b>"), vision_distance = COMBAT_MESSAGE_RANGE)
+				M.visible_message(span_danger("[capitalize(declent_ru(NOMINATIVE))] спадает c [M.declent_ru(GENITIVE)], полностью развалившись на кусочки!"), span_warning("<b>[capitalize(declent_ru(NOMINATIVE))] спадает с вас, полностью развалившись на кусочки!</b>"), vision_distance = COMBAT_MESSAGE_RANGE)
 				M.dropItemToGround(src)
 			else
-				M.visible_message(span_danger("[src] fall[p_s()] apart, completely shredded!"), vision_distance = COMBAT_MESSAGE_RANGE)
+				M.visible_message(span_danger("[capitalize(declent_ru(NOMINATIVE))] разваливается на кусочки!"), vision_distance = COMBAT_MESSAGE_RANGE)
 		name = "shredded [initial(name)]" // change the name -after- the message, not before.
 		update_appearance()
 	SEND_SIGNAL(src, COMSIG_ATOM_DESTRUCTION, damage_flag)
@@ -619,7 +624,7 @@ BLIND     // can't see anything
 	if(!istype(L))
 		return
 	if(prob(0.2))
-		to_chat(L, span_warning("The damaged threads on your [src.name] chafe!"))
+		to_chat(L, span_warning("Порванные нити на [declent_ru(PREPOSITIONAL)] трутся и натирают кожу!"))
 
 /obj/item/clothing/apply_fantasy_bonuses(bonus)
 	. = ..()
@@ -628,3 +633,23 @@ BLIND     // can't see anything
 /obj/item/clothing/remove_fantasy_bonuses(bonus)
 	set_armor(get_armor().generate_new_with_modifiers(list(ARMOR_ALL = -bonus)))
 	return ..()
+
+/// Returns a list of overlays with our blood, if we're bloodied
+/obj/item/clothing/proc/get_blood_overlay(blood_state)
+	if (!GET_ATOM_BLOOD_DECAL_LENGTH(src))
+		return
+
+	var/mutable_appearance/blood_overlay = null
+	if(clothing_flags & LARGE_WORN_ICON)
+		blood_overlay = mutable_appearance('icons/effects/64x64.dmi', "[blood_state]blood_large")
+	else
+		blood_overlay = mutable_appearance('icons/effects/blood.dmi', "[blood_state]blood")
+
+	blood_overlay.color = get_blood_dna_color()
+
+	var/emissive_alpha = get_blood_emissive_alpha(is_worn = TRUE)
+	if (emissive_alpha)
+		var/mutable_appearance/emissive_overlay = emissive_appearance(blood_overlay.icon, blood_overlay.icon_state, src, alpha = emissive_alpha, effect_type = EMISSIVE_NO_BLOOM)
+		blood_overlay.overlays += emissive_overlay
+
+	return blood_overlay

@@ -24,12 +24,11 @@
 		impact_area = get_area(spawn_location)
 	else
 		impact_area = placer.findValidArea()
-	setup = TRUE // BANDASTATION EDIT - STORYTELLER
 
 /datum/round_event/anomaly/announce(fake)
 	if(isnull(impact_area))
 		impact_area = placer.findValidArea()
-	priority_announce("Энергетический поток обнаружен на [ANOMALY_ANNOUNCE_DANGEROUS_TEXT] [impact_area.name].", "Обнаружена аномалия")
+	priority_announce("Энергетический поток обнаружен на [ANOMALY_ANNOUNCE_DANGEROUS_TEXT] [impact_area.declent_ru(NOMINATIVE)].", "Обнаружена аномалия")
 
 /datum/round_event/anomaly/start()
 	var/turf/anomaly_turf
@@ -41,10 +40,13 @@
 
 	var/newAnomaly
 	if(anomaly_turf)
-		newAnomaly = new anomaly_path(anomaly_turf)
+		newAnomaly = make_anomaly(anomaly_turf)
 	if (newAnomaly)
 		apply_anomaly_properties(newAnomaly)
 		announce_to_ghosts(newAnomaly)
+
+/datum/round_event/anomaly/proc/make_anomaly(turf/anomaly_turf)
+	return new anomaly_path(anomaly_turf)
 
 /// Make any further post-creation modifications to the anomaly
 /datum/round_event/anomaly/proc/apply_anomaly_properties(obj/effect/anomaly/new_anomaly)
@@ -55,4 +57,3 @@
 
 /datum/event_admin_setup/set_location/anomaly/apply_to_event(datum/round_event/anomaly/event)
 	event.spawn_location = chosen_turf
-

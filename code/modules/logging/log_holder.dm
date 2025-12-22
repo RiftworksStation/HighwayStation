@@ -32,7 +32,7 @@ GLOBAL_REAL(logger, /datum/log_holder)
 
 GENERAL_PROTECT_DATUM(/datum/log_holder)
 
-ADMIN_VERB(log_viewer_new, R_ADMIN|R_DEBUG, "View Round Logs", "View the rounds logs.", ADMIN_CATEGORY_MAIN)
+ADMIN_VERB(log_viewer_new, R_ADMIN|R_DEBUG, "View Round Logs", "View the rounds logs.", ADMIN_CATEGORY_HIDDEN) // BANDASTATION EDIT: Original - ADMIN_CATEGORY_MAIN
 	logger.ui_interact(user.mob)
 
 /datum/log_holder/ui_interact(mob/user, datum/tgui/ui)
@@ -230,10 +230,14 @@ ADMIN_VERB(log_viewer_new, R_ADMIN|R_DEBUG, "View Round Logs", "View the rounds 
 	if(!human_readable_enabled)
 		return
 
-	file_path = category.get_output_file(null, "log")
+	file_path = category.get_output_file(null, "log", logis_log = TRUE) // BANDASTATION EDIT - Logis: added `logis_log = TRUE`
 	if(fexists(file_path))
-		rustg_file_append(LOG_CATEGORY_RESET_FILE_MARKER_READABLE, file_path)
-		fcopy(file_path, get_recovery_file_for(file_path))
+		// BANDASTATION REMOVAL START - Logis
+		// rustg_file_append(LOG_CATEGORY_RESET_FILE_MARKER_READABLE, file_path)
+		// fcopy(file_path, get_recovery_file_for(file_path))
+		// BANDASTATION REMOVAL END - Logis
+		return
+
 	rustg_file_write("\[[human_readable_timestamp()]\] Starting up round ID [round_id].\n - -------------------------\n", file_path)
 
 #undef LOG_CATEGORY_RESET_FILE_MARKER
@@ -275,20 +279,8 @@ ADMIN_VERB(log_viewer_new, R_ADMIN|R_DEBUG, "View Round Logs", "View the rounds 
 	category_instance.category_header = category_header
 	init_category_file(category_instance, category_header)
 
-/datum/log_holder/proc/human_readable_timestamp(precision = 3)
-	var/start = time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss", TIMEZONE_UTC)
-	// now we grab the millis from the rustg timestamp
-	var/rustg_stamp = rustg_unix_timestamp()
-	var/list/timestamp = splittext(rustg_stamp, ".")
-#ifdef UNIT_TESTS
-	if(length(timestamp) != 2)
-		stack_trace("rustg returned illegally formatted string '[rustg_stamp]'")
-		return start
-#endif
-	var/millis = timestamp[2]
-	if(length(millis) > precision)
-		millis = copytext(millis, 1, precision + 1)
-	return "[start].[millis]"
+/datum/log_holder/proc/human_readable_timestamp()
+	return rustg_formatted_timestamp("%Y-%m-%d %H:%M:%S%.3f")
 
 /// Adds an entry to the given category, if the category is disabled it will not be logged.
 /// If the category does not exist, we will CRASH and log to the error category.
@@ -320,14 +312,6 @@ ADMIN_VERB(log_viewer_new, R_ADMIN|R_DEBUG, "View Round Logs", "View the rounds 
 	if(!log_category)
 		Log(LOG_CATEGORY_INTERNAL_CATEGORY_NOT_FOUND, message, data)
 		CRASH("Attempted to log to a category that doesn't exist! [category]")
-
-	// BANDASTATION EDIT START - Logis
-	// Duplicate it for Logis
-	if(category != LOG_CATEGORY_GAME)
-		var/duplicate_category = LOG_CATEGORY_GAME
-		var/duplicate_message = "[uppertext(category)]: [message]"
-		Log(duplicate_category, duplicate_message, data)
-	// BANDASTATION EDIT END
 
 	var/list/semver_store = null
 	if(length(data))

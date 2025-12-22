@@ -28,8 +28,17 @@
 		"Captain": {
 			"special_charter": "asteroid"
 		},
-        "Explorer": {
-            "spawn_positions": 4
-        }
+		"Nanotrasen Representative": {
+			"spawn_positions": 1
+		},
+		"Blueshield": {
+			"spawn_positions": 1
+		},
+		"Magistrate": {
+			"spawn_positions": 1
+		},
+		"Explorer": {
+			"spawn_positions": 4
+		}
 	}
 }

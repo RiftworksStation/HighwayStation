@@ -3,8 +3,7 @@
 	description = "Руководите инженерным отделом, следите, чтобы никакое оборудование не было украдено, \
 		чтобы кристалл Суперматерии не взорвался, а также обслуживайте телекоммуникации."
 	auto_deadmin_role_flags = DEADMIN_POSITION_HEAD
-	department_head = list(JOB_CAPTAIN)
-	head_announce = list("Engineering")
+	head_announce = RADIO_CHANNEL_ENGINEERING
 	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
@@ -69,6 +68,8 @@
 	backpack_contents = list(
 		/obj/item/melee/baton/telescopic/silver = 1,
 		/obj/item/construction/rcd/ce = 1,
+		// /obj/item/extinguisher/mini = 1, // BANDASTATION EDIT - Bring back T2 tools to CE
+		// /obj/item/analyzer = 1, // BANDASTATION EDIT - Bring back T2 tools to CE
 	)
 	belt = /obj/item/storage/belt/utility/chief/full
 	ears = /obj/item/radio/headset/heads/ce

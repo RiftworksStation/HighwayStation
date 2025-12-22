@@ -1,12 +1,12 @@
 /client/proc/add_admin_verbs()
 	control_freak = CONTROL_FREAK_SKIN | CONTROL_FREAK_MACROS
 	SSadmin_verbs.assosciate_admin(src)
-	SStitle.title_output(src, "true", "admin_buttons_visibility") // BANDASTATION ADDITION - HTML Title Screen
+	SStitle.title_output(src, "true", "toggleAdmin") // BANDASTATION ADDITION - HTML Title Screen
 
 /client/proc/remove_admin_verbs()
 	control_freak = initial(control_freak)
 	SSadmin_verbs.deassosciate_admin(src)
-	SStitle.title_output(src, "false", "admin_buttons_visibility") // BANDASTATION ADDITION - HTML Title Screen
+	SStitle.title_output(src, "false", "toggleAdmin") // BANDASTATION ADDITION - HTML Title Screen
 
 ADMIN_VERB(hide_verbs, R_NONE, "Adminverbs - Hide All", "Hide most of your admin verbs.", ADMIN_CATEGORY_MAIN)
 	user.remove_admin_verbs()
@@ -95,11 +95,13 @@ ADMIN_VERB(unban_panel, R_BAN, "Unbanning Panel", "Unban players here.", ADMIN_C
 	user.holder.unban_panel()
 	BLACKBOX_LOG_ADMIN_VERB("Unbanning Panel")
 
-ADMIN_VERB(game_panel, R_ADMIN, "Game Panel", "Look at the state of the game.", ADMIN_CATEGORY_GAME)
-	user.holder.Game()
-	BLACKBOX_LOG_ADMIN_VERB("Game Panel")
+// BANDASTATION EDIT START: More handy verb
+// ADMIN_VERB(game_panel, R_ADMIN, "Game Panel", "Look at the state of the game.", ADMIN_CATEGORY_GAME)
+	// user.holder.Game()
+// 	BLACKBOX_LOG_ADMIN_VERB("Game Panel")
+// BANDASTATION EDIT END: More handy verb
 
-ADMIN_VERB(poll_panel, R_POLL, "Server Poll Management", "View and manage polls.", ADMIN_CATEGORY_MAIN)
+ADMIN_VERB(poll_panel, R_POLL, "Server Poll Management", "View and manage polls.", ADMIN_CATEGORY_HIDDEN) // BANDASTATION EDIT: Original - ADMIN_CATEGORY_MAIN
 	user.holder.poll_list_panel()
 	BLACKBOX_LOG_ADMIN_VERB("Server Poll Management")
 
@@ -445,7 +447,7 @@ ADMIN_VERB(build_mode_self, R_BUILD, "Toggle Build Mode Self", "Toggle build mod
 	togglebuildmode(user.mob) // why is this a global proc???
 	BLACKBOX_LOG_ADMIN_VERB("Toggle Build Mode")
 
-ADMIN_VERB(check_ai_laws, R_ADMIN, "Check AI Laws", "View the current AI laws.", ADMIN_CATEGORY_GAME)
+ADMIN_VERB(check_ai_laws, R_ADMIN, "Check AI Laws", "View the current AI laws.", ADMIN_CATEGORY_HIDDEN) // BANDASTATION EDIT: Original - ADMIN_CATEGORY_GAME
 	user.holder.output_ai_laws()
 
 ADMIN_VERB(manage_sect, R_ADMIN, "Manage Religious Sect", "Manages the chaplain's religion.", ADMIN_CATEGORY_GAME)

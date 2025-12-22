@@ -37,7 +37,7 @@
 	///Disease recipient candidates
 	var/list/disease_candidates = list()
 
-/datum/round_event_control/disease_outbreak/can_spawn_event(players_amt, allow_magic = FALSE, fake_check = FALSE) // BANDASTATION EDIT - STORYTELLER
+/datum/round_event_control/disease_outbreak/can_spawn_event(players_amt, allow_magic = FALSE)
 	. = ..()
 	if(!.)
 		return .
@@ -121,6 +121,9 @@
 		var/datum/disease/fake_virus = pick(virus_candidates)
 		illness_type = initial(fake_virus.name)
 	priority_announce("Вспышка биологической угрозы 7-го уровня зафиксирована на борту [station_name()]. Всему персоналу надлежит сдержать её распространение.", "[illness_type]", ANNOUNCER_OUTBREAK7)
+
+	// Set status displays to biohazard alert
+	send_status_display_biohazard_alert()
 
 /datum/round_event/disease_outbreak/setup()
 	announce_when = ADV_ANNOUNCE_DELAY

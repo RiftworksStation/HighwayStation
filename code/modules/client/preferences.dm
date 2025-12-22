@@ -88,6 +88,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	/// If set to TRUE, will update character_profiles on the next ui_data tick.
 	var/tainted_character_profiles = FALSE
 
+	var/list/custom_emote_panel = list() // BANDASTATION ADD - Emote Panel
+
 /datum/preferences/Destroy(force)
 	QDEL_NULL(character_preview_view)
 	QDEL_LIST(middleware)
@@ -101,8 +103,13 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		middleware += new middleware_type(src)
 
 	if(IS_CLIENT_OR_MOCK(parent))
-		load_and_save = !is_guest_key(parent.key)
-		load_path(parent.ckey)
+		if(is_guest_key(parent.key))
+			if(parent.is_localhost())
+				path = DEV_PREFS_PATH // guest + locallost = dev instance, load dev preferences if possible
+			else
+				load_and_save = FALSE // guest + not localhost = guest on live, don't save anything
+		else
+			load_path(parent.ckey) // not guest = load their actual savefile
 		if(load_and_save && !fexists(path))
 			try_savefile_type_migration()
 
@@ -209,6 +216,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			save_character()
 			// SAFETY: `switch_to_slot` performs sanitization on the slot number
 			switch_to_slot(params["slot"])
+
+			parent.tgui_panel?.window.send_message("emotes/setList", custom_emote_panel) // BANDASTATION ADD - Emote Panel
+
 			return TRUE
 		if ("remove_current_slot")
 			remove_current_slot()
@@ -264,6 +274,16 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				return FALSE
 
 			return TRUE
+		// BANDASTATION ADDITION - START
+		if("change_preferences_window")
+			if(current_window == PREFERENCE_TAB_CHARACTER_PREFERENCES)
+				current_window = PREFERENCE_TAB_GAME_PREFERENCES
+			else
+				current_window = PREFERENCE_TAB_CHARACTER_PREFERENCES
+			update_static_data(ui.user)
+			ui_interact(ui.user)
+			return TRUE
+		// BANDASTATION ADDITION - END
 
 	for (var/datum/preference_middleware/preference_middleware as anything in middleware)
 		var/delegation = preference_middleware.action_delegations[action]
@@ -411,7 +431,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	return TRUE
 
 /datum/preferences/proc/GetQuirkBalance()
-	var/bal = 0
+	var/bal = CONFIG_GET(number/default_quirk_points)
 	for(var/V in all_quirks)
 		var/datum/quirk/T = SSquirks.quirks[V]
 		bal -= initial(T.value)
@@ -497,12 +517,22 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	apply_character_randomization_prefs(is_antag)
 	apply_prefs_to(character, icon_updates)
 
-/// Applies the given preferences to a human mob.
-/datum/preferences/proc/apply_prefs_to(mob/living/carbon/human/character, icon_updates = TRUE)
+/**
+ * Applies the given preferences to a human mob.
+ *
+ * Arguments:
+ * * character - The human mob to apply the preferences to
+ * * icon_updates - Whether to update the mob's icons after applying preferences.
+ * Is often skipped to save processing when an update will happen later anyway.
+ * * do_not_apply - A list of preference types to skip when applying preferences.
+ */
+/datum/preferences/proc/apply_prefs_to(mob/living/carbon/human/character, icon_updates = TRUE, list/do_not_apply)
 	character.dna.features = list()
 
 	for (var/datum/preference/preference as anything in get_preferences_in_priority_order())
 		if (preference.savefile_identifier != PREFERENCE_CHARACTER)
+			continue
+		if (preference.type in do_not_apply)
 			continue
 
 		preference.apply_to_human(character, read_preference(preference.type))
@@ -564,5 +594,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		to_chat(parent, span_warning("There's been a connection failure while trying to check the status of your BYOND membership. Reconnecting may fix the issue, or BYOND could be experiencing downtime."))
 
 	unlock_content = !!byond_member
-	if(unlock_content)
-		max_save_slots = 8
+	// BANDASTATION REMOVE - Start
+	// if(unlock_content)
+	// 	max_save_slots = 8
+	// BANDASTATION REMOVE - End

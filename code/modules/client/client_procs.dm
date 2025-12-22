@@ -4,8 +4,11 @@
 
 GLOBAL_LIST_INIT(blacklisted_builds, list(
 	"1622" = "Bug breaking rendering can lead to wallhacks.",
-	))
-
+))
+GLOBAL_LIST_INIT(unrecommended_builds, list(
+	"1670" = "Bug breaking in-world text rendering.",
+	"1671" = "Bug breaking in-world text rendering.",
+))
 #define LIMITER_SIZE 5
 #define CURRENT_SECOND 1
 #define SECOND_COUNT 2
@@ -101,9 +104,11 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	if(href_list["priv_msg"])
 		cmd_admin_pm(href_list["priv_msg"],null)
 		return
+	/* BANDASTATION REMOVAL
 	if (href_list["player_ticket_panel"])
 		view_latest_ticket()
 		return
+	*/
 	// Admin message
 	if(href_list["messageread"])
 		var/message_id = round(text2num(href_list["messageread"]), 1)
@@ -114,6 +119,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 			list("id" = message_id, "player_key" = usr.ckey)
 		)
 		query_message_read.warn_execute()
+		QDEL_NULL(query_message_read)
 		return
 
 	// TGUIless adminhelp
@@ -139,9 +145,9 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 			if(!SSmapping.current_map.mapping_url)
 				return
 			if(is_station_level(mob.z))
-				src << link("[SSmapping.current_map.mapping_url][LOWER_TEXT(sanitize_css_class_name(SSmapping.current_map.map_name))]/?x=[mob.x]&y=[mob.y]&zoom=6")
+				src << link("[SSmapping.current_map.mapping_url]/?x=[mob.x]&y=[mob.y]&zoom=6")
 			else
-				src << link("[SSmapping.current_map.mapping_url][LOWER_TEXT(sanitize_css_class_name(SSmapping.current_map.map_name))]")
+				src << link("[SSmapping.current_map.mapping_url]")
 	if (hsrc)
 		var/datum/real_src = hsrc
 		if(QDELETED(real_src))
@@ -260,19 +266,15 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	if(GLOB.persistent_clients_by_ckey[ckey])
 		reconnecting = TRUE
 		persistent_client = GLOB.persistent_clients_by_ckey[ckey]
-		persistent_client.byond_build = byond_build
-		persistent_client.byond_version = byond_version
 	else
-		persistent_client = new(ckey)
-		persistent_client.byond_build = byond_build
-		persistent_client.byond_version = byond_version
+		persistent_client = new(ckey, key) // BANDASTATION ADDITION - Mentors: (key)
+	persistent_client.set_client(src)
 
 	if(SScentral.can_run())
-		SScentral.get_player_discord_async(ckey)
+		SScentral.update_player_discord_async(ckey)
 		SScentral.update_player_donate_tier_blocking(src)
 
-	if(byond_version >= 516)
-		winset(src, null, list("browser-options" = "find,refresh,byondstorage"))
+	winset(src, null, list("browser-options" = "find")) // BANDASTATION EDIT - Removed 'refresh'
 
 	// Instantiate stat panel
 	stat_panel = new(src, "statbrowser")
@@ -287,7 +289,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 	set_right_click_menu_mode(TRUE)
 
-	GLOB.ahelp_tickets.ClientLogin(src)
+	GLOB.ticket_manager.client_login(persistent_client) // BANDASTATION REPLACEMENT - Original: GLOB.ahelp_tickets.ClientLogin(src)
 	GLOB.interviews.client_login(src)
 	GLOB.requests.client_login(src)
 	//preferences datum - also holds some persistent data for the client (because we may as well keep these datums to a minimum)
@@ -326,30 +328,47 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 			if(!joined_player_preferences)
 				continue //this shouldn't happen.
 
-			var/client/C = GLOB.directory[joined_player_ckey]
-			var/in_round = ""
-			if (joined_players[joined_player_ckey])
-				in_round = " who has played in the current round"
-			var/message_type = "Notice"
+			var/client/potential_match = GLOB.directory[joined_player_ckey]
 
-			var/matches
+			var/matched_ip = null
+			var/matched_cid = null
+			var/same_round = FALSE
+
 			if(joined_player_preferences.last_ip == address)
-				matches += "IP ([address])"
+				matched_ip = "IP [address]"
+
 			if(joined_player_preferences.last_id == computer_id)
-				if(matches)
-					matches = "BOTH [matches] and "
-					alert_admin_multikey = TRUE
-					message_type = "MULTIKEY"
-				matches += "Computer ID ([computer_id])"
+				matched_cid = "Computer ID [computer_id]"
 				alert_mob_dupe_login = TRUE
 
-			if(matches)
-				if(C)
-					message_admins(span_danger("<B>[message_type]: </B></span><span class='notice'>Connecting player [key_name_admin(src)] has the same [matches] as [key_name_admin(C)]<b>[in_round]</b>."))
-					log_admin_private("[message_type]: Connecting player [key_name(src)] has the same [matches] as [key_name(C)][in_round].")
-				else
-					message_admins(span_danger("<B>[message_type]: </B></span><span class='notice'>Connecting player [key_name_admin(src)] has the same [matches] as [joined_player_ckey](no longer logged in)<b>[in_round]</b>. "))
-					log_admin_private("[message_type]: Connecting player [key_name(src)] has the same [matches] as [joined_player_ckey](no longer logged in)[in_round].")
+			if(isnull(matched_ip) && isnull(matched_cid))
+				continue
+
+			if (joined_players[joined_player_ckey])
+				same_round = TRUE
+
+			var/double_match = !isnull(matched_ip) && !isnull(matched_cid)
+
+			if(double_match && same_round)
+				alert_admin_multikey = TRUE
+
+			var/list/concatables = list()
+			concatables += span_danger(span_bold("[double_match ? "MULTIKEY" : "Notice"]:"))
+			concatables += "<span class='notice'>Connecting player [key_name_admin(src)] has the same"
+			if(double_match)
+				concatables += "!BOTH! [matched_ip] and [matched_cid]"
+			else
+				concatables += (!isnull(matched_ip) ? matched_ip : matched_cid)
+			concatables += "as [isnull(potential_match) ? "[joined_player_ckey] (no longer logged in)" : "[key_name_admin(potential_match)]"]"
+			if(same_round)
+				concatables += span_bold("in the current round")
+
+			concatables += "</span>"
+
+			var/sendable_string = jointext(concatables, " ")
+
+			message_admins(sendable_string)
+			log_admin_private(strip_html_full(sendable_string, MAX_MESSAGE_LEN))
 
 	. = ..() //calls mob.Login()
 
@@ -372,7 +391,10 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 				new /datum/admins(autoadmin_ranks, ckey)
 
 	if(CONFIG_GET(flag/enable_localhost_rank) && !connecting_admin && is_localhost())
-		var/datum/admin_rank/localhost_rank = new("!localhost!", R_EVERYTHING, R_DBRANKS, R_EVERYTHING) //+EVERYTHING -DBRANKS *EVERYTHING
+		var/datum/admin_rank/localhost_rank = new("!localhost!", RANK_SOURCE_LOCAL, R_EVERYTHING, R_DBRANKS, R_EVERYTHING) //+EVERYTHING -DBRANKS *EVERYTHING
+		if(QDELETED(localhost_rank))
+			to_chat(world, "Local admin rank creation failed, somehow?")
+			return
 		new /datum/admins(list(localhost_rank), ckey, 1, 1)
 
 	if (length(GLOB.stickybanadminexemptions))
@@ -565,9 +587,11 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 	loot_panel = new(src)
 
-	view_size = new(src, getScreenSize(prefs.read_preference(/datum/preference/toggle/widescreen)))
+	view_size = new(src)
+	set_fullscreen(logging_in = TRUE)
 	view_size.resetFormat()
 	view_size.setZoomMode()
+	view_size.apply()
 	Master.UpdateTickRate()
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_CLIENT_CONNECT, src)
 	fully_created = TRUE
@@ -598,10 +622,14 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 	GLOB.clients -= src
 	GLOB.directory -= ckey
-	persistent_client.client = null
+	if(persistent_client)
+		GLOB.ticket_manager.client_logout(persistent_client) // BANDASTATION ADDITION
+		persistent_client.set_client(null)
+	else
+		stack_trace("A client was Del()'d without a persistent_client! This should not be happening.")
 
 	log_access("Logout: [key_name(src)]")
-	GLOB.ahelp_tickets.ClientLogout(src)
+	// GLOB.ahelp_tickets.ClientLogout(src) // BANDASTATION REMOVAL
 	GLOB.interviews.client_logout(src)
 	GLOB.requests.client_logout(src)
 	SSserver_maint.UpdateHubStatus()
@@ -623,6 +651,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	QDEL_NULL(loot_panel)
 	QDEL_NULL(parallax_rock)
 	QDEL_LIST(parallax_layers_cached)
+	QDEL_NULL(who) // BANDASTATION ADDITION - TGUI Who
 	parallax_layers = null
 	seen_messages = null
 	Master.UpdateTickRate()
@@ -667,6 +696,20 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 		return
 
 	var/client_is_in_db = query_client_in_db.NextRow()
+
+	if(GLOB.clients.len >= CONFIG_GET(number/extreme_popcap))
+		if(!GLOB.joined_player_list.Find(ckey) && !holder && !GLOB.deadmins[ckey])
+			var/list/connectiontopic_a = params2list(connectiontopic)
+			var/list/panic_addr = CONFIG_GET(string/panic_server_address)
+			if(panic_addr && !connectiontopic_a["redirect"])
+				var/panic_name = CONFIG_GET(string/panic_server_name)
+				to_chat_immediate(src, span_notice("Sending you to [panic_name ? panic_name : panic_addr]."))
+				winset(src, null, "command=.options")
+				src << link("[panic_addr]?redirect=1")
+				qdel(query_client_in_db)
+				qdel(src)
+				return
+
 	// If we aren't an admin, and the flag is set (the panic bunker is enabled).
 	if(CONFIG_GET(flag/panic_bunker) && !holder && !GLOB.deadmins[ckey])
 		// The amount of hours needed to bypass the panic bunker.
@@ -1016,9 +1059,15 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 				if("South")
 					movement_keys[key] = SOUTH
 				if(ADMIN_CHANNEL)
-					if(holder)
+					if(check_rights_for(src, R_ADMIN))
 						var/asay = tgui_say_create_open_command(ADMIN_CHANNEL)
 						winset(src, "default-[REF(key)]", "parent=default;name=[key];command=[asay]")
+					else
+						winset(src, "default-[REF(key)]", "parent=default;name=[key];command=")
+				if(MENTOR_CHANNEL)
+					if(check_rights_for(src, R_MENTOR))
+						var/msay = tgui_say_create_open_command(MENTOR_CHANNEL)
+						winset(src, "default-[REF(key)]", "parent=default;name=[key];command=[msay]")
 					else
 						winset(src, "default-[REF(key)]", "parent=default;name=[key];command=")
 	calculate_move_dir()
@@ -1122,8 +1171,8 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 /client/proc/open_filter_editor(atom/in_atom)
 	if(holder)
-		holder.filteriffic = new /datum/filter_editor(in_atom)
-		holder.filteriffic.ui_interact(mob)
+		holder.filterrific = new /datum/filter_editor(in_atom)
+		holder.filterrific.ui_interact(mob)
 
 ///opens the particle editor UI for the in_atom object for this client
 /client/proc/open_particle_editor(atom/movable/in_atom)
@@ -1204,8 +1253,18 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	set name = "Toggle Fullscreen"
 	set category = "OOC"
 
-	fullscreen = !fullscreen
+	var/is_on = prefs.read_preference(/datum/preference/toggle/fullscreen_mode)
+	prefs.write_preference(GLOB.preference_entries[/datum/preference/toggle/fullscreen_mode], !is_on)
+	set_fullscreen()
 
+/client/proc/set_fullscreen(logging_in = FALSE)
+	var/fullscreen = prefs?.read_preference(/datum/preference/toggle/fullscreen_mode)
+	//no need to set every login to not fullscreen, they already aren't.
+	//we also dont need to call attempt_auto_fit_viewport, Login does that for us.
+	if(logging_in)
+		if(fullscreen)
+			winset(src, "mainwindow", "menu=;is-fullscreen=[fullscreen ? "true" : "false"]")
+		return
 	winset(src, "mainwindow", "menu=;is-fullscreen=[fullscreen ? "true" : "false"]")
 	attempt_auto_fit_viewport()
 

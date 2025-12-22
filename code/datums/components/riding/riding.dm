@@ -185,7 +185,8 @@
 	if(seat.buckle_lying && rider.body_position == LYING_DOWN)
 		y_offset += (-1 * PIXEL_Y_OFFSET_LYING)
 
-	rider.add_offsets(RIDING_SOURCE, x_add = x_offset, y_add = y_offset, animate = animate)
+	// Rider uses pixel_z offsets as they're above the turf, not up north on the turf
+	rider.add_offsets(RIDING_SOURCE, x_add = x_offset, z_add = y_offset, animate = animate)
 	rider.layer = layer
 
 #undef GET_X_OFFSET
@@ -264,7 +265,7 @@
 /datum/component/riding/proc/driver_move(atom/movable/movable_parent, mob/living/user, direction)
 	SIGNAL_HANDLER
 	SHOULD_CALL_PARENT(TRUE)
-	movable_parent.set_glide_size(DELAY_TO_GLIDE_SIZE(modified_move_delay(vehicle_move_delay))) // BANDASTATION EDIT - Vehicle speed
+	movable_parent.set_glide_size(DELAY_TO_GLIDE_SIZE(modified_move_delay(vehicle_move_delay, cap_speed = TRUE))) // BANDASTATION EDIT - Speed
 
 /// So we can check all occupants when we bump a door to see if anyone has access
 /datum/component/riding/proc/vehicle_bump(atom/movable/movable_parent, obj/machinery/door/possible_bumped_door)

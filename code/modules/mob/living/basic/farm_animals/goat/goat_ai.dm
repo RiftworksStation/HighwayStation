@@ -4,7 +4,7 @@
 		BB_TARGETING_STRATEGY = /datum/targeting_strategy/basic,
 	)
 
-	ai_traits = STOP_MOVING_WHEN_PULLED
+	ai_traits = DEFAULT_AI_FLAGS | STOP_MOVING_WHEN_PULLED
 	ai_movement = /datum/ai_movement/basic_avoidance
 	idle_behavior = /datum/idle_behavior/idle_random_walk
 
@@ -18,6 +18,6 @@
 
 /datum/ai_planning_subtree/random_speech/goat
 	speech_chance = 3
-	emote_hear = list("brays.")
-	emote_see = list("shakes their head.", "stamps a foot.", "glares around.")
-	speak = list("EHEHEHEHEH", "eh?")
+	emote_hear = list("блеет.")
+	emote_see = list("трясет головой.", "топает ногой.", "пялится вокруг.")
+	speak = list("беее", "бе?")

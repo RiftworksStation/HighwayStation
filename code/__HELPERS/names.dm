@@ -257,7 +257,7 @@ GLOBAL_DATUM(syndicate_code_response_regex, /regex)
 					if(2)
 						var/datum/job/job = pick(SSjob.joinable_occupations)
 						if(job)
-							. += job.title //Returns a job.
+							. += LOWER_TEXT(job_title_ru(job.title)) //Returns a job.
 						else
 							stack_trace("Failed to pick(SSjob.joinable_occupations) on generate_code_phrase()")
 							. += "Bug"
@@ -395,3 +395,11 @@ GLOBAL_DATUM(syndicate_code_response_regex, /regex)
 	if(breaks.Find(given_name))
 		return FALSE
 	return TRUE
+
+/// Generates and returns a list of both arabic and roman numerals for 1 through 99
+/proc/generate_number_strings()
+	var/list/numbers = list()
+	for(var/i in 1 to 99)
+		numbers += "[i]"
+		numbers += "\Roman[i]"
+	return numbers

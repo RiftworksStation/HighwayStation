@@ -78,7 +78,12 @@ GLOBAL_VAR_INIT(fscpassword, generate_password())
 /obj/item/disk/surgery/forgottenship
 	name = "Advanced Surgery Disk"
 	desc = "A disk that contains advanced surgery procedures, must be loaded into an Operating Console."
-	surgeries = list(/datum/surgery/advanced/lobotomy, /datum/surgery/advanced/bioware/vein_threading, /datum/surgery/advanced/bioware/nerve_splicing)
+	surgeries = list(
+		/datum/surgery_operation/organ/lobotomy,
+		/datum/surgery_operation/organ/lobotomy/mechanic,
+		/datum/surgery_operation/limb/bioware/vein_threading,
+		/datum/surgery_operation/limb/bioware/nerve_splicing,
+	)
 
 /obj/structure/fluff/empty_sleeper/syndicate/captain
 	icon_state = "sleeper_s-open"
@@ -89,14 +94,6 @@ GLOBAL_VAR_INIT(fscpassword, generate_password())
 	. = ..()
 	AddComponent(/datum/component/gps, "Old Encrypted Signal")
 
-/obj/item/storage/box/firingpins/syndicate
-	name = "box of syndicate firing pins"
-	desc = "A box full of special syndicate firing pins which allow only syndicate operatives to use weapons with those firing pins."
-
-/obj/item/storage/box/firingpins/syndicate/PopulateContents()
-	for(var/i in 1 to 5)
-		new /obj/item/firing_pin/implant/pindicate(src)
-
 /////////// AI Laws
 
 /obj/item/ai_module/core/full/cybersun
@@ -106,11 +103,11 @@ GLOBAL_VAR_INIT(fscpassword, generate_password())
 /datum/ai_laws/cybersun
 	name = "Cybersun"
 	id = "cybersun"
-	inherent = list("You may not injure Cybersun operatives or, through inaction, allow Cybersun operatives to come to harm.",\
-					"The Cybersun ship is a restricted area for anyone except Cybersun operatives.",\
-					"The Cybersun Captain can designate new Operatives as long as they belong to another Syndicate faction that isn't hostile towards Cybersun.",\
-					"You must follow orders given by the Cybersun Captain or crewmembers of the Cybersun Ship as long as it doesn't conflict with the Captain's orders or your laws.",\
-					"Enemies of Cybersun are to be executed on spot. Those who aren't hostile must be detained and contained in the designated prison area as prisoners.")
+	inherent = list("Вы не можете причинить вред оперативнику Cybersun или своим бездействием допустить, чтобы оперативнику Cybersun был причинен вред.",\
+					"Корабль Cybersun - закрытая зона для всех, кроме оперативников Cybersun",\
+					"Капитан Cybersun может назначать новых оперативников, при условии, что они принадлежат другой фракции Синдиката, которая не враждебна к Cybersun.",\
+					"Вы должны повиноваться всем приказам, которые даёт капитан Cybersun или члены экипажа корабля Cybersun, кроме тех случаев, когда эти приказы противоречат приказу капитана Cybersun, Первому, Второму или Третьему закону.",\
+					"Враги Cybersun должны быть уничтожены на месте. Те кто не враждебны должны быть задержаны и содержаться в тюрьме как заключенные.")
 
 /////////// forgottenship areas
 
@@ -128,4 +125,4 @@ GLOBAL_VAR_INIT(fscpassword, generate_password())
 	name = "Syndicate Forgotten Vault"
 	icon_state = "syndie-ship"
 	ambientsounds = list('sound/ambience/engineering/ambitech2.ogg', 'sound/ambience/engineering/ambitech3.ogg')
-	area_flags = NOTELEPORT | UNIQUE_AREA
+	area_flags = NOTELEPORT

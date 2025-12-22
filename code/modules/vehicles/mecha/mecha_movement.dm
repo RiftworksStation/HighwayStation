@@ -75,7 +75,7 @@
 /obj/vehicle/sealed/mecha/vehicle_move(direction, forcerotate = FALSE)
 	if(!COOLDOWN_FINISHED(src, cooldown_vehicle_move))
 		return FALSE
-	COOLDOWN_START(src, cooldown_vehicle_move, modified_move_delay(movedelay)) // BANDASTATION EDIT - Vehicle speed
+	COOLDOWN_START(src, cooldown_vehicle_move, modified_move_delay(movedelay, cap_speed = TRUE)) // BANDASTATION EDIT - Speed
 	if(completely_disabled)
 		return FALSE
 	if(!direction)
@@ -108,7 +108,7 @@
 			to_chat(occupants, "[icon2html(src, occupants)][span_warning("Missing [english_list(missing_parts)].")]")
 			TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MESSAGE, 2 SECONDS)
 		return FALSE
-	if(!use_energy(step_energy_drain))
+	if((step_energy_drain != 0) && !use_energy(step_energy_drain))
 		if(TIMER_COOLDOWN_FINISHED(src, COOLDOWN_MECHA_MESSAGE))
 			to_chat(occupants, "[icon2html(src, occupants)][span_warning("Insufficient power to move!")]")
 			TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MESSAGE, 2 SECONDS)
@@ -144,7 +144,7 @@
 		if(keyheld || !pivot_step) //If we pivot step, we don't return here so we don't just come to a stop
 			return TRUE
 
-	set_glide_size(DELAY_TO_GLIDE_SIZE(modified_move_delay(movedelay))) // BANDASTATION EDIT - Vehicle speed
+	set_glide_size(DELAY_TO_GLIDE_SIZE(modified_move_delay(movedelay, cap_speed = TRUE))) // BANDASTATION EDIT - Speed
 	//Otherwise just walk normally
 	. = try_step_multiz(direction)
 
@@ -205,6 +205,6 @@
 */
 /obj/vehicle/sealed/mecha/proc/do_camera_update(oldLoc)
 	if(oldLoc != get_turf(src))
-		GLOB.cameranet.updatePortableCamera(chassis_camera, MECH_CAMERA_BUFFER)
+		SScameras.update_portable_camera(chassis_camera, MECH_CAMERA_BUFFER)
 	updating = FALSE
 #undef MECH_CAMERA_BUFFER

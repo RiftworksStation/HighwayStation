@@ -192,11 +192,7 @@
 /proc/dispatch_announcement_to_players(announcement, list/players = GLOB.player_list, sound_override = null, should_play_sound = TRUE, datum/component/tts_component/tts_override = null, tts_message) // BANDASTATION ADDITION: "datum/component/tts_component/tts_override = null" & "tts_message"
 	var/sound_to_play = !isnull(sound_override) ? sound_override : 'sound/announcer/notice/notice2.ogg'
 
-	// note for later: low-hanging fruit to convert to astype() behind an experiment define whenever the 516 beta releases
-	// var/datum/callback/should_play_sound_callback = astype(should_play_sound)
-	var/datum/callback/should_play_sound_callback
-	if(istype(should_play_sound, /datum/callback))
-		should_play_sound_callback = should_play_sound
+	var/datum/callback/should_play_sound_callback = astype(should_play_sound)
 
 	for(var/mob/target in players)
 		if(isnewplayer(target) || !target.can_hear())
@@ -216,19 +212,14 @@
 				var/mob/living/silicon/ai/active_ai = DEFAULTPICK(active_ais(TRUE, null), null)
 				announcement_tts_seed = active_ai ? active_ai.get_tts_seed() : /datum/tts_seed/silero/glados
 
-			INVOKE_ASYNC(
-				SStts220, \
-				TYPE_PROC_REF(/datum/controller/subsystem/tts220, get_tts), \
-				null, \
-				target, \
-				tts_message, \
-				announcement_tts_seed, \
-				FALSE, \
-				list(/datum/singleton/sound_effect/announcement), \
-				null, \
-				sound_to_play, \
-				null, \
-				CHANNEL_TTS_ANNOUNCEMENT, \
+			SStts220.get_tts(
+				listener = target,
+				message = tts_message,
+				tts_seed = announcement_tts_seed,
+				is_local = FALSE,
+				effect_types = list(/datum/singleton/sound_effect/announcement),
+				preSFX = sound_to_play,
+				channel_override = CHANNEL_TTS_ANNOUNCEMENT
 			)
 			// BANDASTATION EDIT END - TTS
 

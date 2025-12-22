@@ -97,19 +97,22 @@ GLOBAL_LIST_INIT(holiday_mail, list())
 			return holiday_colors[(thing_to_color.x % holiday_colors.len) + 1]
 
 /proc/request_holiday_colors(atom/thing_to_color, pattern)
-	switch(pattern)
-		if(PATTERN_RANDOM)
-			return "#[random_short_color()]"
-		if(PATTERN_RAINBOW)
-			var/datum/holiday/pride_week/rainbow_datum = new()
-			return rainbow_datum.get_holiday_colors(thing_to_color, PATTERN_DEFAULT)
-	if(!length(GLOB.holidays))
-		return
-	for(var/holiday_key in GLOB.holidays)
-		var/datum/holiday/holiday_real = GLOB.holidays[holiday_key]
-		if(!holiday_real.holiday_colors)
-			continue
-		return holiday_real.get_holiday_colors(thing_to_color, pattern || holiday_real.holiday_pattern)
+	// // BANDASTATION REMOVAL START - Remove holiday tile recoloring
+	// switch(pattern)
+	// 	if(PATTERN_RANDOM)
+	// 		return "#[random_short_color()]"
+	// 	if(PATTERN_RAINBOW)
+	// 		var/datum/holiday/pride_week/rainbow_datum = new()
+	// 		return rainbow_datum.get_holiday_colors(thing_to_color, PATTERN_DEFAULT)
+	// if(!length(GLOB.holidays))
+	// 	return
+	// for(var/holiday_key in GLOB.holidays)
+	// 	var/datum/holiday/holiday_real = GLOB.holidays[holiday_key]
+	// 	if(!holiday_real.holiday_colors)
+	// 		continue
+	// 	return holiday_real.get_holiday_colors(thing_to_color, pattern || holiday_real.holiday_pattern)
+	// // BANDASTATION REMOVAL END - Remove holiday tile recoloring
+	return // BANDASTATION ADDITION - Remove holiday tile recoloring
 
 // The actual holidays
 
@@ -398,6 +401,23 @@ GLOBAL_LIST_INIT(holiday_mail, list())
 
 /datum/holiday/bee/getStationPrefix()
 	return pick("Bee","Honey","Hive","Africanized","Mead","Buzz")
+
+/datum/holiday/goth
+	name = "Goth Day"
+	begin_day = 22
+	begin_month = MAY
+	holiday_mail = list(
+		/obj/item/lipstick,
+		/obj/item/lipstick/black,
+		/obj/item/clothing/suit/costume/gothcoat,
+	)
+	holiday_colors = list(
+		COLOR_WHITE,
+		COLOR_BLACK,
+	)
+
+/datum/holiday/goth/getStationPrefix()
+	return pick("Goth", "Sanguine", "Tenebris", "Lacrimosa", "Umbra", "Noctis")
 
 // JUNE
 
@@ -830,7 +850,13 @@ GLOBAL_LIST_INIT(holiday_mail, list())
 	begin_month = DECEMBER
 	end_day = 27
 	holiday_hat = /obj/item/clothing/head/costume/santa
-	no_mail_holiday = TRUE
+	holiday_mail = list(
+		/obj/item/clothing/head/beanie/christmas,
+		/obj/item/clothing/neck/scarf/christmas,
+		/obj/item/food/cookie/sugar,
+		/obj/item/gift/anything,
+		/obj/item/toy/xmas_cracker,
+	)
 	holiday_colors = list(
 		COLOR_CHRISTMAS_GREEN,
 		COLOR_CHRISTMAS_RED,
@@ -858,6 +884,27 @@ GLOBAL_LIST_INIT(holiday_mail, list())
 
 /datum/holiday/xmas/greet()
 	return "Have a merry Christmas!"
+
+/datum/holiday/xmas/celebrate()
+	. = ..()
+	SSticker.OnRoundstart(CALLBACK(src, PROC_REF(roundstart_celebrate)))
+	GLOB.maintenance_loot += list(
+		list(
+			/obj/item/clothing/head/costume/santa = 1,
+			/obj/item/gift/anything = 1,
+			/obj/item/toy/xmas_cracker = 3,
+		) = maint_holiday_weight,
+	)
+
+/datum/holiday/xmas/proc/roundstart_celebrate()
+	for(var/obj/machinery/computer/security/telescreen/entertainment/Monitor as anything in SSmachines.get_machines_by_type_and_subtypes(/obj/machinery/computer/security/telescreen/entertainment))
+		Monitor.icon_state_on = "entertainment_xmas"
+
+	for(var/mob/living/basic/pet/dog/corgi/ian/Ian in GLOB.mob_living_list)
+		Ian.place_on_head(new /obj/item/clothing/head/helmet/space/santahat(Ian))
+
+	var/datum/supply_pack/pack = SSshuttle.supply_packs[/datum/supply_pack/costumes_toys/christmas]
+	pack.order_flags |= ORDER_SPECIAL_ENABLED
 
 /datum/holiday/boxing
 	name = "Boxing Day"
@@ -966,27 +1013,6 @@ GLOBAL_LIST_INIT(holiday_mail, list())
 
 /datum/holiday/hebrew/passover/getStationPrefix()
 	return pick("Matzah", "Moses", "Red Sea")
-
-// HOLIDAY ADDONS
-
-/datum/holiday/xmas/celebrate()
-	. = ..()
-	SSticker.OnRoundstart(CALLBACK(src, PROC_REF(roundstart_celebrate)))
-	GLOB.maintenance_loot += list(
-		list(
-			/obj/item/clothing/head/costume/santa = 1,
-			/obj/item/gift/anything = 1,
-			/obj/item/toy/xmas_cracker = 3,
-		) = maint_holiday_weight,
-	)
-
-/datum/holiday/xmas/proc/roundstart_celebrate()
-	for(var/obj/machinery/computer/security/telescreen/entertainment/Monitor as anything in SSmachines.get_machines_by_type_and_subtypes(/obj/machinery/computer/security/telescreen/entertainment))
-		Monitor.icon_state_on = "entertainment_xmas"
-
-	for(var/mob/living/basic/pet/dog/corgi/ian/Ian in GLOB.mob_living_list)
-		Ian.place_on_head(new /obj/item/clothing/head/helmet/space/santahat(Ian))
-
 
 // EASTER (this having its own spot should be understandable)
 

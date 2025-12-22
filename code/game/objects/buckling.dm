@@ -104,7 +104,14 @@
 		RegisterSignal(src, COMSIG_MOVABLE_SET_ANCHORED, PROC_REF(on_set_anchored))
 	M.set_buckled(src)
 	buckled_mobs |= M
-	M.throw_alert(ALERT_BUCKLED, /atom/movable/screen/alert/buckled)
+
+	///If the icon is too big, don't add it to the screen alert
+	var/add_src_icon = TRUE
+	var/list/dim = get_icon_dimensions(icon)
+	if(dim["height"] > ICON_SIZE_Y || dim["width"] > ICON_SIZE_X)
+		add_src_icon = FALSE
+
+	M.throw_alert(ALERT_BUCKLED, /atom/movable/screen/alert/buckled, new_master = add_src_icon ? src : null)
 	M.set_glide_size(glide_size)
 
 	M.Move(loc)
@@ -324,14 +331,23 @@
 
 	. = buckle_mob(M, check_loc = check_loc)
 	if(.)
-		if(M == user)
-			M.visible_message(span_notice("[capitalize(M.declent_ru(NOMINATIVE))] пристегивает себя к [declent_ru(DATIVE)]."),\
-				span_notice("Вы пристегиваете себя к [declent_ru(DATIVE)]."),\
-				span_hear("Вы слышите металлический лязг."))
-		else
-			M.visible_message(span_warning("[capitalize(user.declent_ru(NOMINATIVE))] пристегивает [M.declent_ru(ACCUSATIVE)] к [declent_ru(DATIVE)]!"),\
-				span_warning("[capitalize(user.declent_ru(NOMINATIVE))] пристегивает вас к [declent_ru(DATIVE)]!"),\
-				span_hear("Вы слышите металлический лязг."))
+		buckle_feedback(M, user)
+
+/// Feedback displayed to nearby players after a mob is buckled to src.
+/atom/movable/proc/buckle_feedback(mob/living/being_buckled, mob/buckler)
+	if(being_buckled == buckler)
+		being_buckled.visible_message(
+			span_notice("[capitalize(buckler.declent_ru(NOMINATIVE))] пристегивает себя к [declent_ru(DATIVE)]."),
+			span_notice("Вы пристегиваете себя к [declent_ru(DATIVE)]."),
+			span_hear("Вы слышите металлический лязг."),
+		)
+	else
+		being_buckled.visible_message(
+			span_warning("[capitalize(buckler.declent_ru(NOMINATIVE))] пристегивает [being_buckled.declent_ru(ACCUSATIVE)] к [declent_ru(DATIVE)]!"),
+			span_warning("[capitalize(buckler.declent_ru(NOMINATIVE))] пристегивает вас к [declent_ru(DATIVE)]!"),
+			span_hear("Вы слышите металлический лязг."),
+		)
+
 /**
  * Handles a user unbuckling a mob from src and sends a visible_message
  *
@@ -342,20 +358,28 @@
  * user - The mob unbuckling buckled_mob
  */
 /atom/movable/proc/user_unbuckle_mob(mob/living/buckled_mob, mob/user)
-	if(!(buckled_mob in buckled_mobs) || !user.CanReach(buckled_mob))
+	if(!(buckled_mob in buckled_mobs) || !buckled_mob.IsReachableBy(user))
 		return
 	var/mob/living/M = unbuckle_mob(buckled_mob)
 	if(M)
-		if(M != user)
-			M.visible_message(span_notice("[capitalize(user.declent_ru(NOMINATIVE))] отстегивает [M.declent_ru(ACCUSATIVE)] от [declent_ru(GENITIVE)]."),\
-				span_notice("[capitalize(user.declent_ru(NOMINATIVE))] отстегивает вас от [declent_ru(GENITIVE)]."),\
-				span_hear("Вы слышите металлический лязг."))
-		else
-			M.visible_message(span_notice("[capitalize(M.declent_ru(NOMINATIVE))] отстегивает себя от [declent_ru(GENITIVE)]."),\
-				span_notice("Вы отстегиваете себя от [declent_ru(GENITIVE)]."),\
-				span_hear("Вы слышите металлический лязг."))
+		unbuckle_feedback(M, user)
 		add_fingerprint(user)
 		if(isliving(M.pulledby))
 			var/mob/living/L = M.pulledby
 			L.set_pull_offsets(M, L.grab_state)
 	return M
+
+/// Feedback displayed to nearby players after a mob is unbuckled from src.
+/atom/movable/proc/unbuckle_feedback(mob/living/unbuckled_mob, mob/unbuckler)
+	if(unbuckled_mob == unbuckler)
+		unbuckled_mob.visible_message(
+			span_notice("[unbuckler] unbuckles [unbuckler.p_them()]self from [src]."),
+			span_notice("You unbuckle yourself from [src]."),
+			span_hear("You hear metal clanking."),
+		)
+	else
+		unbuckled_mob.visible_message(
+			span_notice("[unbuckler] unbuckles [unbuckled_mob] from [src]."),
+			span_notice("[unbuckler] unbuckles you from [src]."),
+			span_hear("You hear metal clanking."),
+		)

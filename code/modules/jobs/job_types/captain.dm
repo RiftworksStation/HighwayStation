@@ -4,7 +4,6 @@
 		сохраните жизнь экипажу, будьте готовы сделать всё возможное или умрите \
 		в муках, пытаясь это сделать."
 	auto_deadmin_role_flags = DEADMIN_POSITION_HEAD|DEADMIN_POSITION_SECURITY
-	department_head = list("CentCom")
 	faction = FACTION_STATION
 	total_positions = 1
 	spawn_positions = 1
@@ -23,14 +22,13 @@
 	paycheck = PAYCHECK_COMMAND
 	paycheck_department = ACCOUNT_SEC
 
-	mind_traits = list(HEAD_OF_STAFF_MIND_TRAITS)
+	mind_traits = list(HEAD_OF_STAFF_MIND_TRAITS, TRAIT_DESENSITIZED)
 	liver_traits = list(TRAIT_ROYAL_METABOLISM)
 
 	display_order = JOB_DISPLAY_ORDER_CAPTAIN
 	department_for_prefs = /datum/job_department/captain
 	departments_list = list(
 		/datum/job_department/command,
-		/datum/job_department/security,
 	)
 
 	family_heirlooms = list(/obj/item/reagent_containers/cup/glass/flask/gold, /obj/item/toy/captainsaid/collector)
@@ -44,7 +42,7 @@
 		/obj/item/skillchip/sabrage = 5,
 	)
 
-	job_flags = STATION_JOB_FLAGS | HEAD_OF_STAFF_JOB_FLAGS
+	job_flags = STATION_JOB_FLAGS | HEAD_OF_STAFF_JOB_FLAGS | JOB_ANTAG_PROTECTED
 	rpg_title = "Star Duke"
 
 	human_authority = JOB_AUTHORITY_HUMANS_ONLY
@@ -96,11 +94,6 @@
 
 /datum/outfit/job/captain/pre_equip(mob/living/carbon/human/H, visuals_only)
 	. = ..()
-	// BANDASTATION ADDITION START - Station Fluff
-	if(CHECK_MAP_JOB_CHANGE(JOB_CAPTAIN, "no_charter"))
-		backpack_contents -= /obj/item/station_charter
-		return
-	// BANDASTATION ADDITION END - Station Fluff
 	special_charter = CHECK_MAP_JOB_CHANGE(JOB_CAPTAIN, "special_charter")
 	if(!special_charter)
 		return

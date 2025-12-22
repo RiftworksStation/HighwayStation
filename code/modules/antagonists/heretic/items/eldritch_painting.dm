@@ -22,37 +22,39 @@
 	// Set to false since we don't want this to persist
 	persistence_id = FALSE
 	/// The trauma the painting applies
-	var/applied_trauma = /datum/brain_trauma/severe/pacifism
+	var/applied_status_effect = /datum/status_effect/eldritch_painting
 	/// The text that shows up when you cross the paintings path
 	var/text_to_display = "Some things should not be seen by mortal eyes..."
 	/// The range of the paintings effect
 	var/range = 7
 
-/obj/structure/sign/painting/eldritch/Initialize(mapload, dir, building)
+/obj/structure/sign/painting/eldritch/Initialize(mapload)
 	. = ..()
-	if(ispath(applied_trauma))
-		var/static/list/connections = list(COMSIG_ATOM_ENTERED = PROC_REF(apply_trauma))
+	if(ispath(applied_status_effect))
+		var/static/list/connections = list(COMSIG_ATOM_ENTERED = PROC_REF(apply_status_effect))
 		AddComponent(/datum/component/connect_range, tracked = src, connections = connections, range = range, works_in_containers = FALSE)
 
-/obj/structure/sign/painting/eldritch/proc/apply_trauma(datum/source, mob/living/carbon/viewer)
+/obj/structure/sign/painting/eldritch/proc/apply_status_effect(datum/source, mob/living/carbon/viewer)
 	SIGNAL_HANDLER
 	if(!isliving(viewer) || !can_see(viewer, src, range))
 		return
 	if(isnull(viewer.mind) || isnull(viewer.mob_mood) || viewer.stat != CONSCIOUS || viewer.is_blind())
 		return
-	if(viewer.has_trauma_type(applied_trauma))
+	if(viewer.has_status_effect(applied_status_effect))
 		return
 	if(IS_HERETIC(viewer))
 		return
-	if(viewer.can_block_magic(MAGIC_RESISTANCE|MAGIC_RESISTANCE_MIND))
+	if(viewer.can_block_magic(MAGIC_RESISTANCE_MOON))
+		return
+	if(viewer.reagents.has_reagent(/datum/reagent/water/holywater))
 		return
 	to_chat(viewer, span_notice(text_to_display))
-	viewer.gain_trauma(applied_trauma, TRAUMA_RESILIENCE_SURGERY)
+	viewer.apply_status_effect(applied_status_effect)
 	INVOKE_ASYNC(viewer, TYPE_PROC_REF(/mob, emote), "scream")
 	to_chat(viewer, span_hypnophrase("Когда вы смотрите на картину, вам разум постигает ее правду!"))
 
 /obj/structure/sign/painting/eldritch/wirecutter_act(mob/living/user, obj/item/I)
-	if(!user.can_block_magic(MAGIC_RESISTANCE))
+	if(!user.can_block_magic(MAGIC_RESISTANCE_MOON))
 		user.add_mood_event("ripped_eldritch_painting", /datum/mood_event/eldritch_painting)
 		to_chat(user, span_hypnophrase("Смех отдается эхом в вашем разуме..."))
 	qdel(src)
@@ -87,7 +89,7 @@
 	name = "The sister and He Who Wept"
 	desc = "Прекрасное произведение искусства, изображающее прекрасную даму и ЕГО, ОН ПЛАЧЕТ, Я УВИЖУ ЕГО СНОВА. Можно уничтожить кусачками."
 	icon_state = "eldritch_painting_weeping"
-	applied_trauma = /datum/brain_trauma/severe/weeping
+	applied_status_effect = /datum/status_effect/eldritch_painting/weeping
 	text_to_display = "О, какое искусство! Она такая прекрасная, а он... ОН ПЛАЧЕТ!!!"
 
 /obj/structure/sign/painting/eldritch/weeping/examine_effects(mob/living/carbon/examiner)
@@ -112,7 +114,7 @@
 	name = "The First Desire"
 	desc = "Картина, изображающая блюдо с плотью, от одного только взгляда на нее сводит желудок и пенится рот. Можно уничтожить кусачками."
 	icon_state = "eldritch_painting_desire"
-	applied_trauma = /datum/brain_trauma/severe/flesh_desire
+	applied_status_effect = /datum/status_effect/eldritch_painting/desire
 	text_to_display = "Какое произведение, от одного взгляда на него хочется есть..."
 
 // The special examine interaction for this painting
@@ -121,8 +123,9 @@
 		// Gives them some nutrition
 		examiner.adjust_nutrition(50)
 		to_chat(examiner, span_warning("Вы чувствуете жгучую боль в животе!"))
-		examiner.adjustOrganLoss(ORGAN_SLOT_STOMACH, 5)
-		to_chat(examiner, span_notice("Вы чувствуете себя менее голодным, но, каким-то образом, более пустым?"))
+		examiner.adjust_organ_loss(ORGAN_SLOT_STOMACH, 5)
+		to_chat(examiner, span_notice("Вы чувствуете себя менее голодным."))
+		to_chat(examiner, span_warning("You should stockpile raw meat and organs, before you get hungry again."))
 		examiner.add_mood_event("respite_eldritch_hunger", /datum/mood_event/eldritch_painting/desire_examine)
 		return
 
@@ -159,7 +162,7 @@
 	name = "Great chaparral over rolling hills"
 	desc = "Картина, изображающая массивные заросли, которые, кажется, пытаются пролезть сковзь рамку. Можно уничтожить кусачками."
 	icon_state = "eldritch_painting_vines"
-	applied_trauma = null
+	applied_status_effect = null
 	// A static list of 5 pretty strong mutations, simple to expand for any admins
 	var/list/mutations = list(
 		/datum/spacevine_mutation/aggressive_spread,
@@ -174,7 +177,7 @@
 		/obj/item/food/grown/harebell,
 	)
 
-/obj/structure/sign/painting/eldritch/vines/Initialize(mapload, dir, building)
+/obj/structure/sign/painting/eldritch/vines/Initialize(mapload)
 	. = ..()
 	new /datum/spacevine_controller(get_turf(src), mutations, 0, 10)
 
@@ -204,7 +207,7 @@
 	name = "\improper Lady of the Gate"
 	desc = "Картина с изображением потустороннего существа. Его тонкая кожа цвета фарфора плотно натянута на странную костную структуру. Оно обладает странной красотой."
 	icon_state = "eldritch_painting_beauty"
-	applied_trauma = /datum/brain_trauma/severe/eldritch_beauty
+	applied_status_effect = /datum/status_effect/eldritch_painting/beauty
 	text_to_display = "Ее плоть сияет в бледном свете, и моя тоже бы могла... Если бы не все эти недостатки..."
 	/// List of reagents to add to heretics on examine, set to mutadone by default to remove mutations
 	var/list/reagents_to_add = list(/datum/reagent/medicine/mutadone = 5)
@@ -234,8 +237,8 @@
 	name = "\improper Master of the Rusted Mountain"
 	desc = "Картина, изображающая странное существо, взбирающееся на гору цвета ржавчины. Работа кистью неестественна и нервирующая. Снимается кусачками."
 	icon_state = "eldritch_painting_rust"
-	applied_trauma = /datum/brain_trauma/severe/rusting
-	text_to_display = "Оно взбирается, и я помогу ему... Ржавчина зовет, и я отвечу."
+	applied_status_effect = /datum/status_effect/eldritch_painting/rusting
+	text_to_display = "Ржавчина разрушается. Мастер поднимается. Он зовет. Ты отвечаешь..."
 
 // The special examine interaction for this painting
 /obj/structure/sign/painting/eldritch/rust/examine_effects(mob/living/carbon/examiner)

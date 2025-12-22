@@ -8,19 +8,21 @@
 		terminal.connect_to_network()
 
 /obj/machinery/power/apc/proc/make_terminal(terminal_cable_layer = cable_layer)
+	//attempt to locate a terminal if mappers/map export placed it here
+	terminal = locate(/obj/machinery/power/terminal) in loc
 	// create a terminal object at the same position as original turf loc
-	// wires will attach to this
-	terminal = new/obj/machinery/power/terminal(loc)
+	if(QDELETED(terminal))
+		terminal = new /obj/machinery/power/terminal(loc)
 	terminal.cable_layer = terminal_cable_layer
 	terminal.setDir(dir)
 	terminal.master = src
 
 /obj/machinery/power/apc/proc/toggle_nightshift_lights(mob/user)
 	if(low_power_nightshift_lights)
-		balloon_alert(user, "power is too low!")
+		balloon_alert(user, "слишком мало питания!")
 		return
 	if(last_nightshift_switch > world.time - 10 SECONDS) //~10 seconds between each toggle to prevent spamming
-		balloon_alert(user, "night breaker is cycling!")
+		balloon_alert(user, "цикл освещения перезаряжается!")
 		return
 	last_nightshift_switch = world.time
 	set_nightshift(!nightshift_lights)
@@ -43,8 +45,8 @@
 		return
 	operating = !operating
 	if (user)
-		var/enabled_or_disabled = operating ? "enabled" : "disabled"
-		balloon_alert(user, "power [enabled_or_disabled]")
+		var/enabled_or_disabled = operating ? "включёно" : "выключено"
+		balloon_alert(user, "питание [enabled_or_disabled]")
 		user.log_message("turned [enabled_or_disabled] the [src]", LOG_GAME)
 		add_hiddenprint(user)
 	update()

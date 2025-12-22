@@ -11,9 +11,9 @@ GLOBAL_LIST_EMPTY_TYPED(persistent_clients, /datum/persistent_client)
 	/// The mob this persistent client is currently bound to.
 	var/mob/mob
 
-	/// Major version of BYOND this client is using.
+	/// Major version of BYOND this client was last using.
 	var/byond_version
-	/// Build number of BYOND this client is using.
+	/// Build number of BYOND this client was last using.
 	var/byond_build
 
 	/// Action datums assigned to this player
@@ -42,21 +42,38 @@ GLOBAL_LIST_EMPTY_TYPED(persistent_clients, /datum/persistent_client)
 	/// BANDASTATION ADDITION START - SScentral
 	/// Discord of the player
 	var/discord_id
+	/// Key of the player
+	var/key
 	/// Ckey of the player
 	var/ckey
+	/// Client var used for tracking the ticket the (usually) not-admin client is dealing with
+	var/datum/help_ticket/current_help_ticket
 	/// BANDASTATION ADDITION END - SScentral
 
-/datum/persistent_client/New(ckey, client)
-	src.client = client
+/datum/persistent_client/New(ckey, key)
 	achievements = new(ckey)
 	GLOB.persistent_clients_by_ckey[ckey] = src
 	GLOB.persistent_clients += src
 	src.ckey = ckey /// BANDASTATION ADDITION - SScentral
+	src.key = key /// BANDASTATION ADDITION - Mentors
 
 /datum/persistent_client/Destroy(force)
 	SHOULD_CALL_PARENT(FALSE)
 	. = QDEL_HINT_LETMELIVE
 	CRASH("Who the FUCK tried to delete a persistent client? Get your head checked you leadskull.")
+
+/// Setter for the client var, updates any vars we have that might be dependent on client state
+/datum/persistent_client/proc/set_client(client/new_client)
+	if(client == new_client)
+		return
+
+	if(client)
+		client.persistent_client = null
+	client = new_client
+	if(client)
+		client.persistent_client = src
+		byond_build = client.byond_build
+		byond_version = client.byond_version
 
 /// Setter for the mob var, handles both references.
 /datum/persistent_client/proc/set_mob(mob/new_mob)

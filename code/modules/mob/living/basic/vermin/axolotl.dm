@@ -1,6 +1,6 @@
 /mob/living/basic/axolotl
-	name = "axolotl"
-	desc = "Quite the colorful amphibian!"
+	name = "аксолотль"
+	desc = "Приятно красочная амфибия!"
 	icon_state = "axolotl"
 	icon_living = "axolotl"
 	icon_dead = "axolotl_dead"
@@ -37,6 +37,6 @@
 	AddElement(/datum/element/swabable, CELL_LINE_TABLE_AXOLOTL, CELL_VIRUS_TABLE_GENERIC_MOB, 1, 5)
 
 /datum/ai_controller/basic_controller/axolotl
-	ai_traits = STOP_MOVING_WHEN_PULLED
+	ai_traits = PASSIVE_AI_FLAGS
 	ai_movement = /datum/ai_movement/basic_avoidance
 	idle_behavior = /datum/idle_behavior/idle_random_walk

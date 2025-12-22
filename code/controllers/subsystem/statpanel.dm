@@ -36,10 +36,7 @@ SUBSYSTEM_DEF(statpanels)
 			global_data += "Next Map: [cached.map_name]"
 
 		global_data += list(
-			"Storyteller: [!SSgamemode.secret_storyteller && SSgamemode.current_storyteller ? SSgamemode.current_storyteller.name : "Secret"]", // BANDASTATION ADDITION - STORYTELLER
 			"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
-			"Players Connected: [LAZYLEN(GLOB.clients)]", // BANDASTATION ADD
-			"Players in Lobby: [LAZYLEN(GLOB.new_player_list)]", // BANDASTATION ADD
 			"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss", world.timezone)]",
 			"[SSticker.round_start_time ? "Round Time" : "Lobby Time"]: [ROUND_TIME()]", // BANDASTATION ADD
 			"Station Time: [station_time_timestamp()]",
@@ -139,8 +136,8 @@ SUBSYSTEM_DEF(statpanels)
 	target.stat_panel.send_message("update_mc", list("mc_data" = mc_data, "coord_entry" = coord_entry))
 
 /datum/controller/subsystem/statpanels/proc/set_tickets_tab(client/target)
-	var/list/ahelp_tickets = GLOB.ahelp_tickets.stat_entry()
-	target.stat_panel.send_message("update_tickets", ahelp_tickets)
+	var/list/help_tickets = GLOB.ticket_manager.stat_entry(target) // BANDASTATION EDIT - Original: ahelp_tickets = GLOB.ahelp_tickets.stat_entry()
+	target.stat_panel.send_message("update_tickets", help_tickets) // BANDASTATION EDIT - Original: ahelp_tickets
 	var/datum/interview_manager/m = GLOB.interviews
 
 	// get open interview count
@@ -198,7 +195,7 @@ SUBSYSTEM_DEF(statpanels)
 		list("World Time:", "[world.time]"),
 		list("Globals:", GLOB.stat_entry(), text_ref(GLOB)),
 		list("[config]:", config.stat_entry(), text_ref(config)),
-		list("Byond:", "(FPS:[world.fps]) (TickCount:[world.time/world.tick_lag]) (TickDrift:[round(Master.tickdrift,1)]([round((Master.tickdrift/(world.time/world.tick_lag))*100,0.1)]%)) (Internal Tick Usage: [round(MAPTICK_LAST_INTERNAL_TICK_USAGE,0.1)]%)"),
+		list("Byond:", "(FPS:[world.fps]) (TickCount:[world.time/world.tick_lag]) (TickDrift:[round(Master.tickdrift,1)]([round((Master.tickdrift/(world.time/world.tick_lag))*100,0.1)]%))\n  (Internal Tick Usage: [round(MAPTICK_LAST_INTERNAL_TICK_USAGE,0.1)]%)"),
 		list("Master Controller:", Master.stat_entry(), text_ref(Master)),
 		list("Failsafe Controller:", Failsafe.stat_entry(), text_ref(Failsafe)),
 		list("","")
@@ -223,7 +220,6 @@ SUBSYSTEM_DEF(statpanels)
 #endif
 	for(var/datum/controller/subsystem/sub_system as anything in Master.subsystems)
 		mc_data[++mc_data.len] = list("\[[sub_system.state_letter()]][sub_system.name]", sub_system.stat_entry(), text_ref(sub_system))
-	mc_data[++mc_data.len] = list("Camera Net", "Cameras: [GLOB.cameranet.cameras.len] | Chunks: [GLOB.cameranet.chunks.len]", text_ref(GLOB.cameranet))
 
 ///immediately update the active statpanel tab of the target client
 /datum/controller/subsystem/statpanels/proc/immediate_send_stat_data(client/target)

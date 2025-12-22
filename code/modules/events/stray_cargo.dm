@@ -42,7 +42,7 @@
 /datum/round_event/stray_cargo/announce(fake)
 	if(fake)
 		impact_area = find_event_area()
-	priority_announce("Бродячая грузовая капсула обнаружена на сканерах дальнего действия. Ожидаемое место падения: [impact_area.name].", "Предупреждение о столкновении")
+	priority_announce("Бродячая грузовая капсула обнаружена на сканерах дальнего действия. Ожидаемое место падения: [impact_area.declent_ru(NOMINATIVE)].", "Предупреждение о столкновении")
 
 /**
 * Tries to find a valid area, throws an error if none are found
@@ -64,9 +64,8 @@
 		stray_spawnable_supply_packs = SSshuttle.supply_packs.Copy()
 		for(var/pack in stray_spawnable_supply_packs)
 			var/datum/supply_pack/pack_type = pack
-			if(initial(pack_type.special))
+			if(initial(pack_type.order_flags) & ORDER_SPECIAL)
 				stray_spawnable_supply_packs -= pack
-	setup = TRUE // BANDASTATION EDIT - STORYTELLER
 
 ///Spawns a random supply pack, puts it in a pod, and spawns it on a random tile of the selected area
 /datum/round_event/stray_cargo/start()
@@ -117,8 +116,8 @@
 	if(!allowed_areas)
 		///Places that shouldn't explode
 		var/static/list/safe_area_types = typecacheof(list(
-		/area/station/ai_monitored/turret_protected/ai,
-		/area/station/ai_monitored/turret_protected/ai_upload,
+		/area/station/ai/satellite/chamber,
+		/area/station/ai/upload/chamber,
 		/area/station/engineering,
 		/area/shuttle,
 	))

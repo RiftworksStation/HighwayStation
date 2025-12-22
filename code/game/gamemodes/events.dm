@@ -10,7 +10,7 @@
 	priority_announce("Обнаружена аномальная активность в сети питания [station_name()]. В качестве меры предосторожности питание будет отключено на неопределенный срок.", "Критический сбой системы питания", ANNOUNCER_POWEROFF)
 	var/list/all_smes = SSmachines.get_machines_by_type_and_subtypes(/obj/machinery/power/smes)
 	for(var/obj/machinery/power/smes/smes as anything in all_smes)
-		if(istype(get_area(smes), /area/station/ai_monitored/turret_protected) || !is_station_level(smes.z))
+		if(istype(get_area(smes), /area/station/ai) || !is_station_level(smes.z))
 			continue
 		smes.charge = 0
 		smes.output_level = 0
@@ -54,7 +54,7 @@
 	for(var/obj/machinery/power/smes/smes as anything in all_smes)
 		if(!is_station_level(smes.z))
 			continue
-		smes.charge = smes.capacity
+		smes.adjust_charge(INFINITY)
 		smes.output_level = smes.output_level_max
 		smes.output_attempt = TRUE
 		smes.update_appearance()
@@ -86,7 +86,7 @@
 	for(var/obj/machinery/power/smes/smes as anything in all_smes)
 		if(!is_station_level(smes.z))
 			continue
-		smes.charge = smes.capacity
+		smes.adjust_charge(INFINITY)
 		smes.output_level = smes.output_level_max
 		smes.output_attempt = TRUE
 		smes.update_appearance()

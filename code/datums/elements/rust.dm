@@ -8,7 +8,7 @@
 	/// The rust image itself, since the icon and icon state are only used as an argument
 	var/image/rust_overlay
 
-/datum/element/rust/Attach(atom/target, rust_icon = 'modular_bandastation/aesthetics/walls/icons/rust_overlay.dmi', rust_icon_state = "rust_default") // SS220 EDIT - AESTHETICS
+/datum/element/rust/Attach(atom/target, rust_icon = 'modular_content/aesthetics/walls/icons/rust_overlay.dmi', rust_icon_state = "rust_default") // SS220 EDIT - AESTHETICS
 	. = ..()
 	if(!isatom(target))
 		return ELEMENT_INCOMPATIBLE
@@ -36,7 +36,7 @@
 /datum/element/rust/proc/handle_examine(datum/source, mob/user, list/examine_text)
 	SIGNAL_HANDLER
 
-	examine_text += span_notice("[source] is very rusty, you could probably <i>burn</i> or <i>scrape</i> it off.")
+	examine_text += span_notice("[source] is very rusty, you could probably <i>burn</i> or <i>scrape</i> it off, hell maybe even pour some <i>space cola</i> on it to remove the rust.")
 
 /datum/element/rust/proc/apply_rust_overlay(atom/parent_atom, list/overlays)
 	SIGNAL_HANDLER
@@ -115,6 +115,10 @@
 /datum/element/rust/heretic/proc/on_entered(turf/source, atom/movable/entered, ...)
 	SIGNAL_HANDLER
 
+	if(ismecha(entered))
+		var/obj/vehicle/sealed/mecha/victim = entered
+		victim.take_damage(20, armour_penetration = 100)
+		return
 	if(!isliving(entered))
 		return
 	var/mob/living/victim = entered

@@ -151,7 +151,7 @@
 	name = "Dormitory Maintenance"
 	},
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
-/obj/effect/mapping_helpers/airlock/unres,
+/obj/effect/mapping_helpers/airlock/unres/delayed,
 /obj/machinery/duct,
 /turf/open/floor/plating,
 /area/station/maintenance/port/central)

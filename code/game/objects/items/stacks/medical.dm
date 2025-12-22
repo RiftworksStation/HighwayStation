@@ -16,6 +16,7 @@
 	cost = 250
 	source = /datum/robot_energy_storage/medical
 	merge_type = /obj/item/stack/medical
+	apply_verb = "treating"
 	/// How long it takes to apply it to yourself
 	var/self_delay = 5 SECONDS
 	/// How long it takes to apply it to someone else
@@ -32,8 +33,6 @@
 	var/sanitization
 	/// How much we add to flesh_healing for burn wounds on application
 	var/flesh_regeneration
-	/// Verb used when applying this object to someone
-	var/apply_verb = "treating"
 	/// Whether this item can be used on dead bodies
 	var/works_on_dead = FALSE
 	/// The sound this makes when starting healing with this item
@@ -182,7 +181,8 @@
 	if(!use(1) || !repeating || amount <= 0)
 		var/atom/alert_loc = QDELETED(src) ? user : src
 		alert_loc.balloon_alert(user, repeating ? "all used up!" : "treated [parse_zone(healed_zone)]")
-		playsound(patient, heal_end_sound, 75, TRUE, MEDIUM_RANGE_SOUND_EXTRARANGE)
+		if(heal_end_sound)
+			playsound(patient, heal_end_sound, 75, TRUE, MEDIUM_RANGE_SOUND_EXTRARANGE)
 		return
 	if(heal_continuous_sound && (continuous || !silent))
 		playsound(patient, heal_continuous_sound, 75, TRUE, MEDIUM_RANGE_SOUND_EXTRARANGE)
@@ -248,8 +248,7 @@
 /// Checks a bunch of stuff to see if we can heal the patient, including can_heal
 /// Gives a feedback if we can't ultimatly heal the patient (unless silent is TRUE)
 /obj/item/stack/medical/proc/try_heal_checks(mob/living/patient, mob/living/user, healed_zone, silent = FALSE)
-	if(!(healed_zone in GLOB.all_body_zones))
-		stack_trace("Invalid zone ([healed_zone || "null"]) passed to try_heal_checks.")
+	if(!(healed_zone in patient.get_all_limbs()))
 		healed_zone = BODY_ZONE_CHEST
 
 	if(!can_heal(patient, user, healed_zone, silent))
@@ -274,7 +273,7 @@
 
 		var/datum/wound/burn/flesh/any_burn_wound = locate() in affecting.wounds
 		var/can_heal_burn_wounds = (flesh_regeneration || sanitization) && any_burn_wound?.can_be_ointmented_or_meshed()
-		var/can_suture_bleeding = stop_bleeding && affecting.get_modified_bleed_rate() > 0
+		var/can_suture_bleeding = stop_bleeding && affecting.cached_bleed_rate > 0
 		var/brute_to_heal = heal_brute && affecting.brute_dam > 0
 		var/burn_to_heal = heal_burn && affecting.burn_dam > 0
 
@@ -328,7 +327,7 @@
 				break // one at a time
 		affecting.adjustBleedStacks(-1 * stop_bleeding, 0)
 	if(flesh_regeneration || sanitization)
-		for(var/datum/wound/burn/flesh/wound as anything in affecting.wounds)
+		for(var/datum/wound/burn/flesh/wound in affecting.wounds)
 			if(wound.can_be_ointmented_or_meshed())
 				wound.flesh_healing += flesh_regeneration
 				wound.sanitization += sanitization
@@ -336,9 +335,9 @@
 	post_heal_effects(max(previous_damage - affecting.get_damage(), 0), patient, user)
 	return TRUE
 
-/// Healing a simple mob, just an adjustbruteloss call
+/// Healing a simple mob, just an adjust_brute_loss() call
 /obj/item/stack/medical/proc/heal_simplemob(mob/living/patient, mob/living/user)
-	patient.adjustBruteLoss(-1 * (heal_brute * patient.maxHealth / 100))
+	patient.adjust_brute_loss(-1 * (heal_brute * patient.maxHealth / 100))
 	user.visible_message(
 		span_green("[user] applies [src] on [patient]."),
 		span_green("You apply [src] on [patient]."),
@@ -382,6 +381,8 @@
 	custom_price = PAYCHECK_CREW * 2
 	absorption_rate = 0.125
 	absorption_capacity = 5
+	sanitization = 3
+	flesh_regeneration = 5
 	splint_factor = 0.7
 	burn_cleanliness_bonus = 0.35
 	merge_type = /obj/item/stack/medical/gauze
@@ -392,6 +393,10 @@
 	heal_begin_sound = SFX_BANDAGE_BEGIN
 	drop_sound = SFX_CLOTH_DROP
 	pickup_sound = SFX_CLOTH_PICKUP
+
+/obj/item/stack/medical/gauze/Initialize(mapload, new_amount, merge, list/mat_override, mat_amt)
+	. = ..()
+	register_context()
 
 /obj/item/stack/medical/gauze/Destroy(force)
 	. = ..()
@@ -406,6 +411,14 @@
 		context[SCREENTIP_CONTEXT_LMB] = "Apply Gauze"
 		return CONTEXTUAL_SCREENTIP_SET
 	return NONE
+
+/obj/item/stack/medical/gauze/add_context(atom/source, list/context, obj/item/held_item, mob/living/user)
+	. = ..()
+	if(isnull(held_item))
+		return
+	if(held_item.tool_behaviour == TOOL_WIRECUTTER || held_item.get_sharpness())
+		context[SCREENTIP_CONTEXT_LMB] = "Shred Into Cloth"
+		return CONTEXTUAL_SCREENTIP_SET
 
 /obj/item/stack/medical/gauze/try_heal_checks(mob/living/patient, mob/living/user, healed_zone, silent = FALSE)
 	var/obj/item/bodypart/limb = patient.get_bodypart(healed_zone)
@@ -475,18 +488,28 @@
 		)
 		if(heal_end_sound)
 			playsound(patient, heal_end_sound, 75, TRUE, MEDIUM_RANGE_SOUND_EXTRARANGE)
+
+	if(limb.cached_bleed_rate)
+		add_mob_blood(patient)
+
+	// Dressing burns provides a "one-time" bonus to sanitization and healing
+	// However, any notable infection will reduce the effectiveness of this bonus
+	for(var/datum/wound/burn/flesh/wound in limb.wounds)
+		wound.sanitization += sanitization * (wound.infection > 0.1 ? 0.2 : 1)
+		wound.flesh_healing += flesh_regeneration * (wound.infection > 0.1 ? 0 : 1)
+
 	limb.apply_gauze(src)
 
 /obj/item/stack/medical/gauze/twelve
 	amount = 12
 
-/obj/item/stack/medical/gauze/attackby(obj/item/I, mob/user, list/modifiers)
+/obj/item/stack/medical/gauze/attackby(obj/item/I, mob/user, list/modifiers, list/attack_modifiers)
 	if(I.tool_behaviour == TOOL_WIRECUTTER || I.get_sharpness())
 		if(get_amount() < 2)
 			balloon_alert(user, "not enough gauze!")
 			return
 		new /obj/item/stack/sheet/cloth(I.drop_location())
-		if(user.CanReach(src))
+		if(IsReachableBy(user))
 			user.visible_message(span_notice("[user] cuts [src] into pieces of cloth with [I]."), \
 				span_notice("You cut [src] into pieces of cloth with [I]."), \
 				span_hear("You hear cutting."))
@@ -512,6 +535,8 @@
 	burn_cleanliness_bonus = 0.7
 	absorption_rate = 0.075
 	absorption_capacity = 4
+	sanitization = 1
+	flesh_regeneration = 3
 	merge_type = /obj/item/stack/medical/gauze/improvised
 
 	/*
@@ -534,7 +559,7 @@
 	max_amount = 10
 	repeating = TRUE
 	heal_brute = 10
-	stop_bleeding = 0.6
+	stop_bleeding = 0.5
 	grind_results = list(/datum/reagent/medicine/spaceacillin = 2)
 	merge_type = /obj/item/stack/medical/suture
 	apply_verb = "suturing"
@@ -543,14 +568,6 @@
 	heal_begin_sound = SFX_SUTURE_BEGIN
 	heal_continuous_sound = SFX_SUTURE_CONTINUOUS
 	heal_end_sound = SFX_SUTURE_END
-
-/obj/item/stack/medical/suture/emergency
-	name = "emergency suture"
-	desc = "A value pack of cheap sutures, not very good at repairing damage, but still decent at stopping bleeding."
-	heal_brute = 5
-	amount = 5
-	max_amount = 5
-	merge_type = /obj/item/stack/medical/suture/emergency
 
 /obj/item/stack/medical/suture/medicated
 	name = "medicated suture"
@@ -732,7 +749,7 @@
 		oof_ouch.apply_wound(bone, wound_source = "bone gel")
 		var/datum/wound/blunt/bone/critical/oof_OUCH = new
 		oof_OUCH.apply_wound(bone, wound_source = "bone gel")
-	for(var/zone in GLOB.all_body_zones)
+	for(var/zone in patient.get_all_limbs())
 		patient.apply_damage(60, BRUTE, zone)
 	use(1)
 	return BRUTELOSS
@@ -766,7 +783,7 @@
 /obj/item/stack/medical/poultice/post_heal_effects(amount_healed, mob/living/carbon/healed_mob, mob/living/user)
 	. = ..()
 	playsound(src, 'sound/misc/soggy.ogg', 30, TRUE)
-	healed_mob.adjustOxyLoss(amount_healed)
+	healed_mob.adjust_oxy_loss(amount_healed)
 
 /obj/item/stack/medical/bandage
 	name = "first aid bandage"
