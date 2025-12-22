@@ -24,7 +24,7 @@ GLOBAL_LIST_EMPTY(ru_names)
 /proc/ru_names_toml(name, prefix, suffix, override_base)
 	. = list()
 	var/formatted_name = trimtext(format_text(name))
-	formatted_name = lowertext(formatted_name)
+	formatted_name = LOWER_TEXT(formatted_name)
 	// The world didn't initialize properly yet
 	if(isnull(GLOB.ru_names))
 		return .
