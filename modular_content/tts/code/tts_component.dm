@@ -237,7 +237,7 @@
 	SIGNAL_HANDLER
 	if(!equipped_item.voice_effect)
 		return
-	if(slot & ITEM_SLOT_HANDS)
+	if(!(slot & equipped_item.slot_flags))
 		return
 	if(equipped_item.should_apply_voice_effect())
 		tts_effects_add(equipped_item.voice_effect)
