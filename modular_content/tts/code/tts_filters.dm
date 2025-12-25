@@ -4,9 +4,9 @@
 /atom/movable/Initialize(mapload, ...)
 	. = ..()
 	if(voice_filter && !voice_effect)
-		CRASH("[src] has assigned var/voice_filter = ([voice_filter]), but is missing var/voice_effect!")
+		stack_trace("[src] has assigned var/voice_filter = ([voice_filter]), but is missing var/voice_effect!")
 	if(voice_effect && !length(voice_effect))
-		CRASH("[src] has assigned var/voice_effect = ([voice_effect]), but it is not a list()!")
+		stack_trace("[src] has assigned var/voice_effect = ([voice_effect]), but it is not a list()!")
 
 
 /obj/item/clothing/should_apply_voice_effect()

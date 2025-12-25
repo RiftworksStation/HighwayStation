@@ -6,7 +6,7 @@
 #define SHELLEO_ERR ".err"
 #define SHELLEO_OUT ".out"
 
-/proc/apply_sound_effects(list/effects, filename_input, filename_output)
+/proc/apply_sound_effects(list/datum/singleton/sound_effect/effects, filename_input, filename_output)
 	if(!length(effects))
 		CRASH("Invalid sound effect chosen.")
 
@@ -30,7 +30,7 @@
 
 	return TRUE
 
-/proc/_apply_individual_effect(datum/singleton/sound_effect/effect, list/effects, filename_input, filename_output, filename_modifying, is_complex = FALSE)
+/proc/_apply_individual_effect(datum/singleton/sound_effect/effect, list/datum/singleton/sound_effect/effects, filename_input, filename_output, filename_modifying, is_complex = FALSE)
 	var/taskset = CONFIG_GET(string/ffmpeg_cpuaffinity) ? "taskset -ac [CONFIG_GET(string/ffmpeg_cpuaffinity)]" : ""
 	var/output_name = is_complex ? filename_output : "[filename_modifying][effect.suffix].ogg"
 	var/filter = is_complex ? effect.ffmpeg_arguments : {"-filter_complex:a "[effect.ffmpeg_arguments]""}
