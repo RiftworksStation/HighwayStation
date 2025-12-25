@@ -132,6 +132,7 @@
 				modified_move_delay *= 1.1
 			if(SANITY_LEVEL_INSANE)
 				modified_move_delay *= 1.2
+	modified_move_delay = modified_move_delay(modified_move_delay, cap_speed = TRUE) // BANDASTATION EDIT - Speed
 	if(NSCOMPONENT(direction) && EWCOMPONENT(direction))
 		modified_move_delay = FLOOR(modified_move_delay * sqrt(2), world.tick_lag)
 	COOLDOWN_START(src, vehicle_move_cooldown, modified_move_delay)

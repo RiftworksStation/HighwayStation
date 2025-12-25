@@ -1,7 +1,7 @@
 /datum/action/changeling/biodegrade
 	name = "Biodegrade"
-	desc = "Dissolves restraints or other objects preventing free movement. Costs 30 chemicals."
-	helptext = "This is obvious to nearby people, and can destroy standard restraints and closets. Works against grabs."
+	desc = "Растворяет наручники и другие предметы, мешающие свободному движению. Стоит 30 химикатов."
+	helptext = "Это очевидно для находящихся рядом людей и может разрушить стандартные наручники и шкафы. Работает против захватов."
 	button_icon_state = "biodegrade"
 	chemical_cost = 30
 	dna_cost = 2

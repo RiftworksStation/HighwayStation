@@ -20,6 +20,7 @@ import { ReconnectButton } from './reconnect';
 import { settingsVisibleAtom } from './settings/atoms';
 import { SettingsPanel } from './settings/SettingsPanel';
 import { useSettings } from './settings/use-settings';
+// import { EmotePanel, useEmotes } from './emotes'; // BANDASTATION ADD  - Emote Panel // Broken by PR - https://github.com/tgstation/tgstation/pull/94514
 
 export function Panel(props) {
   const [audioVisible, setAudioVisible] = useAtom(visibleAtom);

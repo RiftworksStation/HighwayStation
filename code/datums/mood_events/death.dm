@@ -2,6 +2,16 @@
 	mood_change = -8
 	timeout = 5 MINUTES
 
+// BANDASTATION EDIT START
+/datum/mood_event/conditional/see_death/proc/get_ru_verb(mob/dead_mob, dusted, gibbed)
+	if(gibbed)
+		return genderize_ru(dead_mob.gender, "взорвался", "взорвалась", "взорвалось", "взорвались")
+	else if(dusted)
+		return genderize_ru(dead_mob.gender, "обратился в пыль", "обратилась в пыль", "обратилось в пыль", "обратились в пыль")
+	else
+		return genderize_ru(dead_mob.gender, "умер", "умерла", "умерло", "умерли")
+// BANDASTATION EDIT END
+
 /datum/mood_event/conditional/see_death/can_effect_mob(datum/mood/home, mob/living/who, mob/dead_mob, dusted, gibbed)
 	if(isnull(dead_mob))
 		stack_trace("Death mood event being applied with null dead_mob")
@@ -29,12 +39,13 @@
 
 	if(!description)
 		if(gibbed)
-			description = "%DEAD_MOB% just exploded in front of me!!"
+			description = "%DEAD_MOB% %DEAD_VERB% на моих глазах!!"
 		else if(dusted)
-			description = "%DEAD_MOB% was just vaporized in front of me!!"
+			description = "%DEAD_MOB% %DEAD_VERB% на моих глазах!!"
 		else
-			description = "I just saw %DEAD_MOB% die. How horrible..."
+			description = "На моих глазах %DEAD_VERB% %DEAD_MOB%. Ну и ужас..."
 
+	description = replacetext_char(description, "%DEAD_VERB%", get_ru_verb(dead_mob, dusted, gibbed)) // BANDASTATION EDIT ADD
 	description = capitalize(replacetext(description, "%DEAD_MOB%", get_descriptor(dead_mob)))
 
 /// Blank proc which allows conditional effects to modify mood, timeout, or description before the main effect is applied
@@ -69,10 +80,10 @@
 /// Changes "I saw Joe x" to "I saw the engineer x"
 /datum/mood_event/conditional/see_death/proc/get_descriptor(mob/dead_mob)
 	if(is_pet(dead_mob))
-		return "[dead_mob]"
+		return "[capitalize(dead_mob.declent_ru(NOMINATIVE))]"
 	if(dead_mob.name != "Unknown" && dead_mob.mind?.assigned_role?.job_flags & JOB_CREW_MEMBER)
-		return "the [LOWER_TEXT(dead_mob.mind?.assigned_role.title)]"
-	return "someone"
+		return "[LOWER_TEXT(dead_mob.mind?.assigned_role.title)]"
+	return "кто-то"
 
 /// Highest priority: Clown naivety about death
 /datum/mood_event/conditional/see_death/naive
@@ -134,11 +145,11 @@
 
 /datum/mood_event/conditional/see_death/dontcare/update_effect(mob/dead_mob, dusted, gibbed)
 	if(gibbed)
-		description = "Oh, %DEAD_MOB% exploded. Now I have to get the mop."
+		description = "О, %DEAD_MOB% %DEAD_VERB%. Теперь нужно это всё чистить."
 	else if(dusted)
-		description = "Oh, %DEAD_MOB% was vaporized. Now I have to get the dustpan."
+		description = "О, %DEAD_MOB% %DEAD_VERB%. Теперь нужно взять совок."
 	else
-		description = "Oh, %DEAD_MOB% died. Shame, I guess."
+		description = "О, %DEAD_MOB% %DEAD_VERB%. Жаль, наверное."
 
 /// Pets take priority over normal death moodlets
 /datum/mood_event/conditional/see_death/pet
@@ -149,11 +160,11 @@
 
 /datum/mood_event/conditional/see_death/pet/update_effect(mob/dead_mob, dusted, gibbed)
 	if(gibbed)
-		description = "%DEAD_MOB% just exploded!!"
+		description = "%DEAD_MOB% %DEAD_VERB%!!"
 	else if(dusted)
-		description = "%DEAD_MOB% just vaporized!!"
+		description = "%DEAD_MOB% %DEAD_VERB%!!"
 	else
-		description = "%DEAD_MOB% just died!!"
+		description = "%DEAD_MOB% %DEAD_VERB%!!"
 
 	// future todo : make the hop care about ian, cmo runtime, etc.
 	if(HAS_PERSONALITY(owner, /datum/personality/animal_friend))
@@ -174,8 +185,8 @@
 
 /datum/mood_event/conditional/see_death/desensitized/update_effect(mob/dead_mob, dusted, gibbed)
 	if(gibbed)
-		description = "I saw %DEAD_MOB% explode."
+		description = "Я увидел, как %DEAD_MOB% %DEAD_VERB%."
 	else if(dusted)
-		description = "I saw %DEAD_MOB% get vaporized."
+		description = "Я увидел, как %DEAD_MOB% %DEAD_VERB%."
 	else
-		description = "I saw %DEAD_MOB% die."
+		description = "Я увидел, как %DEAD_MOB% %DEAD_VERB%."
