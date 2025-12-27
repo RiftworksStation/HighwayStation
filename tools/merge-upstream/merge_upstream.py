@@ -73,14 +73,15 @@ TRANSLATE_CHANGES = os.getenv("TRANSLATE_CHANGES", "False").lower() in ("true", 
 CHANGELOG_AUTHOR = os.getenv("CHANGELOG_AUTHOR", "")
 
 check_env()
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-TARGET_REPO = os.getenv("TARGET_REPO")
-TARGET_BRANCH = os.getenv("TARGET_BRANCH")
-UPSTREAM_REPO = os.getenv("UPSTREAM_REPO")
-UPSTREAM_BRANCH = os.getenv("UPSTREAM_BRANCH")
-MERGE_BRANCH = os.getenv("MERGE_BRANCH")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
+TARGET_REPO = os.getenv("TARGET_REPO", "")
+TARGET_BRANCH = os.getenv("TARGET_BRANCH", "")
+UPSTREAM_REPO = os.getenv("UPSTREAM_REPO", "")
+UPSTREAM_BRANCH = os.getenv("UPSTREAM_BRANCH", "")
+MERGE_BRANCH = os.getenv("MERGE_BRANCH", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
+TARGET_ORG = TARGET_REPO.split("/")[0]
 
 def run_command(command: str) -> str:
     """Run a shell command and return its output."""
@@ -272,7 +273,7 @@ def translate_changelog(changelog: typing.Dict[int, list[Change]]):
         context = "\n".join(f.readlines()).strip()
 
     client = OpenAI(
-        base_url="https://models.github.ai/inference",
+        base_url=f"https://models.github.ai/orgs/{TARGET_ORG}/inference",
         api_key=OPENAI_API_KEY,
     )
     response: ChatCompletion = client.chat.completions.create(
