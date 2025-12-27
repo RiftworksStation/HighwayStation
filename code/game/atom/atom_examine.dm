@@ -141,7 +141,7 @@
  * [COMSIG_ATOM_GET_EXAMINE_NAME] signal
  */
 /atom/proc/get_examine_name(mob/user, declent = NOMINATIVE) // BANDASTATION EDIT - Declents
-	var/list/override = list(article, null, "<em>[get_visible_name(declent = declent)]</em>") // BANDASTATION EDIT - Declents
+	var/list/override = list(article, null, "<em>[get_visible_name(declent)]</em>")
 	SEND_SIGNAL(src, COMSIG_ATOM_GET_EXAMINE_NAME, user, override)
 
 	if(!isnull(override[EXAMINE_POSITION_ARTICLE]))
@@ -150,10 +150,10 @@
 	if(!isnull(override[EXAMINE_POSITION_BEFORE]))
 		override -= null // There is no article, don't try to join it
 		return "[jointext(override, " ")]" // BANDASTATION EDIT - Declents
-	return "[get_visible_name(declent = declent)]" // BANDASTATION EDIT - Declents
+	return "[declent_ru(declent)]" // BANDASTATION EDIT - Declents
 
 /mob/living/get_examine_name(mob/user, declent = NOMINATIVE) // BANDASTATION EDIT - Declents
-	var/visible_name = get_visible_name(declent = declent)   // BANDASTATION EDIT - Declents
+	var/visible_name = get_visible_name(declent)
 	var/list/name_override = list(visible_name)
 	if(SEND_SIGNAL(user, COMSIG_LIVING_PERCEIVE_EXAMINE_NAME, src, visible_name, name_override) & COMPONENT_EXAMINE_NAME_OVERRIDEN)
 		return name_override[1]
@@ -193,7 +193,5 @@
  * * add_id_name - If TRUE, ID information such as honorifics or name (if mismatched) are appended
  * * force_real_name - If TRUE, will always return real_name and add (as face_name/id_name) if it doesn't match their appearance
  */
-/atom/proc/get_visible_name(add_id_name = TRUE, force_real_name = FALSE, declent = NOMINATIVE)
-	if(name != initial(name))
-		return name
+/atom/proc/get_visible_name(add_id_name = TRUE, force_real_name = FALSE, declent = NOMINATIVE)  // BANDASTATION EDIT - Declents
 	return declent_ru(declent)

@@ -99,8 +99,8 @@ GLOBAL_LIST_EMPTY_TYPED(air_alarms, /obj/machinery/airalarm)
 		set_panel_open(TRUE)
 
 	if(name == initial(name))
-		var/area/current_area = get_area(src)
-		name = "[declent_ru(NOMINATIVE)] [current_area.declent_ru(GENITIVE)]"
+		ru_names_rename(ru_names_toml(src::name, suffix = " ([capitalize(get_area_name(src))])", override_base = "[get_area_name(src)] Air Alarm"))
+		name = "[get_area_name(src)] Air Alarm"
 
 	tlv_collection = list()
 	tlv_collection["pressure"] = new /datum/tlv/pressure
@@ -183,8 +183,8 @@ GLOBAL_LIST_EMPTY_TYPED(air_alarms, /obj/machinery/airalarm)
 
 /obj/machinery/airalarm/update_name(updates)
 	. = ..()
-	var/area/current_area = get_area(src)
-	name = "[declent_ru(NOMINATIVE)] [current_area.declent_ru(GENITIVE)]"
+	ru_names_rename(ru_names_toml(src::name, suffix = " ([capitalize(get_area_name(my_area))])", override_base = "[get_area_name(my_area)] Air Alarm"))
+	name = "[get_area_name(my_area)] Air Alarm"
 
 /obj/machinery/airalarm/on_exit_area(datum/source, area/area_to_unregister)
 	//we cannot unregister from an area we never registered to in the first place

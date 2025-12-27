@@ -199,7 +199,8 @@
 	if(!req_access)
 		req_access = list(ACCESS_ENGINE_EQUIP)
 	if(auto_name)
-		name = "[declent_ru(NOMINATIVE)] [area.declent_ru(GENITIVE)]"
+		ru_names_rename(ru_names_toml(src::name, suffix = " ([capitalize(get_area_name(area, TRUE))])", override_base = "\improper [get_area_name(area, TRUE)] APC"))
+		name = "\improper [get_area_name(area, TRUE)] APC"
 
 	//Initialize its electronics
 	set_wires(new /datum/wires/apc(src))
@@ -292,7 +293,8 @@
 /obj/machinery/power/apc/update_name(updates)
 	. = ..()
 	if(auto_name)
-		name = "[declent_ru(NOMINATIVE)] [area.declent_ru(GENITIVE)]"
+		ru_names_rename(ru_names_toml(src::name, suffix = " ([capitalize(get_area_name(area, TRUE))])", override_base = "\improper [get_area_name(area, TRUE)] APC"))
+		name = "\improper [get_area_name(area, TRUE)] APC"
 
 /obj/machinery/power/apc/proc/assign_to_area(area/target_area = get_area(src))
 	if(area == target_area)
