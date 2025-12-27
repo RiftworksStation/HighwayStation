@@ -12,7 +12,7 @@ from pathlib import Path
 from re import Pattern
 from subprocess import CompletedProcess
 
-from github import Github
+from github import Github, Auth
 from github.PaginatedList import PaginatedList
 from github.PullRequest import PullRequest
 from github.Repository import Repository
@@ -272,7 +272,7 @@ def translate_changelog(changelog: typing.Dict[int, list[Change]]):
         context = "\n".join(f.readlines()).strip()
 
     client = OpenAI(
-        base_url="https://models.inference.ai.azure.com",
+        base_url="https://models.github.ai/inference",
         api_key=OPENAI_API_KEY,
     )
     response: ChatCompletion = client.chat.completions.create(
@@ -398,7 +398,7 @@ def check_pull_exists(target_repo: Repository, base: str, head: str):
     logging.debug("No existing pull requests found.")
 
 if __name__ == "__main__":
-    github = Github(GITHUB_TOKEN)
+    github = Github(auth=Auth.Token(GITHUB_TOKEN))
     target_repo: Repository = github.get_repo(TARGET_REPO)
 
     check_pull_exists(target_repo, TARGET_BRANCH, MERGE_BRANCH)
