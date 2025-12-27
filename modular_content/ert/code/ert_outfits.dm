@@ -1,9 +1,10 @@
-/datum/outfit/centcom/ert
+/datum/outfit/centcom/ert/non_tg
+	name = "ERT Common"
 	uniform = /obj/item/clothing/under/rank/centcom/military/ert
 	mask = /obj/item/clothing/mask/gas/sechailer/swat
 
 // MARK: SECURITY
-/datum/outfit/centcom/ert/security
+/datum/outfit/centcom/ert/non_tg/security
 	name = "ERT Security - Base"
 	id = /obj/item/card/id/advanced/centcom/ert/security
 	back = /obj/item/storage/backpack/ert/security
@@ -17,7 +18,7 @@
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses
 	additional_radio = /obj/item/encryptionkey/heads/hos
 
-/datum/outfit/centcom/ert/security/amber
+/datum/outfit/centcom/ert/non_tg/security/amber
 	name = "ERT Security - Amber"
 	back = /obj/item/storage/backpack/ert/security
 	belt = /obj/item/storage/belt/security/webbing/ert/full
@@ -25,7 +26,7 @@
 	suit_store = /obj/item/gun/energy/e_gun
 	head = /obj/item/clothing/head/helmet/swat/nanotrasen
 
-/datum/outfit/centcom/ert/security/red
+/datum/outfit/centcom/ert/non_tg/security/red
 	name = "ERT Security - Red"
 	suit = /obj/item/clothing/suit/armor/vest/marine/security
 	belt = /obj/item/storage/belt/military/assault/ert/full_red_security
@@ -36,7 +37,7 @@
 	head = /obj/item/clothing/head/helmet/marine/security
 	suit_store = /obj/item/gun/ballistic/automatic/laser
 
-/datum/outfit/centcom/ert/security/gamma
+/datum/outfit/centcom/ert/non_tg/security/gamma
 	name = "ERT Security - Gamma"
 	back = /obj/item/mod/control/pre_equipped/responsory/security
 	belt = /obj/item/storage/belt/military/ert/full_gamma_security
@@ -51,7 +52,7 @@
 	suit_store = /obj/item/gun/energy/e_gun/stun
 	gloves = /obj/item/clothing/gloves/tackler/combat/insulated
 
-/datum/outfit/centcom/ert/security/inquisitor
+/datum/outfit/centcom/ert/non_tg/security/inquisitor
 	name = "ERT Security - Inquisition"
 	back = /obj/item/mod/control/pre_equipped/responsory/inquisitory/security
 	belt = /obj/item/storage/belt/military/ert/full_gamma_security
@@ -70,7 +71,7 @@
 	gloves = /obj/item/clothing/gloves/tackler/combat/insulated
 
 // MARK: COMMANDER
-/datum/outfit/centcom/ert/commander
+/datum/outfit/centcom/ert/non_tg/commander
 	name = "ERT Commander - Base"
 	id = /obj/item/card/id/advanced/centcom/ert
 	back = /obj/item/storage/backpack/ert
@@ -85,7 +86,7 @@
 	l_pocket = /obj/item/switchblade
 	additional_radio = /obj/item/encryptionkey/heads/captain
 
-/datum/outfit/centcom/ert/commander/amber
+/datum/outfit/centcom/ert/non_tg/commander/amber
 	name = "ERT Commander - Amber"
 	belt = /obj/item/storage/belt/security/webbing/ert/full
 	suit = /obj/item/clothing/suit/armor/swat/ert
@@ -100,7 +101,7 @@
 	l_pocket = /obj/item/melee/baton/telescopic/bronze
 	r_pocket = /obj/item/switchblade
 
-/datum/outfit/centcom/ert/commander/red
+/datum/outfit/centcom/ert/non_tg/commander/red
 	name = "ERT Commander - Red"
 	suit = /obj/item/clothing/suit/armor/vest/marine
 	belt = /obj/item/storage/belt/military/assault/ert/full_red_commander
@@ -116,7 +117,7 @@
 	l_pocket = /obj/item/melee/baton/telescopic/silver
 	r_pocket = /obj/item/knife/combat
 
-/datum/outfit/centcom/ert/commander/gamma
+/datum/outfit/centcom/ert/non_tg/commander/gamma
 	name = "ERT Commander - Gamma"
 	back = /obj/item/mod/control/pre_equipped/responsory/commander
 	suit_store = /obj/item/storage/belt/holster/ert/full_gamma_commander
@@ -127,7 +128,7 @@
 		/obj/item/organ/cyberimp/brain/anti_stun = 1,
 	)
 
-/datum/outfit/centcom/ert/commander/gamma/post_equip(mob/living/carbon/human/squaddie, visuals_only = FALSE)
+/datum/outfit/centcom/ert/non_tg/commander/gamma/post_equip(mob/living/carbon/human/squaddie, visuals_only = FALSE)
 	. = ..()
 	var/obj/item/mod/control/mod = squaddie.back
 	if(!istype(mod))
@@ -138,7 +139,7 @@
 	component.attach_hat(beret)
 	squaddie.update_clothing(helmet.slot_flags)
 
-/datum/outfit/centcom/ert/commander/inquisitor
+/datum/outfit/centcom/ert/non_tg/commander/inquisitor
 	name = "ERT Commander - Inquisition"
 	back = /obj/item/mod/control/pre_equipped/responsory/inquisitory/commander
 	suit_store = /obj/item/storage/belt/holster/ert/full_gamma_commander
@@ -155,7 +156,7 @@
 	r_hand = null
 
 // MARK: MEDIC
-/datum/outfit/centcom/ert/medic
+/datum/outfit/centcom/ert/non_tg/medic
 	name = "ERT Medic - Base"
 	id = /obj/item/card/id/advanced/centcom/ert/medical
 	back = /obj/item/storage/backpack/ert/medical
@@ -174,7 +175,7 @@
 	additional_radio = /obj/item/encryptionkey/heads/cmo
 	skillchips = list(/obj/item/skillchip/entrails_reader)
 
-/datum/outfit/centcom/ert/medic/amber
+/datum/outfit/centcom/ert/non_tg/medic/amber
 	name = "ERT Medic - Amber"
 	glasses = /obj/item/clothing/glasses/hud/health/sunglasses
 	suit = /obj/item/clothing/suit/armor/swat/ert
@@ -182,7 +183,7 @@
 	suit_store = /obj/item/gun/energy/disabler
 	belt = /obj/item/storage/belt/medical/paramedic
 
-/datum/outfit/centcom/ert/medic/red
+/datum/outfit/centcom/ert/non_tg/medic/red
 	name = "ERT Medic - Red"
 	suit = /obj/item/clothing/suit/armor/vest/marine/medic
 	suit_store = /obj/item/storage/belt/holster/ert/full_gp9r
@@ -198,7 +199,7 @@
 		/obj/item/organ/cyberimp/eyes/hud/medical
 	)
 
-/datum/outfit/centcom/ert/medic/gamma
+/datum/outfit/centcom/ert/non_tg/medic/gamma
 	name = "ERT Medic - Gamma"
 	back = /obj/item/mod/control/pre_equipped/responsory/medic
 	backpack_contents = list(
@@ -214,7 +215,7 @@
 	)
 	suit_store = /obj/item/gun/energy/e_gun/nuclear
 
-/datum/outfit/centcom/ert/medic/inquisitor
+/datum/outfit/centcom/ert/non_tg/medic/inquisitor
 	name = "ERT Medic - Inquisition"
 	back = /obj/item/mod/control/pre_equipped/responsory/inquisitory/medic
 	backpack_contents = list(
@@ -233,7 +234,7 @@
 	suit_store = /obj/item/gun/energy/e_gun/nuclear
 
 // MARK: ENGINEER
-/datum/outfit/centcom/ert/engineer
+/datum/outfit/centcom/ert/non_tg/engineer
 	name = "ERT Engineer - Base"
 	uniform = /obj/item/clothing/under/rank/centcom/military/eng/ert
 	id = /obj/item/card/id/advanced/centcom/ert/engineer
@@ -252,13 +253,13 @@
 	additional_radio = /obj/item/encryptionkey/heads/ce
 	skillchips = list(/obj/item/skillchip/job/engineer)
 
-/datum/outfit/centcom/ert/engineer/amber
+/datum/outfit/centcom/ert/non_tg/engineer/amber
 	name = "ERT Engineer - Amber"
 	suit = /obj/item/clothing/suit/armor/swat/ert
 	head = /obj/item/clothing/head/helmet/swat/nanotrasen
 	suit_store = /obj/item/gun/energy/disabler/smg
 
-/datum/outfit/centcom/ert/engineer/red
+/datum/outfit/centcom/ert/non_tg/engineer/red
 	name = "ERT Engineer - Red"
 	suit = /obj/item/clothing/suit/armor/vest/marine/engineer
 	head = /obj/item/clothing/head/helmet/marine/engineer
@@ -275,7 +276,7 @@
 	)
 	suit_store = /obj/item/gun/ballistic/shotgun/riot
 
-/datum/outfit/centcom/ert/engineer/gamma
+/datum/outfit/centcom/ert/non_tg/engineer/gamma
 	name = "ERT Engineer - Gamma"
 	back = /obj/item/mod/control/pre_equipped/responsory/engineer
 	backpack_contents = list(
@@ -295,7 +296,7 @@
 	suit_store = /obj/item/gun/ballistic/shotgun/automatic/combat/compact
 
 // MARK: CHAPLAIN
-/datum/outfit/centcom/ert/chaplain
+/datum/outfit/centcom/ert/non_tg/chaplain
 	name = "ERT Chaplain - Base"
 	id = /obj/item/card/id/advanced/centcom/ert/chaplain
 	back = /obj/item/storage/backpack/cultpack
@@ -311,7 +312,7 @@
 	additional_radio = /obj/item/encryptionkey/heads/hop
 	l_pocket = /obj/item/nullrod
 
-/datum/outfit/centcom/ert/chaplain/amber
+/datum/outfit/centcom/ert/non_tg/chaplain/amber
 	name = "ERT Chaplain - Amber"
 	suit = /obj/item/clothing/suit/chaplainsuit/armor/templar
 	head = /obj/item/clothing/head/helmet/chaplain
@@ -321,7 +322,7 @@
 	r_pocket = /obj/item/flashlight/lantern
 	l_hand = /obj/item/gun/energy/disabler/smoothbore/prime
 
-/datum/outfit/centcom/ert/chaplain/red
+/datum/outfit/centcom/ert/non_tg/chaplain/red
 	name = "ERT Chaplain - Red"
 	suit = /obj/item/clothing/suit/chaplainsuit/armor/crusader/ert
 	head = /obj/item/clothing/head/helmet/plate/crusader/ert
@@ -337,7 +338,7 @@
 	r_pocket = /obj/item/flashlight/lantern
 	suit_store = /obj/item/gun/energy/e_gun
 
-/datum/outfit/centcom/ert/chaplain/gamma
+/datum/outfit/centcom/ert/non_tg/chaplain/gamma
 	name = "ERT Chaplain - Gamma"
 	back = /obj/item/mod/control/pre_equipped/responsory/chaplain
 	backpack_contents = list(
@@ -352,7 +353,7 @@
 	belt = /obj/item/claymore
 	suit_store = /obj/item/gun/energy/e_gun/nuclear
 
-/datum/outfit/centcom/ert/chaplain/inquisitor
+/datum/outfit/centcom/ert/non_tg/chaplain/inquisitor
 	name = "ERT Chaplain - Inquisition"
 	back = /obj/item/mod/control/pre_equipped/responsory/inquisitory/chaplain
 	backpack_contents = list(
@@ -369,7 +370,7 @@
 	suit_store = /obj/item/gun/energy/e_gun/nuclear
 
 // MARK: JANITOR
-/datum/outfit/centcom/ert/janitor
+/datum/outfit/centcom/ert/non_tg/janitor
 	name = "ERT Janitor - Base"
 	id = /obj/item/card/id/advanced/centcom/ert/janitor
 	back = /obj/item/storage/backpack/ert/janitor
@@ -387,12 +388,12 @@
 	l_hand = /obj/item/storage/bag/trash/bluespace
 	additional_radio = /obj/item/encryptionkey/heads/hop
 
-/datum/outfit/centcom/ert/janitor/amber
+/datum/outfit/centcom/ert/non_tg/janitor/amber
 	name = "ERT Janitor - Amber"
 	suit = /obj/item/clothing/suit/apron/ert
 	head = /obj/item/clothing/head/beret/ert/janitor
 
-/datum/outfit/centcom/ert/janitor/red
+/datum/outfit/centcom/ert/non_tg/janitor/red
 	name = "ERT Janitor - Red"
 	suit = /obj/item/clothing/suit/armor/vest/marine
 	head = /obj/item/clothing/head/helmet/marine/security
@@ -406,7 +407,7 @@
 	)
 	r_hand = /obj/item/reagent_containers/spray/cleaner
 
-/datum/outfit/centcom/ert/janitor/gamma
+/datum/outfit/centcom/ert/non_tg/janitor/gamma
 	name = "ERT Janitor - Gamma"
 	back = /obj/item/mod/control/pre_equipped/responsory/janitor
 	backpack_contents = list(
@@ -421,7 +422,7 @@
 	r_hand = /obj/item/reagent_containers/spray/chemsprayer/janitor
 
 // MARK: CLOWN
-/datum/outfit/centcom/ert/clown
+/datum/outfit/centcom/ert/non_tg/clown
 	name = "ERT Clown - Base"
 	id = /obj/item/card/id/advanced/centcom/ert/clown
 	back = /obj/item/storage/backpack/ert/clown
@@ -441,13 +442,13 @@
 	r_pocket = /obj/item/bikehorn/golden
 	additional_radio = /obj/item/encryptionkey/heads/hop
 
-/datum/outfit/centcom/ert/clown/amber
+/datum/outfit/centcom/ert/non_tg/clown/amber
 	name = "ERT Clown - Amber"
 	suit = /obj/item/clothing/suit/armor/vest
 	head = /obj/item/clothing/head/helmet/sec
 	glasses = /obj/item/clothing/glasses/trickblindfold
 
-/datum/outfit/centcom/ert/clown/red
+/datum/outfit/centcom/ert/non_tg/clown/red
 	name = "ERT Clown - Red"
 	suit = /obj/item/clothing/suit/armor/vest/marine
 	head = /obj/item/clothing/head/helmet/marine
@@ -462,7 +463,7 @@
 	belt = /obj/item/storage/belt/military/assault/ert/full_red_clown
 	shoes = /obj/item/clothing/shoes/clown_shoes/banana_shoes/combat
 
-/datum/outfit/centcom/ert/clown/gamma
+/datum/outfit/centcom/ert/non_tg/clown/gamma
 	name = "ERT Clown - Gamma"
 	back = /obj/item/mod/control/pre_equipped/responsory/clown
 	backpack_contents = list(
@@ -484,19 +485,53 @@
 	l_hand = /obj/item/pneumatic_cannon/pie/selfcharge
 
 // MARK: OLD PRESETS
-// TODO220: Don't change TG ert teams modularly, need to create our own
+/datum/outfit/centcom/ert
+	name = "(TG OUTFIT) ERT Common"
+
+/datum/outfit/centcom/ert/security
+	name = "(TG OUTFIT) ERT Security"
+
 /datum/outfit/centcom/ert/security/alert
-	name = "(OLD OUTFIT) ERT Security - High Alert"
-	back = /obj/item/mod/control/pre_equipped/responsory/security
+	name = "(TG OUTFIT) ERT Security - High Alert"
+
+/datum/outfit/centcom/ert/security/inquisitor
+	name = "(TG OUTFIT) Inquisition Security"
+
+/datum/outfit/centcom/ert/medic
+	name = "(TG OUTFIT) ERT Medic"
 
 /datum/outfit/centcom/ert/medic/alert
-	name = "(OLD OUTFIT) ERT Medic - High Alert"
-	back = /obj/item/mod/control/pre_equipped/responsory/medic
+	name = "(TG OUTFIT) ERT Medic - High Alert"
+
+/datum/outfit/centcom/ert/medic/inquisitor
+	name = "(TG OUTFIT) Inquisition Medic"
+
+/datum/outfit/centcom/ert/engineer
+	name = "(TG OUTFIT) ERT Engineer"
 
 /datum/outfit/centcom/ert/engineer/alert
-	name = "(OLD OUTFIT) ERT Engineer - High Alert"
-	back = /obj/item/mod/control/pre_equipped/responsory/engineer
+	name = "(TG OUTFIT) ERT Engineer - High Alert"
+
+/datum/outfit/centcom/ert/commander
+	name = "(TG OUTFIT) ERT Commander"
 
 /datum/outfit/centcom/ert/commander/alert
-	name = "(OLD OUTFIT) ERT Commander - High Alert"
-	back = /obj/item/mod/control/pre_equipped/responsory/commander
+	name = "(TG OUTFIT) ERT Commander - High Alert"
+
+/datum/outfit/centcom/ert/commander/inquisitor
+	name = "(TG OUTFIT) Inquisition Commander"
+
+/datum/outfit/centcom/ert/chaplain
+	name = "(TG OUTFIT) ERT Chaplain"
+
+/datum/outfit/centcom/ert/chaplain/inquisitor
+	name = "(TG OUTFIT) Inquisition Chaplain"
+
+/datum/outfit/centcom/ert/janitor
+	name = "(TG OUTFIT) ERT Janitor"
+
+/datum/outfit/centcom/ert/janitor/heavy
+	name = "(TG OUTFIT) ERT Janitor - Heavy Duty"
+
+/datum/outfit/centcom/ert/clown
+	name = "(TG OUTFIT) ERT Clown"

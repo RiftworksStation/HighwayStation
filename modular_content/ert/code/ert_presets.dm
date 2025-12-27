@@ -1,98 +1,148 @@
-/datum/ert/amber
-	leader_role = /datum/antagonist/ert/commander/amber
-	roles = list(/datum/antagonist/ert/security/amber, /datum/antagonist/ert/medic/amber, /datum/antagonist/ert/engineer/amber, /datum/antagonist/ert/chaplain/amber, /datum/antagonist/ert/janitor/amber, /datum/antagonist/ert/clown/amber)
+/datum/ert/non_tg/amber
+	leader_role = /datum/antagonist/ert/non_tg/commander/amber
+	roles = list(/datum/antagonist/ert/non_tg/security/amber, /datum/antagonist/ert/non_tg/medic/amber, /datum/antagonist/ert/non_tg/engineer/amber, /datum/antagonist/ert/non_tg/chaplain/amber, /datum/antagonist/ert/non_tg/janitor/amber, /datum/antagonist/ert/non_tg/clown/amber)
 	polldesc = "Code Amber Emergency Response Team"
+	code = "Amber"
 
-/datum/ert/red
-	leader_role = /datum/antagonist/ert/commander/red
-	roles = list(/datum/antagonist/ert/security/red, /datum/antagonist/ert/medic/red, /datum/antagonist/ert/engineer/red, /datum/antagonist/ert/chaplain/red, /datum/antagonist/ert/janitor/red, /datum/antagonist/ert/clown/red)
+/datum/ert/non_tg/red
+	leader_role = /datum/antagonist/ert/non_tg/commander/red
+	roles = list(/datum/antagonist/ert/non_tg/security/red, /datum/antagonist/ert/non_tg/medic/red, /datum/antagonist/ert/non_tg/engineer/red, /datum/antagonist/ert/non_tg/chaplain/red, /datum/antagonist/ert/non_tg/janitor/red, /datum/antagonist/ert/non_tg/clown/red)
 	polldesc = "Code Red Emergency Response Team"
+	code = "Red"
 
-/datum/ert/gamma
-	leader_role = /datum/antagonist/ert/commander/gamma
-	roles = list(/datum/antagonist/ert/security/gamma, /datum/antagonist/ert/medic/gamma, /datum/antagonist/ert/engineer/gamma, /datum/antagonist/ert/chaplain/gamma, /datum/antagonist/ert/janitor/gamma, /datum/antagonist/ert/clown/gamma)
+/datum/ert/non_tg/gamma
+	leader_role = /datum/antagonist/ert/non_tg/commander/gamma
+	roles = list(/datum/antagonist/ert/non_tg/security/gamma, /datum/antagonist/ert/non_tg/medic/gamma, /datum/antagonist/ert/non_tg/engineer/gamma, /datum/antagonist/ert/non_tg/chaplain/gamma, /datum/antagonist/ert/non_tg/janitor/gamma, /datum/antagonist/ert/non_tg/clown/gamma)
 	code = "Gamma"
 	polldesc = "Code Gamma Emergency Response Team"
 
-/datum/ert/janitor
-	leader_role = /datum/antagonist/ert/janitor/gamma
-	roles = list(/datum/antagonist/ert/janitor/red, /datum/antagonist/ert/janitor/amber)
+/datum/ert/non_tg/janitor
+	leader_role = /datum/antagonist/ert/non_tg/janitor/gamma
+	roles = list(/datum/antagonist/ert/non_tg/janitor/red, /datum/antagonist/ert/non_tg/janitor/amber)
 	polldesc = "Janitor Emergency Response Team"
+	opendoors = FALSE
+	rename_team = "Janitor"
+	mission = "Clean up EVERYTHING."
 
-/datum/ert/clown
-	leader_role = /datum/antagonist/ert/clown/gamma
-	roles = list(/datum/antagonist/ert/clown/red, /datum/antagonist/ert/clown/amber)
+/datum/ert/non_tg/clown
+	leader_role = /datum/antagonist/ert/non_tg/clown/gamma
+	roles = list(/datum/antagonist/ert/non_tg/clown/red, /datum/antagonist/ert/non_tg/clown/amber)
 	polldesc = "Clown Emergency Response Team"
 
-/datum/ert/inquisition
+/datum/ert/non_tg/inquisition
+	leader_role = /datum/antagonist/ert/non_tg/commander/inquisitor
+	roles = list(/datum/antagonist/ert/non_tg/chaplain/inquisitor, /datum/antagonist/ert/non_tg/security/inquisitor, /datum/antagonist/ert/non_tg/medic/inquisitor)
 	polldesc = "Inquisition Emergency Response Team"
+	rename_team = "Inquisition"
+	mission = "Destroy any traces of paranormal activity aboard the station."
 
 // MARK: SECURITY
-/datum/antagonist/ert/security/amber
-	outfit = /datum/outfit/centcom/ert/security/amber
+/datum/antagonist/ert/non_tg/security
+	role = "Сотрудник службы безопасности"
+	outfit = /datum/outfit/centcom/ert/non_tg/security
 
-/datum/antagonist/ert/security/red
-	outfit = /datum/outfit/centcom/ert/security/red
+/datum/antagonist/ert/non_tg/security/amber
+	outfit = /datum/outfit/centcom/ert/non_tg/security/amber
 
-/datum/antagonist/ert/security/gamma
-	outfit = /datum/outfit/centcom/ert/security/gamma
+/datum/antagonist/ert/non_tg/security/red
+	outfit = /datum/outfit/centcom/ert/non_tg/security/red
+
+/datum/antagonist/ert/non_tg/security/gamma
+	outfit = /datum/outfit/centcom/ert/non_tg/security/gamma
+
+/datum/antagonist/ert/non_tg/security/inquisitor
+	outfit = /datum/outfit/centcom/ert/non_tg/security/inquisitor
 
 // MARK: ENGINEER
-/datum/antagonist/ert/engineer/amber
-	outfit = /datum/outfit/centcom/ert/engineer/amber
+/datum/antagonist/ert/non_tg/engineer
+	role = "Инженер"
+	outfit = /datum/outfit/centcom/ert/non_tg/engineer
 
-/datum/antagonist/ert/engineer/red
-	outfit = /datum/outfit/centcom/ert/engineer/red
+/datum/antagonist/ert/non_tg/engineer/amber
+	outfit = /datum/outfit/centcom/ert/non_tg/engineer/amber
 
-/datum/antagonist/ert/engineer/gamma
-	outfit = /datum/outfit/centcom/ert/engineer/gamma
+/datum/antagonist/ert/non_tg/engineer/red
+	outfit = /datum/outfit/centcom/ert/non_tg/engineer/red
+
+/datum/antagonist/ert/non_tg/engineer/gamma
+	outfit = /datum/outfit/centcom/ert/non_tg/engineer/gamma
 
 // MARK: MEDIC
-/datum/antagonist/ert/medic/amber
-	outfit = /datum/outfit/centcom/ert/medic/amber
+/datum/antagonist/ert/non_tg/medic
+	role = "Медик"
+	outfit = /datum/outfit/centcom/ert/non_tg/medic
 
-/datum/antagonist/ert/medic/red
-	outfit = /datum/outfit/centcom/ert/medic/red
+/datum/antagonist/ert/non_tg/medic/amber
+	outfit = /datum/outfit/centcom/ert/non_tg/medic/amber
 
-/datum/antagonist/ert/medic/gamma
-	outfit = /datum/outfit/centcom/ert/medic/gamma
+/datum/antagonist/ert/non_tg/medic/red
+	outfit = /datum/outfit/centcom/ert/non_tg/medic/red
+
+/datum/antagonist/ert/non_tg/medic/gamma
+	outfit = /datum/outfit/centcom/ert/non_tg/medic/gamma
+
+/datum/antagonist/ert/non_tg/medic/inquisitor
+	outfit = /datum/outfit/centcom/ert/non_tg/medic/inquisitor
 
 // MARK: COMMANDER
-/datum/antagonist/ert/commander/amber
-	outfit = /datum/outfit/centcom/ert/commander/amber
+/datum/antagonist/ert/non_tg/commander
+	role = "Командир"
+	outfit = /datum/outfit/centcom/ert/non_tg/commander
 
-/datum/antagonist/ert/commander/red
-	outfit = /datum/outfit/centcom/ert/commander/red
+/datum/antagonist/ert/non_tg/commander/amber
+	outfit = /datum/outfit/centcom/ert/non_tg/commander/amber
 
-/datum/antagonist/ert/commander/gamma
-	outfit = /datum/outfit/centcom/ert/commander/gamma
+/datum/antagonist/ert/non_tg/commander/red
+	outfit = /datum/outfit/centcom/ert/non_tg/commander/red
+
+/datum/antagonist/ert/non_tg/commander/gamma
+	outfit = /datum/outfit/centcom/ert/non_tg/commander/gamma
+
+/datum/antagonist/ert/non_tg/commander/inquisitor
+	outfit = /datum/outfit/centcom/ert/non_tg/commander/inquisitor
 
 // MARK: CHAPLAIN
-/datum/antagonist/ert/chaplain/amber
-	outfit = /datum/outfit/centcom/ert/chaplain/amber
+/datum/antagonist/ert/non_tg/chaplain
+	role = "Священник"
+	outfit = /datum/outfit/centcom/ert/non_tg/chaplain
 
-/datum/antagonist/ert/chaplain/red
-	outfit = /datum/outfit/centcom/ert/chaplain/red
+/datum/antagonist/ert/non_tg/chaplain/amber
+	outfit = /datum/outfit/centcom/ert/non_tg/chaplain/amber
 
-/datum/antagonist/ert/chaplain/gamma
-	outfit = /datum/outfit/centcom/ert/chaplain/gamma
+/datum/antagonist/ert/non_tg/chaplain/red
+	outfit = /datum/outfit/centcom/ert/non_tg/chaplain/red
+
+/datum/antagonist/ert/non_tg/chaplain/gamma
+	outfit = /datum/outfit/centcom/ert/non_tg/chaplain/gamma
+
+/datum/antagonist/ert/non_tg/chaplain/inquisitor
+	outfit = /datum/outfit/centcom/ert/non_tg/chaplain/inquisitor
 
 // MARK: JANITOR
-/datum/antagonist/ert/janitor/amber
-	outfit = /datum/outfit/centcom/ert/janitor/amber
+/datum/antagonist/ert/non_tg/janitor
+	role = "Уборщик"
+	outfit = /datum/outfit/centcom/ert/non_tg/janitor
 
-/datum/antagonist/ert/janitor/red
-	outfit = /datum/outfit/centcom/ert/janitor/red
+/datum/antagonist/ert/non_tg/janitor/amber
+	outfit = /datum/outfit/centcom/ert/non_tg/janitor/amber
 
-/datum/antagonist/ert/janitor/gamma
-	outfit = /datum/outfit/centcom/ert/janitor/gamma
+/datum/antagonist/ert/non_tg/janitor/red
+	outfit = /datum/outfit/centcom/ert/non_tg/janitor/red
+
+/datum/antagonist/ert/non_tg/janitor/gamma
+	role = "Уборщик-специалист"
+	outfit = /datum/outfit/centcom/ert/non_tg/janitor/gamma
 
 // MARK: CLOWN
-/datum/antagonist/ert/clown/amber
-	outfit = /datum/outfit/centcom/ert/clown/amber
+/datum/antagonist/ert/non_tg/clown
+	role = "Клоун"
+	outfit = /datum/outfit/centcom/ert/non_tg/clown
 
-/datum/antagonist/ert/clown/red
-	outfit = /datum/outfit/centcom/ert/clown/red
+/datum/antagonist/ert/non_tg/clown/amber
+	outfit = /datum/outfit/centcom/ert/non_tg/clown/amber
 
-/datum/antagonist/ert/clown/gamma
-	outfit = /datum/outfit/centcom/ert/clown/gamma
+/datum/antagonist/ert/non_tg/clown/red
+	outfit = /datum/outfit/centcom/ert/non_tg/clown/red
+
+/datum/antagonist/ert/non_tg/clown/gamma
+	outfit = /datum/outfit/centcom/ert/non_tg/clown/gamma

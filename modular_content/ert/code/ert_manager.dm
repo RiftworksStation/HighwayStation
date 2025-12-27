@@ -87,13 +87,13 @@ ADMIN_VERB(ert_manager, R_ADMIN, "ERT Manager", "Manage ERT reqests.", ADMIN_CAT
 			var/datum/ert/new_ert
 			switch(ert_type)
 				if("Amber")
-					new_ert = new /datum/ert/amber
+					new_ert = new /datum/ert/non_tg/amber
 				if("Red")
-					new_ert = new /datum/ert/red
+					new_ert = new /datum/ert/non_tg/red
 				if("Gamma")
-					new_ert = new /datum/ert/gamma
+					new_ert = new /datum/ert/non_tg/gamma
 				if("Inquisition")
-					new_ert = new /datum/ert/inquisition
+					new_ert = new /datum/ert/non_tg/inquisition
 				else
 					to_chat(usr, "<span class='userdanger'>Invalid ERT type.</span>")
 					return
@@ -149,73 +149,73 @@ ADMIN_VERB(ert_manager, R_ADMIN, "ERT Manager", "Manage ERT reqests.", ADMIN_CAT
 	if(ert_type == "Amber")
 		for(var/role in 1 to slots_sans_leader)
 			if(security_slots > 0)
-				roles.Add(/datum/antagonist/ert/security/amber)
+				roles.Add(/datum/antagonist/ert/non_tg/security/amber)
 				security_slots--
 			if(medical_slots > 0)
-				roles.Add(/datum/antagonist/ert/medic/amber)
+				roles.Add(/datum/antagonist/ert/non_tg/medic/amber)
 				medical_slots--
 			if(engineering_slots > 0)
-				roles.Add(/datum/antagonist/ert/engineer/amber)
+				roles.Add(/datum/antagonist/ert/non_tg/engineer/amber)
 				engineering_slots--
 			if(janitor_slots > 0)
-				roles.Add(/datum/antagonist/ert/janitor/amber)
+				roles.Add(/datum/antagonist/ert/non_tg/janitor/amber)
 				janitor_slots--
 			if(chaplain_slots > 0)
-				roles.Add(/datum/antagonist/ert/chaplain/amber)
+				roles.Add(/datum/antagonist/ert/non_tg/chaplain/amber)
 				chaplain_slots--
 			if(clown_slots > 0)
-				roles.Add(/datum/antagonist/ert/clown/amber)
+				roles.Add(/datum/antagonist/ert/non_tg/clown/amber)
 				clown_slots--
 	if(ert_type == "Red")
 		for(var/role in 1 to slots_sans_leader)
 			if(security_slots > 0)
-				roles.Add(/datum/antagonist/ert/security/red)
+				roles.Add(/datum/antagonist/ert/non_tg/security/red)
 				security_slots--
 			if(medical_slots > 0)
-				roles.Add(/datum/antagonist/ert/medic/red)
+				roles.Add(/datum/antagonist/ert/non_tg/medic/red)
 				medical_slots--
 			if(engineering_slots > 0)
-				roles.Add(/datum/antagonist/ert/engineer/red)
+				roles.Add(/datum/antagonist/ert/non_tg/engineer/red)
 				engineering_slots--
 			if(janitor_slots > 0)
-				roles.Add(/datum/antagonist/ert/janitor/red)
+				roles.Add(/datum/antagonist/ert/non_tg/janitor/red)
 				janitor_slots--
 			if(chaplain_slots > 0)
-				roles.Add(/datum/antagonist/ert/chaplain/red)
+				roles.Add(/datum/antagonist/ert/non_tg/chaplain/red)
 				chaplain_slots--
 			if(clown_slots > 0)
-				roles.Add(/datum/antagonist/ert/clown/red)
+				roles.Add(/datum/antagonist/ert/non_tg/clown/red)
 				clown_slots--
 	if(ert_type == "Gamma")
 		for(var/role in 1 to slots_sans_leader)
 			if(security_slots > 0)
-				roles.Add(/datum/antagonist/ert/security/gamma)
+				roles.Add(/datum/antagonist/ert/non_tg/security/gamma)
 				security_slots--
 			if(medical_slots > 0)
-				roles.Add(/datum/antagonist/ert/medic/gamma)
+				roles.Add(/datum/antagonist/ert/non_tg/medic/gamma)
 				medical_slots--
 			if(engineering_slots > 0)
-				roles.Add(/datum/antagonist/ert/engineer/gamma)
+				roles.Add(/datum/antagonist/ert/non_tg/engineer/gamma)
 				engineering_slots--
 			if(janitor_slots > 0)
-				roles.Add(/datum/antagonist/ert/janitor/gamma)
+				roles.Add(/datum/antagonist/ert/non_tg/janitor/gamma)
 				janitor_slots--
 			if(chaplain_slots > 0)
-				roles.Add(/datum/antagonist/ert/chaplain/gamma)
+				roles.Add(/datum/antagonist/ert/non_tg/chaplain/gamma)
 				chaplain_slots--
 			if(clown_slots > 0)
-				roles.Add(/datum/antagonist/ert/clown/gamma)
+				roles.Add(/datum/antagonist/ert/non_tg/clown/gamma)
 				clown_slots--
 	if(ert_type == "Inquisition")
 		for(var/role in 1 to slots_sans_leader)
 			if(security_slots > 0)
-				roles.Add(/datum/antagonist/ert/security/inquisitor)
+				roles.Add(/datum/antagonist/ert/non_tg/security/inquisitor)
 				security_slots--
 			if(medical_slots > 0)
-				roles.Add(/datum/antagonist/ert/medic/inquisitor)
+				roles.Add(/datum/antagonist/ert/non_tg/medic/inquisitor)
 				medical_slots--
 			if(chaplain_slots > 0)
-				roles.Add(/datum/antagonist/ert/chaplain/inquisitor)
+				roles.Add(/datum/antagonist/ert/non_tg/chaplain/inquisitor)
 				chaplain_slots--
 	return roles
 
@@ -335,7 +335,7 @@ ADMIN_VERB(ert_manager, R_ADMIN, "ERT Manager", "Manage ERT reqests.", ADMIN_CAT
 			ert_operative.set_species(/datum/species/human)
 
 		//Give antag datum
-		var/datum/antagonist/ert/ert_antag
+		var/datum/antagonist/ert/non_tg/ert_antag
 
 		if((chosen_candidate == earmarked_leader) && (commander_slots > 0 && !leader_spawned))
 			ert_antag = new ertemplate.leader_role ()
@@ -375,7 +375,7 @@ ADMIN_VERB(ert_manager, R_ADMIN, "ERT Manager", "Manage ERT reqests.", ADMIN_CAT
 	return TRUE
 
 /datum/ert_manager/proc/create_leader_preview(datum/ert/ert_template)
-	var/datum/antagonist/ert/preview = ert_template.leader_role
+	var/datum/antagonist/ert/non_tg/preview = ert_template.leader_role
 	return image(get_dynamic_human_appearance(preview.outfit, r_hand = NO_REPLACE, l_hand = NO_REPLACE))
 
 /obj/effect/landmark/ert_brief_spawn
